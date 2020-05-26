@@ -18,8 +18,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-
-public class ChildManagementScreen {
+import java.util.Observable;
+public class ChildManagementScreen extends Observable implements View{
 
 	public JFrame frame;
 	private JLabel label,selectChildName,fullnameLabel,idLabel;
@@ -56,6 +56,7 @@ public class ChildManagementScreen {
 	 */
 	private void initialize() {
 		frame = new JFrame();
+		frame.setTitle("ניהול מאגר ילדים");
 		frame.setBounds(100, 100, 626, 377);
 		frame.getContentPane().setLayout(null);
 		

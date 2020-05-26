@@ -6,7 +6,7 @@ import java.util.Vector;
 public class MemoryCards {
 public static void main(String[] args) {
 		
-		MainScreen view = new MainScreen();
+		MainScreen view = new MainScreen();//Opening MainScreen
 		
 		Data model= new Data();
 		
@@ -17,6 +17,6 @@ public static void main(String[] args) {
 		 * ADD view as observer to controller (uncomment your view)
 		 */
 		
-		//view.start(Vector a);
+		
 	}
 }

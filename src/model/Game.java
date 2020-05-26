@@ -5,7 +5,7 @@ import java.util.Random;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 
-abstract class Game implements CardsGame{
+public abstract class Game implements CardsGame{
 	protected ImageIcon[] imagePhoto;
 	protected ImageIcon imageCover; //the cover photo that will display on all the closed cards
 	protected int[] photoIndex;//each cell represent image index- initialize with 2n cards
@@ -14,11 +14,9 @@ abstract class Game implements CardsGame{
 	protected int choiceNumber;//number of selected cards in the same turn (1 or 2)
 	protected int[] score;//index 0 score of player 1, index1 combo of player 1, same goes for player 2
 	protected int numOfCards;
+	protected String[] players;//maintain the players name
 	
-	//public Game()
-	//{
-		
-	//}
+	public String[] getPlayersNames() {return players;}
 	public int getRemainingPhotoNum(boolean []photoFound)
 	{
 		//for(int i=0;i<photoFound.length;i++)
@@ -82,12 +80,13 @@ abstract class Game implements CardsGame{
 		if(whosTurn==1)
 		{
 			score[0]+= 5*(score[1]);
+			return score[0];
 		}
 		else
 		{
 			score[2]+=5*(score[3]);
+			return score[2];
 		}
-		return 0;
 	}
 	public void setChoiceNumber()
 	{

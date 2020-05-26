@@ -1,6 +1,6 @@
 package model;
 import java.io.Serializable;
-public class Children implements Serializable{
+public class Children implements Serializable,Model{
 /**
 	 * 
 	 */

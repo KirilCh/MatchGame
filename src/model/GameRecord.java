@@ -3,7 +3,7 @@ import java.util.*;
 import java.io.Serializable;
 
 
-public class GameRecord implements Serializable{
+public class GameRecord implements Serializable,Model{
 /**
 	 * 
 	 */

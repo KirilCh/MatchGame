@@ -27,9 +27,25 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.*;
 import java.util.Vector;
+import java.util.Observable;
+public class MainScreen extends Observable implements View{
 
-public class MainScreen{
-
+	public class GameSettings
+	{
+		int gameType;
+		int gameLevel;
+		String player1;
+		String player2;
+		public GameSettings(){}
+		public GameSettings(int type,int level,String p1,String p2) 
+		{
+			gameType=type;
+			gameLevel=level;
+			player1=p1;
+			player2=p2;
+		}
+	}
+	private GameSettings gameSettings;
 	private JFrame frame;
 	private final ButtonGroup buttonGroup_kind = new ButtonGroup();
 	private final ButtonGroup buttonGroup_number = new ButtonGroup();
@@ -49,7 +65,8 @@ public class MainScreen{
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
+	 
+	/*public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -61,19 +78,20 @@ public class MainScreen{
 			}
 		});
 		
-	}
+	}*/
 
 	/**
 	 * Create the application.
 	 */
 	public MainScreen() {
 		initialize();
-		/*try {
+		gameSettings=new GameSettings();
+		try {
 			this.frame.setVisible(true);
 		
 		}catch (Exception e) {
 			e.printStackTrace();
-		}*/
+		}
 	}
 	
 
@@ -82,6 +100,7 @@ public class MainScreen{
 	 */
 	private void initialize() {
 		frame = new JFrame();
+		frame.setTitle("זכור את הפועל");
 		frame.setBounds(100, 100, 787, 643);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
@@ -333,6 +352,11 @@ public class MainScreen{
 	protected void onStartGameButtonActionPerformed(MouseEvent e) {
 		if(startGame.isEnabled()==true)
 		{
+			gameSettings.player1=p1List.getSelectedItem().toString();
+			if (twoP) gameSettings.player2=p2List.getSelectedItem().toString();
+			else gameSettings.player2=null;
+			setChanged();
+			notifyObservers(gameSettings);
 			/*if(oneP&&firstNameT.getText().length()>=2)
 			{
 				errorL.setVisible(false);
@@ -369,6 +393,9 @@ public class MainScreen{
 			p2List.setEnabled(false);
 			secondPNameL.setEnabled(false);
 		}
+		if(easLevel.isSelected()) gameSettings.gameLevel=1;
+		else if(medLevel.isSelected())gameSettings.gameLevel=2;
+		else gameSettings.gameLevel=3;//hardLevel selected
 	}
 
 	protected void onAnyKindButtonActionPerformed(ActionEvent e) {
@@ -376,6 +403,9 @@ public class MainScreen{
 		easLevel.setEnabled(true);
 		medLevel.setEnabled(true);
 		hardLevel.setEnabled(true);
+		if(againstTimeRadioButton.isSelected())gameSettings.gameType=1;
+		else if(againstCompRadioButton.isSelected())gameSettings.gameType=2;
+		else gameSettings.gameType=3;//one One one selected - against rival
 	}
 
 	protected void twoPlayersRadioButtonActionPerformed(ActionEvent e) {
