@@ -44,6 +44,10 @@ public class MainScreen extends Observable implements View{
 			player1=p1;
 			player2=p2;
 		}
+		public int getDifficulty() {return gameLevel;}
+		public int getGameType() {return gameType;}
+		public String getPlayer1() {return player1;}
+		public String getPlayer2() {return player2;}
 	}
 	private GameSettings gameSettings;
 	private JFrame frame;

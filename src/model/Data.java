@@ -9,8 +9,9 @@ import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.xssf.usermodel.XSSFSheet;  
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import java.util.Observable;
 
-public class Data implements Model
+public class Data extends Observable implements Model
 {
 int rowNumCL,rowNumGH;
 Sheet childrenList,gameHistory;

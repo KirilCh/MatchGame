@@ -2,9 +2,35 @@ package model;
 
 import javax.swing.ImageIcon;
 
+
 public class AgainstRival extends Game{
 	private int playersTurn;
-	
+	public class RivalWhosTurn
+	{
+		int playersTurn;
+		public int getWhosTurn() {return playersTurn;}
+	}
+	public class RivalGameSettings
+	{
+		String gameLevel;
+		String player1;
+		String player2;
+		public RivalGameSettings(){}
+		public RivalGameSettings(String level,String p1,String p2) 
+		{
+			gameLevel=level;
+			player1=p1;
+			player2=p2;
+
+		}
+		public String getDifficulty() {return gameLevel;}
+		public String getP1Name() {return player1;}
+		public String getP2Name() {return player2;}
+	}
+	private RivalGameSettings gameSettings;
+	private RivalWhosTurn whosTurn;
+	public AgainstRival() {} 
+
 	public AgainstRival(String p1,String p2,int difficulty) 
 	{
 		players=new String[2];
@@ -31,23 +57,29 @@ public class AgainstRival extends Game{
 		
 		imageCover = new ImageIcon("coverPhotoName.jpg");
 		
-//Difficulty level affects only numOfCards
+		String level;
+		//Difficulty level affects only numOfCards
 		if(difficulty==0)
 		{
+			level="Easy";
 			numOfCards=12;
 		}
 		else if(difficulty==1)
 		{
+			level="Medium";
 			numOfCards=16;
 		}
 		else 
 		{
+			level="Hard";
 			numOfCards=24;
 		}
-		
+		gameSettings=new RivalGameSettings(level,p1,p2);
 		photoIndex = new int[numOfCards];
 		nRandomIntegers(numOfCards);
 		photoFound = new boolean[numOfCards];
+		whosTurn=new RivalWhosTurn();
+		whosTurn.playersTurn=1;
 	}
-	public int whosTurn() {return playersTurn;}
+	public RivalWhosTurn whosTurn() {return whosTurn;}
 }

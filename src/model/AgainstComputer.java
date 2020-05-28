@@ -3,9 +3,38 @@ import java.util.Random;
 
 import javax.swing.ImageIcon;
 
+
+
 public class AgainstComputer extends Game{
 	private int playersTurn;
+	public class CompWhosTurn
+	{
+		int playersTurn;
+		public int getWhosTurn() {return playersTurn;}
+	}
+	public class CompGameSettings
+	{
+		String gameLevel;
+		String player1;
+		String player2;
+		public CompGameSettings(){}
+		public CompGameSettings(String level,String p1,String p2) 
+		{
+			gameLevel=level;
+			player1=p1;
+			player2=p2;
+
+		}
+		public String getDifficulty() {return gameLevel;}
+		public String getP1Name() {return player1;}
+		public String getP2Name() {return player2;}
+
+	}
 	
+	private CompGameSettings gameSettings;
+	private CompWhosTurn whosTurn;
+	public AgainstComputer() {} 
+
 public AgainstComputer(String p1,int difficulty) 
 {		
 	players=new String[2];
@@ -31,27 +60,32 @@ public AgainstComputer(String p1,int difficulty)
 	imagePhoto[11] = new ImageIcon("PhotoName12.jpg");
 	
 	imageCover = new ImageIcon("coverPhotoName.jpg");
-			
+	String level;
 	//Difficulty level affects only numOfCards
 	if(difficulty==0)
 	{
+		level="Easy";
 		numOfCards=12;
 	}
 	else if(difficulty==1)
 	{
+		level="Medium";
 		numOfCards=16;
 	}
 	else 
 	{
+		level="Hard";
 		numOfCards=24;
 	}
-
+	gameSettings=new CompGameSettings(level,p1,"computer");
 	photoIndex = new int[numOfCards];
 	nRandomIntegers(numOfCards);
 	photoFound = new boolean[numOfCards];
+	whosTurn=new CompWhosTurn();
+	whosTurn.playersTurn=1;
 	}
-	public int whosTurn() {return playersTurn;}
-	public int[] compTurn(int playersTurn) 
+	public CompWhosTurn whosTurn() {return whosTurn;}
+	public int[] compTurn()//(int playersTurn) 
 	{
 		Random rand = new Random();
 		int []choosePhotoLabel = new int[2];

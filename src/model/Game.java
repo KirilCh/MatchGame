@@ -1,11 +1,12 @@
 package model;
 
 import java.util.Random;
+import java.util.Observable;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 
-public abstract class Game implements CardsGame{
+public abstract class Game extends Observable implements CardsGame{
 	protected ImageIcon[] imagePhoto;
 	protected ImageIcon imageCover; //the cover photo that will display on all the closed cards
 	protected int[] photoIndex;//each cell represent image index- initialize with 2n cards
@@ -15,6 +16,7 @@ public abstract class Game implements CardsGame{
 	protected int[] score;//index 0 score of player 1, index1 combo of player 1, same goes for player 2
 	protected int numOfCards;
 	protected String[] players;//maintain the players name
+
 	
 	public String[] getPlayersNames() {return players;}
 	public int getRemainingPhotoNum(boolean []photoFound)

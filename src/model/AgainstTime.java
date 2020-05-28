@@ -3,9 +3,26 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import javax.swing.ImageIcon;
+
 public class AgainstTime extends Game{
 	private int countDown;
+	public class TimeGameSettings
+	{
+		String gameLevel;
+		String player1;
+		public TimeGameSettings(){}
+		public TimeGameSettings(String level,String p1) 
+		{
+			gameLevel=level;
+			player1=p1;
+		}
+		public String getDifficulty() {return gameLevel;}
+		public String getP1Name() {return player1;}
+
+	}
 	
+	private TimeGameSettings gameSettings;
+	public AgainstTime() {}
 	public AgainstTime(String p1,int difficulty) 
 	{
 		players=new String[1];
@@ -29,7 +46,11 @@ public class AgainstTime extends Game{
 		imagePhoto[11] = new ImageIcon("PhotoName12.jpg");
 		
 		imageCover = new ImageIcon("coverPhotoName.jpg");
-		
+		String level;
+		if (difficulty==0) level="Easy";
+		else if (difficulty==1) level="Medium";
+		else level="Hard";
+		gameSettings=new TimeGameSettings(level,p1);
 		numOfCards=24;
 
 //Difficulty level affects only game time length
