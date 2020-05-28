@@ -3,10 +3,12 @@ import java.util.Random;
 
 import javax.swing.ImageIcon;
 
+import model.Game.PhotoIndex;
+
 
 
 public class AgainstComputer extends Game{
-	private int playersTurn;
+	//private int playersTurn;
 	public class CompWhosTurn
 	{
 		int playersTurn;
@@ -36,30 +38,31 @@ public class AgainstComputer extends Game{
 	public AgainstComputer() {} 
 
 public AgainstComputer(String p1,int difficulty) 
-{		
+{	
+	photoIndexInner=new PhotoIndex();
 	players=new String[2];
 	players[0]=p1;
 	players[1]="computer";
 	score = new int[4]; //Initialized with 0`s
-	choiceNumber=1;
-	playersTurn=1;
+	//choiceNumber=1;
+	//playersTurn=1;
 	
 	imagePhoto = new ImageIcon[12]; //An array of images used to play the game
 	
-	imagePhoto[0] = new ImageIcon("PhotoName1.jpg");
-	imagePhoto[1] = new ImageIcon("PhotoName2.jpg");
-	imagePhoto[2] = new ImageIcon("PhotoName3.jpg");
-	imagePhoto[3] = new ImageIcon("PhotoName4.jpg");
-	imagePhoto[4] = new ImageIcon("PhotoName5.jpg");
-	imagePhoto[5] = new ImageIcon("PhotoName6.jpg");
-	imagePhoto[6] = new ImageIcon("PhotoName7.jpg");
-	imagePhoto[7] = new ImageIcon("PhotoName8.jpg");
-	imagePhoto[8] = new ImageIcon("PhotoName9.jpg");
-	imagePhoto[9] = new ImageIcon("PhotoName10.jpg");
-	imagePhoto[10] = new ImageIcon("PhotoName11.jpg");
-	imagePhoto[11] = new ImageIcon("PhotoName12.jpg");
+	imagePhoto[0] = new ImageIcon("PhotoName1.jpeg");
+	imagePhoto[1] = new ImageIcon("PhotoName2.jpeg");
+	imagePhoto[2] = new ImageIcon("PhotoName3.jpeg");
+	imagePhoto[3] = new ImageIcon("PhotoName4.jpeg");
+	imagePhoto[4] = new ImageIcon("PhotoName5.jpeg");
+	imagePhoto[5] = new ImageIcon("PhotoName6.jpeg");
+	imagePhoto[6] = new ImageIcon("PhotoName7.jpeg");
+	imagePhoto[7] = new ImageIcon("PhotoName8.jpeg");
+	imagePhoto[8] = new ImageIcon("PhotoName9.jpeg");
+	imagePhoto[9] = new ImageIcon("PhotoName10.jpeg");
+	imagePhoto[10] = new ImageIcon("PhotoName11.jpeg");
+	imagePhoto[11] = new ImageIcon("PhotoName12.jpeg");
 	
-	imageCover = new ImageIcon("coverPhotoName.jpg");
+	imageCover = new ImageIcon("cover.jpg");
 	String level;
 	//Difficulty level affects only numOfCards
 	if(difficulty==0)
@@ -83,7 +86,9 @@ public AgainstComputer(String p1,int difficulty)
 	photoFound = new boolean[numOfCards];
 	whosTurn=new CompWhosTurn();
 	whosTurn.playersTurn=1;
-	}
+	photoIndexInner.setPhotoIndex(photoIndex);
+
+}
 	public CompWhosTurn whosTurn() {return whosTurn;}
 	public int[] compTurn()//(int playersTurn) 
 	{

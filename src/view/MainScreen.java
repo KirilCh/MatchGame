@@ -356,9 +356,14 @@ public class MainScreen extends Observable implements View{
 	protected void onStartGameButtonActionPerformed(MouseEvent e) {
 		if(startGame.isEnabled()==true)
 		{
-			gameSettings.player1=p1List.getSelectedItem().toString();
-			if (twoP) gameSettings.player2=p2List.getSelectedItem().toString();
-			else gameSettings.player2=null;
+			//gameSettings.player1=p1List.getSelectedItem().toString();
+			//if (twoP) gameSettings.player2=p2List.getSelectedItem().toString();
+		//	else gameSettings.player2=null;
+			gameSettings.gameLevel=1;
+			gameSettings.gameType=0;
+			gameSettings.player1="Kiril";
+			gameSettings.player2="Liat";
+
 			setChanged();
 			notifyObservers(gameSettings);
 			/*if(oneP&&firstNameT.getText().length()>=2)

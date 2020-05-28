@@ -12,12 +12,27 @@ public abstract class Game extends Observable implements CardsGame{
 	protected int[] photoIndex;//each cell represent image index- initialize with 2n cards
 	protected boolean[] photoFound;//give indication about the cards - if found in a match already
 	protected int photoRemaining;//amount of pictures that left unmatched
-	protected int choiceNumber;//number of selected cards in the same turn (1 or 2)
+	//protected int choiceNumber;//number of selected cards in the same turn (1 or 2)
 	protected int[] score;//index 0 score of player 1, index1 combo of player 1, same goes for player 2
 	protected int numOfCards;
 	protected String[] players;//maintain the players name
-
+	protected PhotoIndex photoIndexInner;
+	public class ScoreCalc{
+		int score;
+		public int getScore() {return score;}
+	}
 	
+	public class PhotoIndex
+	{
+		public int[] photoIndex;
+		public PhotoIndex() {}
+		public PhotoIndex(int[] arr) {
+			photoIndex=arr;
+		}
+		public int[] getPhotoIndex() {return photoIndex;}
+		public void setPhotoIndex(int[] arr) { photoIndex=arr;}
+
+	}
 	public String[] getPlayersNames() {return players;}
 	public int getRemainingPhotoNum(boolean []photoFound)
 	{
@@ -26,6 +41,8 @@ public abstract class Game extends Observable implements CardsGame{
 				//photoRemaining++;
 		return photoRemaining;
 	}
+	
+	public boolean[] getPhotoFound() {return photoFound;}
 	
 	public Boolean checkMatch(int firstI,int secondI,int whosTurn) 
 	{
@@ -77,6 +94,10 @@ public abstract class Game extends Observable implements CardsGame{
 	}
 	public ImageIcon[] getImagePhotoArr() {return imagePhoto;}
 	public ImageIcon getImagecover() {return imageCover;}
+	public PhotoIndex getPhotoIndex() {
+		return photoIndexInner;
+	}
+	
 	public int scoreCalc(int whosTurn) 
 	{
 		if(whosTurn==1)
@@ -90,15 +111,4 @@ public abstract class Game extends Observable implements CardsGame{
 			return score[2];
 		}
 	}
-	public void setChoiceNumber()
-	{
-		if(choiceNumber==1)
-			choiceNumber=2;
-		else choiceNumber=1;
-	}
-	public int getNumOfCards()
-	{
-		return numOfCards;
-	}
-	
 }

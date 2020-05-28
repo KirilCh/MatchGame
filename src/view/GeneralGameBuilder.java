@@ -7,6 +7,7 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -27,6 +28,9 @@ import javax.swing.Timer;
 import javax.swing.JOptionPane;
 import java.util.Observable;
 
+import java.net.URL;
+import java.applet.*;
+
 
 public class GeneralGameBuilder extends Observable implements View//extends JFrame
 {
@@ -46,22 +50,51 @@ public class GeneralGameBuilder extends Observable implements View//extends JFra
 	protected JButton startStopButton;
 	protected JButton exitButton;
 	protected boolean isAgainstComputer=false;
+	protected ImageIcon cover;
+	protected ImageIcon[] photos;
+	protected int[] photosIndex;
+	protected int[] choice = new int[2]; //Keep players selection
+	protected int choiceNumber;
+	protected int whosTurn=1;
+	protected int photosRemaining;
+	protected boolean[] whichPhotosFound;
+	
+	AudioClip matchSound;
+	AudioClip noMatchSound;
+	AudioClip gameOverSound;
+	
+	protected int labelSelected;
 	//protected Timer timer = null; //Timer variable
 	
 	public class GetImageCover{}
 	public class GetPhotosArray{}
+	public class GetPhotoIndex{}
 	public class CompTurn{}
 	public class CompWhosTurn{}
 	public class RivalWhosTurn{}
-	public class GetScoreCalc{}
+	public class GetScoreCalc
+	{
+		private int whosTurn;
+		
+		public GetScoreCalc(int playersTurn) {whosTurn=playersTurn;}
+		public int getWhosTurn() {return whosTurn;}
+	}
 	
 	public class CheckMatch
 	{
-		public void getFirstIndex() {}
-		public void getSecondIndex() {}
-		public void getWhosTurn() {}
+		private int firstIndex;
+		private int secondIndex;
+		private int whosTurn;
+		
+		public CheckMatch() {}
+		public CheckMatch(int first,int second,int whoPlays) {firstIndex=first;secondIndex=second;whosTurn=whoPlays;}
+		public int getFirstIndex() {return firstIndex;}
+		public int getSecondIndex() {return secondIndex;}
+		public int getWhosTurn() {return whosTurn;}
 	}
-	private GeneralGameBuilder() {}
+	
+	public class GetPhotoFound{}
+	public GeneralGameBuilder() {}
 	
 	private GeneralGameBuilder(Builder bld)
 	{
@@ -86,9 +119,6 @@ public class GeneralGameBuilder extends Observable implements View//extends JFra
 		gridConstraints.gridy = 0;
 		gridConstraints.gridheight = 5;
 		mainWindow.getContentPane().add(gamePanel, gridConstraints);
-		
-		
-		
 		
 		//Players score and names area
 		player1Label = new JLabel();
@@ -221,13 +251,16 @@ public class GeneralGameBuilder extends Observable implements View//extends JFra
 		//Setting up cards as labels on the window
 		photoLabel = new JLabel[bld.numOfCards];
 		
+		setChanged();
+		notifyObservers(new GetImageCover());
+		
 		for (int i = 0; i < bld.numOfCards; i++)
 		{
 			photoLabel[i] = new JLabel();
 			photoLabel[i].setPreferredSize(new Dimension(120, 75));//150,100
 			photoLabel[i].setOpaque(true);
-			photoLabel[i].setBackground(Color.DARK_GRAY);
-			
+		//	photoLabel[i].setBackground(Color.DARK_GRAY);
+		//	photoLabel[i].setIcon(cover);
 			gridConstraints = new GridBagConstraints();
 			gridConstraints.gridx = i % 4;
 			gridConstraints.gridy = i / 4;
@@ -252,6 +285,14 @@ public class GeneralGameBuilder extends Observable implements View//extends JFra
 				}
 			});
 		}
+		photosRemaining=bld.numOfCards/2;
+		//Get photos for the game
+		setChanged();
+		notifyObservers(new GetPhotosArray());
+		
+		//Get photos indexes for the game // photosIndex
+		setChanged();
+		notifyObservers(new GetPhotoIndex());
 		
 		buttonsPanel = new JPanel();
 		startStopButton = new JButton();
@@ -264,7 +305,7 @@ public class GeneralGameBuilder extends Observable implements View//extends JFra
 		gridConstraints.gridy = 4;
 		mainWindow.getContentPane().add(buttonsPanel, gridConstraints);
 		
-		startStopButton.setText("Stop Game");
+		/*startStopButton.setText("Stop Game");
 		gridConstraints = new GridBagConstraints();
 		gridConstraints.gridx = 0;
 		gridConstraints.gridy = 0;
@@ -276,10 +317,10 @@ public class GeneralGameBuilder extends Observable implements View//extends JFra
 			{
 				//startStopButtonActionPerformed(evt);
 			}
-				});
+				});*/
 		
 		exitButton.setText("Exit");
-		exitButton.setEnabled(false); //Disabled as long as game in progress
+		exitButton.setEnabled(true); //Disabled as long as game in progress
 		gridConstraints = new GridBagConstraints();
 		gridConstraints.gridx = 0;
 		gridConstraints.gridy = 1;
@@ -293,22 +334,139 @@ public class GeneralGameBuilder extends Observable implements View//extends JFra
 				//exitButtonActionPerformed(evt);
 			}
 				});
-		
+		choiceNumber=1;//Initializing choiceNumber to 1 to indicate first selection of the card
 		if(isAgainstComputer==true)
 		{
 			mainWindow.setTitle("Current game = AgainstComputer...");
 		}
+		
+		try
+		{
+			matchSound = Applet.newAudioClip(new URL("file:" + "tada.wav"));
+			noMatchSound = Applet.newAudioClip(new URL("file:" + "boing.wav"));
+			gameOverSound = Applet.newAudioClip(new URL("file:" + "wow.wav"));
+		}
+		catch (Exception ex)
+		{
+			System.out.println("Error loading sound files");
+		}
+		whichPhotosFound = new boolean[bld.numOfCards];
+		
 		mainWindow.setVisible(true);
 	}
 	
-	public void getImageCover(ImageIcon imgCover) {}
-	public void getPhotosArray(ImageIcon[] photosArr) {}
+	
+	private void photoLabelMousePressed(MouseEvent e)
+	{
+		Point p = e.getComponent().getLocation();
+		
+		for(labelSelected=0;labelSelected<photoLabel.length;labelSelected++)
+		{
+			if(p.x==photoLabel[labelSelected].getX() && p.y==photoLabel[labelSelected].getY())
+			{
+				break;
+			}
+			setChanged();
+			notifyObservers(new GetPhotoFound());
+		}
+	}
+	
+	public void getImageCover(ImageIcon imgCover) {cover=imgCover;} //Card cover
+	public void getPhotosArray(ImageIcon[] photosArr) {photos=photosArr;} //Card for the game
+	public void getPhotoIndex(int[] photoIndex) {photosIndex=photoIndex;} //Connecting labels to cards
 	public void getCompMove(int[] arr){}
 	
 	public void whosTurnAnswer() {}
-	public void scoreCalcAnswer() {}
+	public void getPhotoFound(boolean[] photoFound)
+	{
+		//whichPhotosFound = photoFound;
+		if(!photoFound[labelSelected])
+		{
+			showSelectedLabel();
+		}
+	}
+	public void scoreCalcAnswer(int score) 
+	{
+		if(whosTurn==1)
+		{
+			scoreTextField[0].setText(Integer.toString(score));
+		}
+		else
+		{
+			scoreTextField[1].setText(Integer.toString(score));
+		}
+	}
+	public void checkMatchResult(boolean result)
+	{
+		if(result==true) //Its a match
+		{
+			matchSound.play();
+			photoLabel[choice[0]].setIcon(null);
+			photoLabel[choice[1]].setIcon(null);
+			
+			//Update score - updated in checkMatch, need to update display
+			setChanged();
+			notifyObservers(new GetScoreCalc(whosTurn));
+			
+			photosRemaining--;
+			if(whosTurn==1)
+			{
+				messageLabel.setText(player1Label.getText() + "pick a card"); //Updating players pick
+			}
+			else
+			{
+				messageLabel.setText(player2Label.getText() + "pick a card"); //Updating players pick
+			}
+			if(photosRemaining==0)
+			{
+				//End game, Thanos won
+				//Check with Orel about end game page
+				//Which parameteres to pass to constructor
+				//Split into 2 constructors - 1 for 1 player, and another 2 players
+			}
+		}
+		else
+		{
+			//In case theres no match, return the cards to be covered
+			noMatchSound.play();
+			photoLabel[choice[0]].setIcon(cover);
+			photoLabel[choice[1]].setIcon(cover);
+			//Change players turn
+			if(whosTurn==1)
+			{
+				whosTurn=2;
+				messageLabel.setText(player2Label.getText() + "pick another"); //Updating players pick
+			}
+			else 
+				{
+					whosTurn=1;
+					messageLabel.setText(player1Label.getText() + "pick another"); //Updating players pick
+				}
+		}
+	}
 	
-	
+	private void showSelectedLabel()
+	{
+		photoLabel[labelSelected].setIcon(photos[photosIndex[labelSelected]]); 
+		//photoFound[labelSelected] = true -> Changed when theres a match
+		
+		if(choiceNumber==1)
+		{
+			choice[0]=labelSelected;
+			choiceNumber=2;
+			messageLabel.setText(player1Label.getText() + "pick a card"); //Updating players pick
+			
+			//Check if 1 or 2 players game, and act accordingly
+		}
+		else
+		{
+			choice[1]=labelSelected;
+			choiceNumber=1;
+			
+			setChanged();
+			notifyObservers(new CheckMatch(choice[0],choice[1],whosTurn));
+		}
+	}
 	public static class Builder
 	{
 		private String p1Name;
@@ -328,22 +486,17 @@ public class GeneralGameBuilder extends Observable implements View//extends JFra
 			if(this.difficulty=="Easy")
 			{
 				this.numOfCards=12;
-				this.gameLength=15;
+			//	this.gameLength=15;
 			}
 			else if(this.difficulty=="Medium")
 			{
 				this.numOfCards=16;
-				this.gameLength=10;
+			//	this.gameLength=10;
 			}
 			else if(this.difficulty=="Hard")
 			{
 				this.numOfCards=24;
-				this.gameLength=5;
-			}
-			else 
-			{
-				this.numOfCards=0;
-				this.gameLength=0;
+			//	this.gameLength=5;
 			}
 			return this;
 		}
@@ -356,6 +509,11 @@ public class GeneralGameBuilder extends Observable implements View//extends JFra
 		{
 			this.is2Players=true;
 			this.p2Name = name;
+			return this;
+		}
+		public Builder setGameLength(int num)
+		{
+			this.gameLength=num;
 			return this;
 		}
 	}
