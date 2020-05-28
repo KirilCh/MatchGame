@@ -7,7 +7,7 @@ public class MemoryCards {
 public static void main(String[] args) {
 		
 		MainScreen view = new MainScreen();//Opening MainScreen
-		
+		//GeneralGameBuilder gameWindow = new GeneralGameBuilder.Builder().FirstPlayersName("Kiril").setDifficulty("Easy").build();
 		Data model= new Data();
 		
 	//	Controller controller = new DataController(model, view);
