@@ -38,11 +38,7 @@ public class GeneralGameBuilder extends Observable implements View//extends JFra
 	protected JPanel resultsPanel;
 	protected JLabel[] photoLabel;
 	protected JTextField[] scoreTextField; //An array to keep the score of 1 or 2 players
-<<<<<<< HEAD
-	protected JLabel messageLabel; //Used to separate block in results panel block
-=======
-	protected JLabel messageLabel; //Used to seperate block in results panel block
->>>>>>> 6cc6eefbd219028cf0d5cb5104398e6a425ecfb6
+	protected JLabel messageLabel; //Used to separate block in results panel bloc
 	protected JLabel player1Label; //Player 1 name
 	protected JLabel player2Label; //Player 2 name
 	protected JPanel buttonsPanel; //Right lower panel for start/stop and exit buttons
@@ -52,7 +48,6 @@ public class GeneralGameBuilder extends Observable implements View//extends JFra
 	protected boolean isAgainstComputer=false;
 	//protected Timer timer = null; //Timer variable
 	
-<<<<<<< HEAD
 	public class GetImageCover{}
 	public class GetPhotosArray{}
 	public class CompTurn{}
@@ -67,9 +62,7 @@ public class GeneralGameBuilder extends Observable implements View//extends JFra
 		public void getWhosTurn() {}
 	}
 	private GeneralGameBuilder() {}
-=======
 	
->>>>>>> 6cc6eefbd219028cf0d5cb5104398e6a425ecfb6
 	private GeneralGameBuilder(Builder bld)
 	{
 		mainWindow.getContentPane().setLayout(new GridBagLayout());
@@ -307,7 +300,6 @@ public class GeneralGameBuilder extends Observable implements View//extends JFra
 		}
 		mainWindow.setVisible(true);
 	}
-<<<<<<< HEAD
 	
 	public void getImageCover(ImageIcon imgCover) {}
 	public void getPhotosArray(ImageIcon[] photosArr) {}
@@ -317,9 +309,6 @@ public class GeneralGameBuilder extends Observable implements View//extends JFra
 	public void scoreCalcAnswer() {}
 	
 	
-	
-=======
->>>>>>> 6cc6eefbd219028cf0d5cb5104398e6a425ecfb6
 	public static class Builder
 	{
 		private String p1Name;
