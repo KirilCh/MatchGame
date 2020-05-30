@@ -15,13 +15,14 @@ public abstract class Game extends Observable implements CardsGame{
 	//protected int choiceNumber;//number of selected cards in the same turn (1 or 2)
 	protected int[] score;//index 0 score of player 1, index1 combo of player 1, same goes for player 2
 	protected int numOfCards;
-	protected String[] players;//maintain the players name
-	protected PhotoIndex photoIndexInner;
+//	protected PhotoIndex photoIndexInner;
 	public class ScoreCalc{
 		int score;
-		public int getScore() {return score;}
+		public int getScore() {	
+			return score;
+		}
 	}
-	
+	ScoreCalc scoreCalc=new ScoreCalc();
 	public class PhotoIndex
 	{
 		public int[] photoIndex;
@@ -29,22 +30,29 @@ public abstract class Game extends Observable implements CardsGame{
 		public PhotoIndex(int[] arr) {
 			photoIndex=arr;
 		}
-		public int[] getPhotoIndex() {return photoIndex;}
+		public int[] getPhotoIndex() {	
+			return photoIndex;
+		}
 		public void setPhotoIndex(int[] arr) { photoIndex=arr;}
 
 	}
-	public String[] getPlayersNames() {return players;}
-	public int getRemainingPhotoNum(boolean []photoFound)
+	public void setGame() {	}
+	
+	public void getRemainingPhotoNum(boolean []photoFound)
 	{
 		//for(int i=0;i<photoFound.length;i++)
 			//if(photoFound[i])
 				//photoRemaining++;
-		return photoRemaining;
+		setChanged();
+		notifyObservers(photoRemaining);
 	}
 	
-	public boolean[] getPhotoFound() {return photoFound;}
+	public void getPhotoFound() {	
+		setChanged();
+		notifyObservers(photoFound); 
+	}
 	
-	public Boolean checkMatch(int firstI,int secondI,int whosTurn) 
+	public void checkMatch(int firstI,int secondI,int whosTurn) 
 	{
 		if(photoIndex[firstI]==photoIndex[secondI])
 		{
@@ -55,15 +63,15 @@ public abstract class Game extends Observable implements CardsGame{
 			photoRemaining--;
 			photoFound[firstI]=true;
 			photoFound[secondI]=true;
-			return true;
-		}
+			setChanged();
+			notifyObservers(true);		}
 		else 
 		{
 			if(whosTurn==1) //Combo reset
 				score[1]=0;
 			else score[3]=0;
-			return false;
-		}
+			setChanged();
+			notifyObservers(false);		}
 	}
 	
 	public void nRandomIntegers(int n) 
@@ -92,23 +100,32 @@ public abstract class Game extends Observable implements CardsGame{
 				nIntegers[i]-=(n/2);
 		photoIndex=nIntegers;
 	}
-	public ImageIcon[] getImagePhotoArr() {return imagePhoto;}
-	public ImageIcon getImagecover() {return imageCover;}
-	public PhotoIndex getPhotoIndex() {
-		return photoIndexInner;
+	public void  getImagePhotoArr() {	
+		setChanged();
+		notifyObservers(imagePhoto);}
+	public void getImagecover() {	
+		setChanged();
+		notifyObservers(imageCover);
 	}
+	/*public void getPhotoIndex() {
+		setChanged();
+		notifyObservers(photoIndexInner); 
+	}*/
 	
-	public int scoreCalc(int whosTurn) 
+	public void scoreCalc(int whosTurn) 
 	{
 		if(whosTurn==1)
 		{
 			score[0]+= 5*(score[1]);
-			return score[0];
-		}
+			scoreCalc.score=score[0];
+			setChanged();
+			notifyObservers(scoreCalc);		}
 		else
 		{
 			score[2]+=5*(score[3]);
-			return score[2];
+			scoreCalc.score=score[2];
+			setChanged();
+			notifyObservers(scoreCalc);
 		}
 	}
 }

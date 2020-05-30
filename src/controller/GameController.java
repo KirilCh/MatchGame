@@ -19,57 +19,60 @@ public class GameController implements Controller{
 		this.mainView=view;
 		//this.model=model;
 		this.gameScreenView=gameScreenView;
+		this.gameScreenView.addObserver(this);
 		computerModel=compM;
 	}
 	@Override
 	public void update(Observable o, Object arg) 
 	{	
-		//
 		if(o instanceof MainScreen)
 		{
+			mainView=(MainScreen)o;
 			MainScreen.GameSettings gs=mainView.new GameSettings();
 			gs=(MainScreen.GameSettings)arg;
 			if(gs.getGameType()==0)
 			{
 			model=new AgainstRival(gs.getPlayer1(),gs.getPlayer2(),gs.getDifficulty());	
-			model.addObserver(this);
-
 			}
 			else if(gs.getGameType()==1)
 			{
 			model=new AgainstTime(gs.getPlayer1(),gs.getDifficulty());	
-			model.addObserver(this);
-
 			}
 			else if(gs.getGameType()==2)
 			{
-			model=new AgainstComputer(gs.getPlayer1(),gs.getDifficulty());	
-			model.addObserver(this);
+			model=new AgainstComputer(gs.getPlayer1(),gs.getDifficulty());
 			}
+			model.addObserver(this);
+			model.setGame();
 		}
 		//
 		else if(o instanceof Game) //MODEL TO VIEW 
 		{
+			model=(Game)o;
 			 if(arg instanceof AgainstTime.TimeGameSettings) 
 			 {
 				 AgainstTime at=new AgainstTime();
 				 AgainstTime.TimeGameSettings timeGS=at.new TimeGameSettings();
 				 timeGS=(AgainstTime.TimeGameSettings)arg;//
-				 GeneralGameBuilder gameScreenView = new GeneralGameBuilder.Builder().FirstPlayersName(timeGS.getP1Name()).setDifficulty(timeGS.getDifficulty()).setGameLength(timeGS.getTime()).build();
+				 GeneralGameBuilder gameScreenView = new GeneralGameBuilder.Builder().setPhotos(timeGS.getPhotos()).setPhotosIndex(timeGS.getPhotosIndex()).setImageCover(timeGS.getCover()).FirstPlayersName(timeGS.getP1Name()).setDifficulty(timeGS.getDifficulty()).setGameLength(timeGS.getTime()).build();
+				 gameScreenView.addObserver(this);
 			 }
 			 else if(arg instanceof AgainstComputer.CompGameSettings) 
 			 {
 				 AgainstComputer ac=new AgainstComputer();
 				 AgainstComputer.CompGameSettings compGS=ac.new CompGameSettings();
 				 compGS=(AgainstComputer.CompGameSettings)arg;//
-				 GeneralGameBuilder gameScreenView = new GeneralGameBuilder.Builder().FirstPlayersName(compGS.getP1Name()).SecondPlayersName(compGS.getP2Name()).setDifficulty(compGS.getDifficulty()).build();
+				 GeneralGameBuilder gameScreenView = new GeneralGameBuilder.Builder().setPhotos(compGS.getPhotos()).setPhotosIndex(compGS.getPhotosIndex()).setImageCover(compGS.getCover()).FirstPlayersName(compGS.getP1Name()).SecondPlayersName(compGS.getP2Name()).setDifficulty(compGS.getDifficulty()).build();
+				 gameScreenView.addObserver(this);
 			 }
 			 else if(arg instanceof AgainstRival.RivalGameSettings) 
 			 {
 				 AgainstRival ar=new AgainstRival();
 				 AgainstRival.RivalGameSettings rivalGS=ar.new RivalGameSettings();
 				 rivalGS=(AgainstRival.RivalGameSettings)arg;//
-				 GeneralGameBuilder gameScreenView = new GeneralGameBuilder.Builder().FirstPlayersName(rivalGS.getP1Name()).SecondPlayersName(rivalGS.getP2Name()).setDifficulty(rivalGS.getDifficulty()).build();
+				 GeneralGameBuilder gameScreenView = new GeneralGameBuilder.Builder().setPhotos(rivalGS.getPhotos()).setPhotosIndex(rivalGS.getPhotosIndex()).setImageCover(rivalGS.getCover()).FirstPlayersName(rivalGS.getP1Name()).SecondPlayersName(rivalGS.getP2Name()).setDifficulty(rivalGS.getDifficulty()).build();
+				 gameScreenView.addObserver(this);
+		//add set controller and set imageCover in all game types
 			 }
 		     // 
 		     else if(arg instanceof Boolean)
@@ -78,15 +81,15 @@ public class GameController implements Controller{
 	     	}// checkMatchResult -UI
 			 
 	     	//
-	    	else if(arg instanceof ImageIcon) 
+	    /*	else if(arg instanceof ImageIcon) 
 	    	{
-			gameScreenView.getImageCover((ImageIcon)arg);
+	    		gameScreenView.getImageCover((ImageIcon)arg);
 	     	}
 		   //
-		    if(arg instanceof ImageIcon[]) 
+	    	else if(arg instanceof ImageIcon[]) 
 		    {
 			gameScreenView.getPhotosArray((ImageIcon[])arg);
-		    }
+		    }*/
 		   // getPhotosArray-UI
 		   //
 	    	else if(arg instanceof int[]) 
@@ -110,6 +113,7 @@ public class GameController implements Controller{
 		     gameScreenView.whosTurnAnswer(compWS.getWhosTurn());
 		    }*/
 		   //
+		
 		   else if(arg instanceof Game.ScoreCalc)
 		    {
 			   Game.ScoreCalc scoreC=model.new ScoreCalc();
@@ -117,21 +121,22 @@ public class GameController implements Controller{
 			   gameScreenView.scoreCalcAnswer(scoreC.getScore());
 		    } 
 		    //model to view index arr
-			else if (arg instanceof Game.PhotoIndex)
+			/*else if (arg instanceof Game.PhotoIndex)
 			    {
         			 
         			Game.PhotoIndex pi= model.new PhotoIndex();
     				pi=(Game.PhotoIndex)arg;//
     				gameScreenView.getPhotoIndex(pi.getPhotoIndex());
-    			 }
-			else if(arg instanceof Boolean[])
+    			 }*/
+			else if(arg instanceof boolean[])
 	    	{
 	    		gameScreenView.getPhotoFound((boolean[]) arg);
 	    	}
-		    
-		if(o instanceof GeneralGameBuilder) //VIEW TO MODEL
+		}    
+		else if(o instanceof GeneralGameBuilder) //VIEW TO MODEL
 		    {
-			//
+        	gameScreenView=(GeneralGameBuilder)o;
+
 			 if(arg instanceof GeneralGameBuilder.CheckMatch)//
 			{
 				 GeneralGameBuilder ggb=new GeneralGameBuilder();
@@ -165,24 +170,20 @@ public class GameController implements Controller{
 			}*/
 			else if(arg instanceof GeneralGameBuilder.GetScoreCalc)//
 			{
-				model.scoreCalc((int)arg);
+				GeneralGameBuilder.GetScoreCalc scoreC=gameScreenView.new GetScoreCalc();
+				scoreC=( GeneralGameBuilder.GetScoreCalc)arg;//
+				model.scoreCalc(scoreC.getWhosTurn());
 			}
 			 //
-			else if (arg instanceof GeneralGameBuilder.GetPhotoIndex)
+			/*else if (arg instanceof GeneralGameBuilder.GetPhotoIndex)
 			{
 	             model.getPhotoIndex();
-			}
-	        	 else if(arg instanceof GeneralGameBuilder.GetPhotoFound)
-	 			{
-	 				model.getPhotoFound();
-	 			}
+			}*/
+        	else if(arg instanceof GeneralGameBuilder.GetPhotoFound)
+ 			{
+ 				model.getPhotoFound();
+ 			}
 		
 		}
 	}
-	/*
-	*/
-	
-	
-	
-}
 }

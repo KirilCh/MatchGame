@@ -31,7 +31,6 @@ import java.util.Observable;
 import java.net.URL;
 import java.applet.*;
 
-
 public class GeneralGameBuilder extends Observable implements View//extends JFrame
 {
 	JFrame mainWindow = new JFrame();
@@ -58,6 +57,7 @@ public class GeneralGameBuilder extends Observable implements View//extends JFra
 	protected int whosTurn=1;
 	protected int photosRemaining;
 	protected boolean[] whichPhotosFound;
+	protected boolean is2Players;
 	
 	AudioClip matchSound;
 	AudioClip noMatchSound;
@@ -75,7 +75,7 @@ public class GeneralGameBuilder extends Observable implements View//extends JFra
 	public class GetScoreCalc
 	{
 		private int whosTurn;
-		
+		public GetScoreCalc() {}
 		public GetScoreCalc(int playersTurn) {whosTurn=playersTurn;}
 		public int getWhosTurn() {return whosTurn;}
 	}
@@ -96,8 +96,10 @@ public class GeneralGameBuilder extends Observable implements View//extends JFra
 	public class GetPhotoFound{}
 	public GeneralGameBuilder() {}
 	
-	private GeneralGameBuilder(Builder bld)
+	public GeneralGameBuilder(Builder bld)
 	{
+		cover=new ImageIcon(bld.cover.getDescription());
+		
 		mainWindow.getContentPane().setLayout(new GridBagLayout());
 		//getContentPane().setLayout(new GridBagLayout());
 		GridBagConstraints gridConstraints;
@@ -189,9 +191,11 @@ public class GeneralGameBuilder extends Observable implements View//extends JFra
 			{
 				isAgainstComputer=true;
 			}
+			is2Players=true;
 		}
 		else
 		{
+			is2Players=false;
 			final long countDownTimer=bld.gameLength*1000*60;
 			bld.numOfCards=24;
 			
@@ -251,16 +255,13 @@ public class GeneralGameBuilder extends Observable implements View//extends JFra
 		//Setting up cards as labels on the window
 		photoLabel = new JLabel[bld.numOfCards];
 		
-		setChanged();
-		notifyObservers(new GetImageCover());
-		
 		for (int i = 0; i < bld.numOfCards; i++)
 		{
 			photoLabel[i] = new JLabel();
 			photoLabel[i].setPreferredSize(new Dimension(120, 75));//150,100
 			photoLabel[i].setOpaque(true);
-		//	photoLabel[i].setBackground(Color.DARK_GRAY);
-		//	photoLabel[i].setIcon(cover);
+			photoLabel[i].setBackground(Color.DARK_GRAY);
+			photoLabel[i].setIcon(bld.cover);
 			gridConstraints = new GridBagConstraints();
 			gridConstraints.gridx = i % 4;
 			gridConstraints.gridy = i / 4;
@@ -281,19 +282,22 @@ public class GeneralGameBuilder extends Observable implements View//extends JFra
 			{
 				public void mousePressed(MouseEvent e)
 				{
-					//photoLabelMousePressed(e);
+					photoLabelMousePressed(e);
 				}
 			});
 		}
+		
+	
+		
 		photosRemaining=bld.numOfCards/2;
 		//Get photos for the game
-		setChanged();
+		/*setChanged();
 		notifyObservers(new GetPhotosArray());
 		
 		//Get photos indexes for the game // photosIndex
 		setChanged();
 		notifyObservers(new GetPhotoIndex());
-		
+		*/
 		buttonsPanel = new JPanel();
 		startStopButton = new JButton();
 		exitButton = new JButton();
@@ -343,7 +347,7 @@ public class GeneralGameBuilder extends Observable implements View//extends JFra
 		try
 		{
 			matchSound = Applet.newAudioClip(new URL("file:" + "tada.wav"));
-			noMatchSound = Applet.newAudioClip(new URL("file:" + "boing.wav"));
+			noMatchSound = Applet.newAudioClip(new URL("file:" + "CardFlip.mp3"));
 			gameOverSound = Applet.newAudioClip(new URL("file:" + "wow.wav"));
 		}
 		catch (Exception ex)
@@ -351,6 +355,16 @@ public class GeneralGameBuilder extends Observable implements View//extends JFra
 			System.out.println("Error loading sound files");
 		}
 		whichPhotosFound = new boolean[bld.numOfCards];
+		photos=new ImageIcon[12];
+		for(int i=0;i<12;i++)
+		{
+			photos[i]=bld.photos[i];
+		}
+		photosIndex=new int[bld.numOfCards];
+		for(int i=0;i<bld.numOfCards;i++)
+		{
+			photosIndex[i]=bld.photosIndex[i];
+		}
 		
 		mainWindow.setVisible(true);
 	}
@@ -366,17 +380,21 @@ public class GeneralGameBuilder extends Observable implements View//extends JFra
 			{
 				break;
 			}
-			setChanged();
-			notifyObservers(new GetPhotoFound());
 		}
+		setChanged();
+		notifyObservers(new GetPhotoFound());
 	}
 	
-	public void getImageCover(ImageIcon imgCover) {cover=imgCover;} //Card cover
-	public void getPhotosArray(ImageIcon[] photosArr) {photos=photosArr;} //Card for the game
-	public void getPhotoIndex(int[] photoIndex) {photosIndex=photoIndex;} //Connecting labels to cards
+	/*public void getImageCover(ImageIcon imgCover) {
+		cover=new ImageIcon();
+		cover=imgCover;
+		//cover.getIconWidth();
+		} //Card cover*/
+	/*public void getPhotosArray(ImageIcon[] photosArr) {photos=photosArr;} //Card for the game
+	public void getPhotoIndex(int[] photoIndex) {photosIndex=photoIndex;} //Connecting labels to cards*/
 	public void getCompMove(int[] arr){}
 	
-	public void whosTurnAnswer() {}
+//	public void whosTurnAnswer() {}
 	public void getPhotoFound(boolean[] photoFound)
 	{
 		//whichPhotosFound = photoFound;
@@ -401,7 +419,9 @@ public class GeneralGameBuilder extends Observable implements View//extends JFra
 		if(result==true) //Its a match
 		{
 			matchSound.play();
+			photoLabel[choice[0]].setBackground(null);
 			photoLabel[choice[0]].setIcon(null);
+			photoLabel[choice[1]].setBackground(null);
 			photoLabel[choice[1]].setIcon(null);
 			
 			//Update score - updated in checkMatch, need to update display
@@ -411,11 +431,11 @@ public class GeneralGameBuilder extends Observable implements View//extends JFra
 			photosRemaining--;
 			if(whosTurn==1)
 			{
-				messageLabel.setText(player1Label.getText() + "pick a card"); //Updating players pick
+				messageLabel.setText(player1Label.getText() + " pick a card"); //Updating players pick
 			}
 			else
 			{
-				messageLabel.setText(player2Label.getText() + "pick a card"); //Updating players pick
+				messageLabel.setText(player2Label.getText() + " pick a card"); //Updating players pick
 			}
 			if(photosRemaining==0)
 			{
@@ -432,29 +452,32 @@ public class GeneralGameBuilder extends Observable implements View//extends JFra
 			photoLabel[choice[0]].setIcon(cover);
 			photoLabel[choice[1]].setIcon(cover);
 			//Change players turn
-			if(whosTurn==1)
+			if(is2Players==true)
 			{
-				whosTurn=2;
-				messageLabel.setText(player2Label.getText() + "pick another"); //Updating players pick
-			}
-			else 
+				if(whosTurn==1)
+				{
+					whosTurn=2;
+					messageLabel.setText(player2Label.getText() + " pick another"); //Updating players pick
+				}
+				else 
 				{
 					whosTurn=1;
-					messageLabel.setText(player1Label.getText() + "pick another"); //Updating players pick
+					messageLabel.setText(player1Label.getText() + " pick another"); //Updating players pick
 				}
+			}
 		}
 	}
 	
 	private void showSelectedLabel()
 	{
-		photoLabel[labelSelected].setIcon(photos[photosIndex[labelSelected]]); 
+		this.photoLabel[labelSelected].setIcon(this.photos[photosIndex[labelSelected]]); 
 		//photoFound[labelSelected] = true -> Changed when theres a match
 		
 		if(choiceNumber==1)
 		{
 			choice[0]=labelSelected;
 			choiceNumber=2;
-			messageLabel.setText(player1Label.getText() + "pick a card"); //Updating players pick
+			messageLabel.setText(player1Label.getText() + " pick a card"); //Updating players pick
 			
 			//Check if 1 or 2 players game, and act accordingly
 		}
@@ -475,6 +498,10 @@ public class GeneralGameBuilder extends Observable implements View//extends JFra
 		private int gameLength;
 		private boolean is2Players=false;
 		private int numOfCards;
+		private ImageIcon cover;
+		private int[] photosIndex;
+		private ImageIcon[] photos;
+		
 		
 		public GeneralGameBuilder build()
 		{
@@ -514,6 +541,25 @@ public class GeneralGameBuilder extends Observable implements View//extends JFra
 		public Builder setGameLength(int num)
 		{
 			this.gameLength=num;
+			return this;
+		}
+		
+		public Builder setImageCover(ImageIcon cover)
+		{
+			this.cover=new ImageIcon();
+			this.cover=cover;
+			return this;
+		}
+		public Builder setPhotosIndex(int[] photosIndex)
+		{
+			this.photosIndex=new int[this.numOfCards];
+			this.photosIndex=photosIndex;
+			return this;
+		}
+		public Builder setPhotos(ImageIcon[] photos)
+		{
+			this.photos = new ImageIcon[12];
+			this.photos=photos;
 			return this;
 		}
 	}

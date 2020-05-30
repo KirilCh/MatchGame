@@ -3,20 +3,18 @@ package model;
 import javax.swing.ImageIcon;
 
 import model.Game.PhotoIndex;
+import view.GeneralGameBuilder.GetImageCover;
 
 
 public class AgainstRival extends Game{
-	//private int playersTurn;
-	public class RivalWhosTurn
-	{
-		int playersTurn;
-		public int getWhosTurn() {return playersTurn;}
-	}
 	public class RivalGameSettings
 	{
 		String gameLevel;
 		String player1;
 		String player2;
+		ImageIcon cover=new ImageIcon();
+		ImageIcon[] photos=new ImageIcon[12];
+		int[] photosIndex;
 		public RivalGameSettings(){}
 		public RivalGameSettings(String level,String p1,String p2) 
 		{
@@ -28,22 +26,19 @@ public class AgainstRival extends Game{
 		public String getDifficulty() {return gameLevel;}
 		public String getP1Name() {return player1;}
 		public String getP2Name() {return player2;}
+		public ImageIcon getCover() {return cover;}
+		public ImageIcon[] getPhotos() {return photos;}
+		public int[] getPhotosIndex() {return photosIndex;}
+
 	}
 	private RivalGameSettings gameSettings;
-	private RivalWhosTurn whosTurn;
 	public AgainstRival() {} 
 
 	public AgainstRival(String p1,String p2,int difficulty) 
 	{
-		players=new String[2];
-		players[0]=p1;
-		players[1]=p2;
-		score = new int[4];//Initialized with 0`s
-		//choiceNumber=1;
-		//playersTurn=1;
-		photoIndexInner=new PhotoIndex();
-		imagePhoto = new ImageIcon[12]; //An array of images used to play the game
 		
+		score = new int[4];//Initialized with 0`s
+		imagePhoto = new ImageIcon[12]; //An array of images used to play the game
 		imagePhoto[0] = new ImageIcon("PhotoName1.jpeg");
 		imagePhoto[1] = new ImageIcon("PhotoName2.jpeg");
 		imagePhoto[2] = new ImageIcon("PhotoName3.jpeg");
@@ -57,8 +52,8 @@ public class AgainstRival extends Game{
 		imagePhoto[10] = new ImageIcon("PhotoName11.jpeg");
 		imagePhoto[11] = new ImageIcon("PhotoName12.jpeg");
 		
-		imageCover = new ImageIcon("cover.jpg");
-		
+		imageCover = new ImageIcon("cover.jpeg");
+				
 		String level;
 		//Difficulty level affects only numOfCards
 		if(difficulty==0)
@@ -77,12 +72,18 @@ public class AgainstRival extends Game{
 			numOfCards=24;
 		}
 		gameSettings=new RivalGameSettings(level,p1,p2);
+		gameSettings.cover=imageCover;
+		gameSettings.photos=imagePhoto;
+		gameSettings.photosIndex=new int[numOfCards];
 		photoIndex = new int[numOfCards];
 		nRandomIntegers(numOfCards);
+		gameSettings.photosIndex=photoIndex;
+
 		photoFound = new boolean[numOfCards];
-		whosTurn=new RivalWhosTurn();
-		whosTurn.playersTurn=1;
-		photoIndexInner.setPhotoIndex(photoIndex);
+		//photoIndexInner=new PhotoIndex(photoIndex);
 	}
-	public RivalWhosTurn whosTurn() {return whosTurn;}
+	public void setGame() {	
+		setChanged();
+		notifyObservers(gameSettings);
+		}
 }

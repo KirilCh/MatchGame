@@ -6,9 +6,9 @@ public interface CardsGame extends Model{
  
 	public void nRandomIntegers(int n);
 //	public JLabel[] getPhotoLabel();
-	public ImageIcon[] getImagePhotoArr();
-	public ImageIcon getImagecover();
-	public int scoreCalc(int whosTurn);
+	public void getImagePhotoArr();
+	public void getImagecover();
+	public void scoreCalc(int whosTurn);
 	
 }
 

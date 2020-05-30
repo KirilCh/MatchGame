@@ -359,10 +359,8 @@ public class MainScreen extends Observable implements View{
 			//gameSettings.player1=p1List.getSelectedItem().toString();
 			//if (twoP) gameSettings.player2=p2List.getSelectedItem().toString();
 		//	else gameSettings.player2=null;
-			gameSettings.gameLevel=1;
-			gameSettings.gameType=0;
-			gameSettings.player1="Kiril";
-			gameSettings.player2="Liat";
+			gameSettings.player1="Liat";
+			gameSettings.player2="Kiril";
 
 			setChanged();
 			notifyObservers(gameSettings);
@@ -402,9 +400,9 @@ public class MainScreen extends Observable implements View{
 			p2List.setEnabled(false);
 			secondPNameL.setEnabled(false);
 		}
-		if(easLevel.isSelected()) gameSettings.gameLevel=1;
-		else if(medLevel.isSelected())gameSettings.gameLevel=2;
-		else gameSettings.gameLevel=3;//hardLevel selected
+		if(easLevel.isSelected()) gameSettings.gameLevel=0;
+		else if(medLevel.isSelected())gameSettings.gameLevel=1;
+		else gameSettings.gameLevel=2;//hardLevel selected
 	}
 
 	protected void onAnyKindButtonActionPerformed(ActionEvent e) {
@@ -414,7 +412,7 @@ public class MainScreen extends Observable implements View{
 		hardLevel.setEnabled(true);
 		if(againstTimeRadioButton.isSelected())gameSettings.gameType=1;
 		else if(againstCompRadioButton.isSelected())gameSettings.gameType=2;
-		else gameSettings.gameType=3;//one One one selected - against rival
+		else gameSettings.gameType=0;//one One one selected - against rival
 	}
 
 	protected void twoPlayersRadioButtonActionPerformed(ActionEvent e) {

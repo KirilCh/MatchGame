@@ -8,17 +8,14 @@ import model.Game.PhotoIndex;
 
 
 public class AgainstComputer extends Game{
-	//private int playersTurn;
-	public class CompWhosTurn
-	{
-		int playersTurn;
-		public int getWhosTurn() {return playersTurn;}
-	}
 	public class CompGameSettings
 	{
 		String gameLevel;
 		String player1;
 		String player2;
+		ImageIcon cover=new ImageIcon();
+		ImageIcon[] photos=new ImageIcon[12];
+		int[] photosIndex;
 		public CompGameSettings(){}
 		public CompGameSettings(String level,String p1,String p2) 
 		{
@@ -30,22 +27,19 @@ public class AgainstComputer extends Game{
 		public String getDifficulty() {return gameLevel;}
 		public String getP1Name() {return player1;}
 		public String getP2Name() {return player2;}
-
+		public ImageIcon getCover() {return cover;}
+		public ImageIcon[] getPhotos() {return photos;}
+		public int[] getPhotosIndex() {return photosIndex;}
 	}
 	
 	private CompGameSettings gameSettings;
-	private CompWhosTurn whosTurn;
 	public AgainstComputer() {} 
 
 public AgainstComputer(String p1,int difficulty) 
 {	
-	photoIndexInner=new PhotoIndex();
-	players=new String[2];
-	players[0]=p1;
-	players[1]="computer";
+//	photoIndexInner=new PhotoIndex();
+
 	score = new int[4]; //Initialized with 0`s
-	//choiceNumber=1;
-	//playersTurn=1;
 	
 	imagePhoto = new ImageIcon[12]; //An array of images used to play the game
 	
@@ -62,7 +56,7 @@ public AgainstComputer(String p1,int difficulty)
 	imagePhoto[10] = new ImageIcon("PhotoName11.jpeg");
 	imagePhoto[11] = new ImageIcon("PhotoName12.jpeg");
 	
-	imageCover = new ImageIcon("cover.jpg");
+	imageCover = new ImageIcon("cover.jpeg");
 	String level;
 	//Difficulty level affects only numOfCards
 	if(difficulty==0)
@@ -81,16 +75,17 @@ public AgainstComputer(String p1,int difficulty)
 		numOfCards=24;
 	}
 	gameSettings=new CompGameSettings(level,p1,"computer");
+	gameSettings.cover=imageCover;
+	gameSettings.photos=imagePhoto;
+	gameSettings.photosIndex=new int[numOfCards];
 	photoIndex = new int[numOfCards];
 	nRandomIntegers(numOfCards);
+	gameSettings.photosIndex=photoIndex;
 	photoFound = new boolean[numOfCards];
-	whosTurn=new CompWhosTurn();
-	whosTurn.playersTurn=1;
-	photoIndexInner.setPhotoIndex(photoIndex);
-
+	//photoIndexInner.setPhotoIndex(photoIndex);
 }
-	public CompWhosTurn whosTurn() {return whosTurn;}
-	public int[] compTurn()//(int playersTurn) 
+	//public CompWhosTurn whosTurn() {return whosTurn;}
+	public void compTurn()//(int playersTurn) 
 	{
 		Random rand = new Random();
 		int []choosePhotoLabel = new int[2];
@@ -106,6 +101,11 @@ public AgainstComputer(String p1,int difficulty)
 			while(photoFound[choosePhotoLabel[1]]==true)
 				choosePhotoLabel[1] = rand.nextInt(numOfCards);
 		}
-		return choosePhotoLabel;
+		setChanged();
+		notifyObservers(choosePhotoLabel);
 	}
+	public void setGame() {	
+		setChanged();
+		notifyObservers(gameSettings);
+		}
 }
