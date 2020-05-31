@@ -64,6 +64,9 @@ public class GeneralGameBuilder extends Observable implements View//extends JFra
 	AudioClip gameOverSound;
 	
 	protected int labelSelected;
+	protected Timer displayTimer;
+	protected int delay=600; //600 ms delay between card flips
+	protected boolean isClickable=true;
 	//protected Timer timer = null; //Timer variable
 	
 	public class GetImageCover{}
@@ -347,7 +350,7 @@ public class GeneralGameBuilder extends Observable implements View//extends JFra
 		try
 		{
 			matchSound = Applet.newAudioClip(new URL("file:" + "tada.wav"));
-			noMatchSound = Applet.newAudioClip(new URL("file:" + "CardFlip.mp3"));
+			noMatchSound = Applet.newAudioClip(new URL("file:" + "card_flip.wav"));
 			gameOverSound = Applet.newAudioClip(new URL("file:" + "wow.wav"));
 		}
 		catch (Exception ex)
@@ -366,6 +369,14 @@ public class GeneralGameBuilder extends Observable implements View//extends JFra
 			photosIndex[i]=bld.photosIndex[i];
 		}
 		
+		
+		displayTimer = new Timer(delay, new ActionListener()
+				{
+			public void actionPerformed(ActionEvent evt)
+			{
+				displayTimerActionPerformed(evt);
+			}
+				});
 		mainWindow.setVisible(true);
 	}
 	
@@ -374,17 +385,43 @@ public class GeneralGameBuilder extends Observable implements View//extends JFra
 	{
 		Point p = e.getComponent().getLocation();
 		
-		for(labelSelected=0;labelSelected<photoLabel.length;labelSelected++)
+		if(isClickable==true) //Check if allowed to click to avoid illegal card flips
 		{
-			if(p.x==photoLabel[labelSelected].getX() && p.y==photoLabel[labelSelected].getY())
+			for(labelSelected=0;labelSelected<photoLabel.length;labelSelected++)
 			{
-				break;
+				if(p.x==photoLabel[labelSelected].getX() && p.y==photoLabel[labelSelected].getY())
+				{
+					break;
+				}
 			}
-		}
 		setChanged();
 		notifyObservers(new GetPhotoFound());
+		}
 	}
 	
+	private void displayTimerActionPerformed(ActionEvent evt)
+	{
+		displayTimer.stop();
+		if(isClickable==false)
+			isClickable=true;
+		
+		if(choiceNumber==1)
+		{
+			choice[0]=labelSelected;
+			choiceNumber=2;
+			messageLabel.setText(player1Label.getText() + " pick a card"); //Updating players pick
+			
+			//Check if 1 or 2 players game, and act accordingly
+		}
+		else
+		{
+			choice[1]=labelSelected;
+			choiceNumber=1;
+			
+			setChanged();
+			notifyObservers(new CheckMatch(choice[0],choice[1],whosTurn));
+		}
+	}
 	/*public void getImageCover(ImageIcon imgCover) {
 		cover=new ImageIcon();
 		cover=imgCover;
@@ -470,25 +507,15 @@ public class GeneralGameBuilder extends Observable implements View//extends JFra
 	
 	private void showSelectedLabel()
 	{
-		this.photoLabel[labelSelected].setIcon(this.photos[photosIndex[labelSelected]]); 
-		//photoFound[labelSelected] = true -> Changed when theres a match
+		if(isClickable==true)
+		{
+			this.photoLabel[labelSelected].setIcon(this.photos[photosIndex[labelSelected]]);
+			isClickable=false;
+			displayTimer.start();
+		}
 		
-		if(choiceNumber==1)
-		{
-			choice[0]=labelSelected;
-			choiceNumber=2;
-			messageLabel.setText(player1Label.getText() + " pick a card"); //Updating players pick
-			
-			//Check if 1 or 2 players game, and act accordingly
-		}
-		else
-		{
-			choice[1]=labelSelected;
-			choiceNumber=1;
-			
-			setChanged();
-			notifyObservers(new CheckMatch(choice[0],choice[1],whosTurn));
-		}
+		
+		//photoFound[labelSelected] = true -> Changed when theres a match
 	}
 	public static class Builder
 	{
