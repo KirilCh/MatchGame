@@ -350,7 +350,7 @@ public class GeneralGameBuilder extends Observable implements View//extends JFra
 		try
 		{
 			matchSound = Applet.newAudioClip(new URL("file:" + "tada.wav"));
-			noMatchSound = Applet.newAudioClip(new URL("file:" + "card_flip.wav"));
+			noMatchSound = Applet.newAudioClip(new URL("file:" + "card_flip2.wav"));
 			gameOverSound = Applet.newAudioClip(new URL("file:" + "wow.wav"));
 		}
 		catch (Exception ex)
