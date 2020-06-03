@@ -33,6 +33,21 @@ import java.applet.*;
 
 public class GeneralGameBuilder extends Observable implements View//extends JFrame
 {
+	public class GameDetails {
+			
+		int score;
+		String gametype;
+		String name;
+		public int getScore() {
+			return score;
+		}
+		public String getGametype() {
+			return gametype;
+		}
+		public String getName() {
+			return name;
+		}
+	}
 	JFrame mainWindow = new JFrame();
 	
 	

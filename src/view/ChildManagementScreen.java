@@ -19,7 +19,24 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Observable;
+import java.util.Vector;
 public class ChildManagementScreen extends Observable implements View{
+
+	public class Children {
+		public Children() {}
+		public Children(String n,String id) 
+		{
+			name=n;
+			this.id=id;
+		}
+		private String name;
+		private String id;
+		public String getName() {return name;}
+		public String getId() {return id;}
+	}
+
+	public class UpdateList {}
+	
 
 	public JFrame frame;
 	private JLabel label,selectChildName,fullnameLabel,idLabel;
@@ -119,17 +136,21 @@ public class ChildManagementScreen extends Observable implements View{
 	}
 
 	protected void addOrRemove(MouseEvent e) {
-		/*if(addOrRemoveC.getSelectedItem()=="מחיקת ילד")
+		if(addOrRemoveC.getSelectedItem()=="מחיקת ילד")
 		{
 			int indexSelected=childList.getSelectedIndex();
-			list.deleteChild(indexSelected);
+			setChanged();
+			notifyObservers(indexSelected);
+			//list.deleteChild(indexSelected);
 		}
 		else
 		{
-			list.addChild(new Children(fullNameText.getText(),idText.getText()));
+			//list.addChild(new Children(fullNameText.getText(),idText.getText()));
+			setChanged();
+			notifyObservers(new Children(fullNameText.getText(),idText.getText()));
 		}
 		frame.setVisible(false);
-	*/
+
 	}
 	public void display(){frame.setVisible(true);}
 	public void undisplay(){frame.setVisible(false);}
@@ -142,6 +163,8 @@ public class ChildManagementScreen extends Observable implements View{
 			idLabel.setEnabled(false);
 			idText.setEnabled(false);
 			fullNameText.setEnabled(false);
+			setChanged();
+			notifyObservers(new UpdateList());
 		}
 		else
 		{
@@ -152,5 +175,11 @@ public class ChildManagementScreen extends Observable implements View{
 			idText.setEnabled(true);
 			fullNameText.setEnabled(true);
 		}
+	}
+
+	public void updateList(Vector arg) {
+		
+		childList.setModel(new DefaultComboBoxModel(arg));
+		
 	}
 }

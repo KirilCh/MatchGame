@@ -68,9 +68,10 @@ public class MainScreen extends Observable implements View{
 	private JComboBox<String> p1List;
 	private static Boolean oneP=false,twoP=false;
 	//private final JLayeredPane againstCompMode = new JLayeredPane();
-	 ChildManagementScreen childScreen;
+	private ChildManagementScreen childScreen;
 	//private JLabel errorL;
 	private JButton childrenManagementButton;
+	private StatisticsScreen adminScreen;
 	/**
 	 * Launch the application.
 	 */
@@ -92,7 +93,15 @@ public class MainScreen extends Observable implements View{
 	/**
 	 * Create the application.
 	 */
-	public MainScreen() {
+	public MainScreen()
+	{
+		
+	}
+	
+	public MainScreen(StatisticsScreen statpage,ChildManagementScreen managechild) {
+		this.adminScreen=statpage;
+		this.childScreen=managechild;
+	   
 		initialize();
 		gameSettings=new GameSettings();
 		try {
@@ -104,6 +113,7 @@ public class MainScreen extends Observable implements View{
 	}
 	
 
+
 	/**
 	 * Initialize the contents of the frame.
 	 */
@@ -111,7 +121,7 @@ public class MainScreen extends Observable implements View{
 		frame = new JFrame();
 		frame.setTitle("זכור את הפועל");
 		frame.setBounds(100, 100, 787, 643);
-	//	frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		//frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
 				setChanged();
@@ -172,6 +182,12 @@ public class MainScreen extends Observable implements View{
 		adminButton.setFont(new Font("Guttman Kav-Light", Font.PLAIN, 20));
 		adminButton.setBounds(12, 13, 149, 25);
 		panel.add(adminButton);
+		adminButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				openAdmin(e);
+			}
+		});
 		
 		//kind Title
 		gKind = new JLabel("\u05E1\u05D5\u05D2 \u05DE\u05E9\u05D7\u05E7:");
@@ -361,9 +377,13 @@ public class MainScreen extends Observable implements View{
 	}
 
 	protected void openScreen(MouseEvent e) {
-		childScreen=new ChildManagementScreen();
 		childScreen.display();
 	}
+	
+	protected void openAdmin(MouseEvent e) {
+		adminScreen.display();
+	}
+
 
 	protected void onStartGameButtonActionPerformed(MouseEvent e) {
 		if(startGame.isEnabled()==true)
@@ -415,8 +435,8 @@ public class MainScreen extends Observable implements View{
 		if(easLevel.isSelected()) gameSettings.gameLevel=0;
 		else if(medLevel.isSelected())gameSettings.gameLevel=1;
 		else gameSettings.gameLevel=2;//hardLevel selected
-	//	setChanged();/////LIAT TEST!!!
-		//notifyObservers();////LIAT TEST!!!
+		setChanged();
+		notifyObservers();
 	}
 
 	protected void onAnyKindButtonActionPerformed(ActionEvent e) {

@@ -7,6 +7,9 @@ public class Children implements Serializable,Model{
 	private static final long serialVersionUID = 1L;
 private String name;
 private String id;
+public Children(String name) {
+	this.name=name;
+}
 public Children(String n,String id) 
 {
 	name=n;
