@@ -89,7 +89,7 @@ public AgainstComputer(String p1,int difficulty)
 	{
 		Random rand = new Random();
 		int []choosePhotoLabel = new int[2];
-		choosePhotoLabel[0] = rand.nextInt(numOfCards);
+		choosePhotoLabel[0] = rand.nextInt(this.numOfCards);
 		if(photoFound[choosePhotoLabel[0]]==true)
 		{
 			while(photoFound[choosePhotoLabel[0]]==true)

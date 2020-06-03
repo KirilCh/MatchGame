@@ -20,7 +20,7 @@ public class GameController implements Controller{
 		//this.model=model;
 		this.gameScreenView=gameScreenView;
 		this.gameScreenView.addObserver(this);
-		computerModel=compM;
+		this.computerModel=compM;
 	}
 	@Override
 	public void update(Observable o, Object arg) 
@@ -157,7 +157,9 @@ public class GameController implements Controller{
 			 //
 			else if(arg instanceof GeneralGameBuilder.CompTurn)//
 			{
+				computerModel=(AgainstComputer)model;
 				computerModel.compTurn();
+				//model.compTurn();
 			}	
 			 //
 			/*else if(arg instanceof GeneralGameBuilder.CompWhosTurn)//

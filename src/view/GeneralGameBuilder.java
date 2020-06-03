@@ -27,7 +27,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.Timer;
 import javax.swing.JOptionPane;
 import java.util.Observable;
-
+import java.util.concurrent.TimeUnit;
 import java.net.URL;
 import java.applet.*;
 
@@ -65,7 +65,7 @@ public class GeneralGameBuilder extends Observable implements View//extends JFra
 	
 	protected int labelSelected;
 	protected Timer displayTimer;
-	protected int delay=600; //600 ms delay between card flips
+	protected int delay=1000; //600 ms delay between card flips
 	protected boolean isClickable=true;
 	//protected Timer timer = null; //Timer variable
 	
@@ -402,24 +402,35 @@ public class GeneralGameBuilder extends Observable implements View//extends JFra
 	private void displayTimerActionPerformed(ActionEvent evt)
 	{
 		displayTimer.stop();
+		
+		
 		if(isClickable==false)
 			isClickable=true;
-		
-		if(choiceNumber==1)
+		if(isAgainstComputer==true && whosTurn==2)
 		{
-			choice[0]=labelSelected;
-			choiceNumber=2;
-			messageLabel.setText(player1Label.getText() + " pick a card"); //Updating players pick
-			
-			//Check if 1 or 2 players game, and act accordingly
-		}
-		else
-		{
-			choice[1]=labelSelected;
 			choiceNumber=1;
 			
 			setChanged();
 			notifyObservers(new CheckMatch(choice[0],choice[1],whosTurn));
+		}
+		else
+		{
+			if(choiceNumber==1)
+			{
+				choice[0]=labelSelected;
+				choiceNumber=2;
+				messageLabel.setText(player1Label.getText() + " pick a card"); //Updating players pick
+			
+				//Check if 1 or 2 players game, and act accordingly
+			}
+			else
+			{
+				choice[1]=labelSelected;
+				choiceNumber=1;
+			
+				setChanged();
+				notifyObservers(new CheckMatch(choice[0],choice[1],whosTurn));
+			}
 		}
 	}
 	/*public void getImageCover(ImageIcon imgCover) {
@@ -429,7 +440,27 @@ public class GeneralGameBuilder extends Observable implements View//extends JFra
 		} //Card cover*/
 	/*public void getPhotosArray(ImageIcon[] photosArr) {photos=photosArr;} //Card for the game
 	public void getPhotoIndex(int[] photoIndex) {photosIndex=photoIndex;} //Connecting labels to cards*/
-	public void getCompMove(int[] arr){}
+	
+	public void getCompMove(int[] compChoice)//Array is of size 2, containing 1st and 2nd pick
+	{
+		//Reveal the 2 cards the computer selected
+		this.photoLabel[compChoice[0]].setIcon(this.photos[photosIndex[compChoice[0]]]);
+		
+		
+		//Set a delay before next turn
+		try {
+			TimeUnit.SECONDS.sleep(1);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		this.photoLabel[compChoice[1]].setIcon(this.photos[photosIndex[compChoice[1]]]);
+		choice[0]=compChoice[0];
+		choice[1]=compChoice[1];
+		
+		displayTimer.start();
+	}
 	
 //	public void whosTurnAnswer() {}
 	public void getPhotoFound(boolean[] photoFound)
@@ -474,12 +505,40 @@ public class GeneralGameBuilder extends Observable implements View//extends JFra
 			{
 				messageLabel.setText(player2Label.getText() + " pick a card"); //Updating players pick
 			}
+			
 			if(photosRemaining==0)
 			{
+				if(is2Players==true && isAgainstComputer==false)
+				{
+					//AgainstRival
+				}
+				else if(is2Players==true && isAgainstComputer==true)
+				{
+					//AgainstComputer
+					System.exit(0);
+				}
+				else
+				{
+					//AgainstTime
+				}
+				
 				//End game, Thanos won
 				//Check with Orel about end game page
 				//Which parameteres to pass to constructor
 				//Split into 2 constructors - 1 for 1 player, and another 2 players
+			}
+			if(isAgainstComputer==true && whosTurn==2)
+			{
+				//Set a delay before next turn
+				try {
+					TimeUnit.SECONDS.sleep(1);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				setChanged();
+				notifyObservers(new CompTurn());
 			}
 		}
 		else
@@ -491,10 +550,25 @@ public class GeneralGameBuilder extends Observable implements View//extends JFra
 			//Change players turn
 			if(is2Players==true)
 			{
-				if(whosTurn==1)
+				if(whosTurn==1 && isAgainstComputer==false)
 				{
 					whosTurn=2;
 					messageLabel.setText(player2Label.getText() + " pick another"); //Updating players pick
+				}
+				else if(whosTurn==1 && isAgainstComputer==true)
+				{
+					whosTurn=2;
+					
+					//Set a delay before next turn
+					try {
+						TimeUnit.SECONDS.sleep(1);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					
+					setChanged();
+					notifyObservers(new CompTurn());
 				}
 				else 
 				{
@@ -504,7 +578,10 @@ public class GeneralGameBuilder extends Observable implements View//extends JFra
 			}
 		}
 	}
-	
+	private void letCompPlay()
+	{
+		
+	}
 	private void showSelectedLabel()
 	{
 		if(isClickable==true)
