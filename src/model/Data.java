@@ -20,48 +20,82 @@ private static String[] gamesSheetColumns = {"שם מלא", "תעודת זהות","תאריך המשחק
 Workbook dataFile;//this will be the file that will contain the two sheets of data we want to save
 CellStyle dateCellStyle;
 Vector<String> children = new Vector<String>(); // Create an ArrayList object
-
+FileOutputStream fileOut;
+FileInputStream inputStream;
+String excelFilePath="DataFile.xlsx";
+File f=new File(excelFilePath);
+boolean update=false;
+DataFormatter formatter = new DataFormatter();
+Cell cell2compare;
 public Data()
 {
-	dataFile=new XSSFWorkbook();
-    CreationHelper createHelper = dataFile.getCreationHelper();
-	childrenList=dataFile.createSheet("רשימת ילדים");//creating new sheet
-	gameHistory=dataFile.createSheet("היסטוריית משחקים");//creating new sheet
-	 // Create a Font for styling header cells
-    Font headerFont = dataFile.createFont();
-    headerFont.setBold(true);
-    headerFont.setFontHeightInPoints((short) 14);
-    headerFont.setColor(IndexedColors.RED.getIndex());
-
-    // Create a CellStyle with the font
-    CellStyle headerCellStyle = dataFile.createCellStyle();
-    headerCellStyle.setFont(headerFont);
-    
-    // Create a Row for each sheet
-    Row headerRowCL = childrenList.createRow(0);
-    Row headerRowGH = gameHistory.createRow(0);
-
-    // Create cells in both Sheets
-    for(int i = 0; i < childSheetColumns.length; i++) {
-        Cell cell = headerRowCL.createCell(i);
-        cell.setCellValue(childSheetColumns[i]);
-        cell.setCellStyle(headerCellStyle);
+	if(f.exists()) //in case that the DataFile already exists we just update it
+	{
+		update=true;
+		try {
+			inputStream=new FileInputStream(f);
+			dataFile=WorkbookFactory.create(inputStream);
+			childrenList=dataFile.getSheetAt(0);
+			gameHistory=dataFile.getSheetAt(1);
+			rowNumCL=childrenList.getLastRowNum();
+			rowNumGH=gameHistory.getLastRowNum();
+			rowNumCL++;
+			rowNumGH++;
+			Row row;
+			for(int i=1;i<rowNumCL;i++) //update children vector according to childrenList 
+			{
+				row=childrenList.getRow(i);
+				cell2compare=row.getCell(0);
+				String strValue2 = formatter.formatCellValue(cell2compare);
+				children.add(strValue2);
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	else//there is no existing DataFile yet-> we will create it 
+	{
+		dataFile=new XSSFWorkbook();
+	    CreationHelper createHelper = dataFile.getCreationHelper();
+		childrenList=dataFile.createSheet("רשימת ילדים");//creating new sheet
+		gameHistory=dataFile.createSheet("היסטוריית משחקים");//creating new sheet
+		 // Create a Font for styling header cells
+	    Font headerFont = dataFile.createFont();
+	    headerFont.setBold(true);
+	    headerFont.setFontHeightInPoints((short) 14);
+	    headerFont.setColor(IndexedColors.RED.getIndex());
+	
+	    // Create a CellStyle with the font
+	    CellStyle headerCellStyle = dataFile.createCellStyle();
+	    headerCellStyle.setFont(headerFont);
+	    
+	    // Create a Row for each sheet
+	    Row headerRowCL = childrenList.createRow(0);
+	    Row headerRowGH = gameHistory.createRow(0);
+	
+	    // Create cells in both Sheets
+	    for(int i = 0; i < childSheetColumns.length; i++) {
+	        Cell cell = headerRowCL.createCell(i);
+	        cell.setCellValue(childSheetColumns[i]);
+	        cell.setCellStyle(headerCellStyle);
+	    }
+	    for(int i = 0; i < gamesSheetColumns.length; i++) {
+	        Cell cell = headerRowGH.createCell(i);
+	        cell.setCellValue(gamesSheetColumns[i]);
+	        cell.setCellStyle(headerCellStyle);
+	    }
+	    
+	 // Create Cell Style for formatting Date
+	    dateCellStyle = dataFile.createCellStyle();
+	    dateCellStyle.setDataFormat(createHelper.createDataFormat().getFormat("dd-MM-yyyy"));
+	    
+		for(int i = 0; i < gamesSheetColumns.length; i++) {
+			gameHistory.autoSizeColumn(i);}
+			
+	    rowNumCL=1;
+	    rowNumGH=1;
     }
-    for(int i = 0; i < gamesSheetColumns.length; i++) {
-        Cell cell = headerRowGH.createCell(i);
-        cell.setCellValue(gamesSheetColumns[i]);
-        cell.setCellStyle(headerCellStyle);
-    }
-    
- // Create Cell Style for formatting Date
-    dateCellStyle = dataFile.createCellStyle();
-    dateCellStyle.setDataFormat(createHelper.createDataFormat().getFormat("dd-MM-yyyy"));
-    
-	for(int i = 0; i < gamesSheetColumns.length; i++) {
-		gameHistory.autoSizeColumn(i);}
-		
-    rowNumCL=1;
-    rowNumGH=1;
 }
 public void addChild(Children child) 
 {
@@ -72,6 +106,9 @@ public void addChild(Children child)
 		childrenList.autoSizeColumn(i);
     }
 	children.add(child.getName());
+	/*Liat TEST -> 
+	 setChanged();
+	notifyObservers(children);LIAT TEST!!!!*/
 }
 public void saveGameDetails(GameRecord gameR)
 {
@@ -86,9 +123,10 @@ public void saveGameDetails(GameRecord gameR)
 	for(int i = 0; i < gamesSheetColumns.length; i++) {
 		gameHistory.autoSizeColumn(i);}
 }
-public Vector<String> getChildrenList()
+public void getChildrenList()
 {
-	return children;
+	setChanged();
+	notifyObservers(children);
 }
 
 public void deleteChild(int index)
@@ -96,8 +134,6 @@ public void deleteChild(int index)
 	Row row;
 	String child=children.get(index).toString();
 	row=childrenList.getRow(index+1);//+1 because of the header row
-	DataFormatter formatter = new DataFormatter();
-	Cell cell2compare;
 	childrenList.removeRow(row);
 	if((index+1)!=(rowNumCL-1))
 	{
@@ -121,5 +157,18 @@ public void deleteChild(int index)
 		}
 	}
 }
+
+public void closeFile() // when closing tha app -> close the in/output files 
+{
+	try
+	{
+		if(update) inputStream.close();
+		fileOut = new FileOutputStream("DataFile.xlsx"); /// else create new file!!!!!
+		dataFile.write(fileOut);
+		dataFile.close();
+	}
+	catch(Exception e) {e.printStackTrace();}
+	System.exit(0);
+	}
 }
 

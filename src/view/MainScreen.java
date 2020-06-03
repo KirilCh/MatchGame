@@ -17,12 +17,16 @@ import javax.swing.JComboBox;
 import javax.swing.JTextPane;
 import java.awt.Color;
 import javax.swing.ButtonGroup;
+import javax.swing.DefaultComboBoxModel;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JLayeredPane;
 import javax.swing.JTextField;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.*;
@@ -49,6 +53,7 @@ public class MainScreen extends Observable implements View{
 		public String getPlayer1() {return player1;}
 		public String getPlayer2() {return player2;}
 	}
+	public class ExitEvent{}
 	private GameSettings gameSettings;
 	private JFrame frame;
 	private final ButtonGroup buttonGroup_kind = new ButtonGroup();
@@ -106,7 +111,14 @@ public class MainScreen extends Observable implements View{
 		frame = new JFrame();
 		frame.setTitle("זכור את הפועל");
 		frame.setBounds(100, 100, 787, 643);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	//	frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent e) {
+				setChanged();
+				notifyObservers(new ExitEvent());
+				System.exit(0);
+			}
+		});
 		
 		panel = new JPanel();
 		frame.getContentPane().add(panel, BorderLayout.CENTER);
@@ -403,6 +415,8 @@ public class MainScreen extends Observable implements View{
 		if(easLevel.isSelected()) gameSettings.gameLevel=0;
 		else if(medLevel.isSelected())gameSettings.gameLevel=1;
 		else gameSettings.gameLevel=2;//hardLevel selected
+	//	setChanged();/////LIAT TEST!!!
+		//notifyObservers();////LIAT TEST!!!
 	}
 
 	protected void onAnyKindButtonActionPerformed(ActionEvent e) {
@@ -449,5 +463,10 @@ public class MainScreen extends Observable implements View{
 		oneP=true;
 		if(pNames.isEnabled())
 			onAnylevelButtonActionPerformed(e);
+	}
+	public void updateList(Vector arg) {
+		p1List.setModel(new DefaultComboBoxModel(arg));
+		p2List.setModel(new DefaultComboBoxModel(arg));
+
 	}
 }
