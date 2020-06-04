@@ -36,11 +36,6 @@ public class DataController implements Controller{
 		this.Gs=gs;
 		this.Ss=ss;
 		this.Cms=cms;
-		//data.addObserver(this);
-		//Ms.addObserver(this);
-		//Ss.addObserver(this);
-		//Cms.addObserver(this);
-		//Gs.addObserver(this);
 	}
 	
 	
@@ -50,26 +45,34 @@ public class DataController implements Controller{
 		if(o instanceof Data)
 		{
 			data=(Data)o;
-			if(view instanceof MainScreen)
-			{
-				Ms.updateList((Vector) arg);
-			}
-			if(view instanceof ChildManagementScreen)
-			{
-				Cms.updateList((Vector) arg);
-			}
-			if(view instanceof StatisticsScreen)
-			{
-				Ss.updateList((Vector) arg);
-			}
-		    if(arg instanceof JFreeChart)
+			if(arg instanceof JFreeChart)
 			{
 		    	Ss.Showgraph((JFreeChart) arg);
 			}
-			if(arg instanceof JTable)
+		    else if(arg instanceof JTable)
 			{
 				Ss.Showtable((JTable) arg);
 			}
+		    else if(arg instanceof String)
+			{
+				Cms.ShowAddChildResponse((String) arg);
+			}
+		    else if(arg instanceof Vector)
+			{
+		    	if(view instanceof MainScreen)
+				{
+					Ms.updateList((Vector) arg);
+				}
+				else if(view instanceof ChildManagementScreen)
+				{
+					Cms.updateList((Vector) arg);
+				}
+				else if(view instanceof StatisticsScreen)
+				{
+					Ss.updateList((Vector) arg);
+				}
+			}
+		   
 			
 		}
 		else if(o instanceof MainScreen)
@@ -95,7 +98,7 @@ public class DataController implements Controller{
 			{
 				StatisticsScreen.LinearStats graph=Ss.new LinearStats();
 				graph=(StatisticsScreen.LinearStats)arg;
-				data.MakeLinearStatsPerChild(graph.getIndex());
+				//data.MakeLinearStatsPerChild(graph.getIndex());
 			}
 			else if(arg instanceof StatisticsScreen.TableStats)//make inner class
 			{

@@ -124,7 +124,7 @@ public class GeneralGameBuilder extends Observable implements View//extends JFra
 		mainWindow.pack();
 		
 		mainWindow.setTitle("Game in progress..."); //Check later how to place it in the center of the screen
-		mainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		mainWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		mainWindow.setBounds(400,100,1100,800);//Setting up app window size and placing in the center of my screen
 	
 		gamePanel = new JPanel();

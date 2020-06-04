@@ -30,8 +30,6 @@ import java.awt.event.WindowEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.*;
-import java.util.Vector;
-import java.util.Observable;
 public class MainScreen extends Observable implements View{
 
 	public class GameSettings
@@ -66,6 +64,7 @@ public class MainScreen extends Observable implements View{
 	private JButton adminButton,startGame;
 	private JComboBox<String> p2List;
 	private JComboBox<String> p1List;
+	private Vector<String> childrenList1 = new Vector<String>();
 	private static Boolean oneP=false,twoP=false;
 	//private final JLayeredPane againstCompMode = new JLayeredPane();
 	private ChildManagementScreen childScreen;
@@ -334,17 +333,6 @@ public class MainScreen extends Observable implements View{
 		startGame.setEnabled(false);
 		panel.add(startGame);
 	
-	/*	againstCompMode.setVisible(false);
-		againstCompMode.setBackground(new Color(255, 0, 0));
-		againstCompMode.setBounds(0, 0, 769, 596);
-		panel.add(againstCompMode);
-		
-		errorL = new JLabel("*\u05D0\u05D7\u05D3 \u05D0\u05D5 \u05D9\u05D5\u05EA\u05E8 \u05DE\u05D4\u05E0\u05EA\u05D5\u05E0\u05D9\u05DD \u05E9\u05D2\u05D5\u05D9");
-		errorL.setForeground(new Color(255, 0, 0));
-		errorL.setHorizontalAlignment(SwingConstants.RIGHT);
-		errorL.setBounds(22, 434, 172, 30);
-		errorL.setVisible(false);
-		againstCompMode.add(errorL);*/
 		
 		childrenManagementButton = new JButton("\u05E0\u05D4\u05DC \u05D0\u05EA \u05E8\u05E9\u05D9\u05DE\u05EA \u05D4\u05D9\u05DC\u05D3\u05D9\u05DD");
 	
@@ -358,21 +346,25 @@ public class MainScreen extends Observable implements View{
 		childrenManagementButton.setBounds(12, 52, 213, 25);
 		panel.add(childrenManagementButton);
 		
-		//TESTS ON COMBO BOX
-		/*list=new Data();
-		list.addChild(new Children("ליאת","205649000"));
-	    list.addChild(new Children("שרון","34534636"));
-	    list.addChild(new Children("מאי","23423536"));
-		*/
-		
 		p1List = new JComboBox<>(new Vector());
 		p1List.setBounds(554, 456, 113, 30);
 		p1List.setEnabled(false);
+		p1List.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				firstPlayerChoosed(e);
+			}
+			});
 		panel.add(p1List);
-		
+
+
 		p2List = new JComboBox<>(new Vector());
 		p2List.setBounds(554, 490, 113, 30);
 		p2List.setEnabled(false);
+		/*p2List.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				secondPlayerChoosed(e);
+			}
+			});*/
 		panel.add(p2List);
 	}
 
@@ -388,40 +380,47 @@ public class MainScreen extends Observable implements View{
 	protected void onStartGameButtonActionPerformed(MouseEvent e) {
 		if(startGame.isEnabled()==true)
 		{
-			//gameSettings.player1=p1List.getSelectedItem().toString();
-			//if (twoP) gameSettings.player2=p2List.getSelectedItem().toString();
-		//	else gameSettings.player2=null;
-			gameSettings.player1="Liat";
-			gameSettings.player2="Kiril";
-
+			gameSettings.player1=p1List.getItemAt(p1List.getSelectedIndex());
+			gameSettings.player2=p2List.getItemAt(p2List.getSelectedIndex());;
 			setChanged();
 			notifyObservers(gameSettings);
-			/*if(oneP&&firstNameT.getText().length()>=2)
-			{
-				errorL.setVisible(false);
-				frame.setVisible(false);
-				if(againstTimeRadioButton.isSelected())
-				{
-					tMode=new GameInProgress(firstNameT.getText(),2);
-					tMode.setVisible(true);
-				}
-				else if(againstCompRadioButton.isSelected())
-				{
-					cMode=new AgainstComputer(24,firstNameT.getText());
-					cMode.setVisible(true);
-				}
-				//else if() - 2 players option
-			    }
-			else
-				errorL.setVisible(true);*/
 		}
 	}
+	private void firstPlayerChoosed(ActionEvent e) {
+		Vector<String> childrenList2 = new Vector<String>();
+		childrenList2.addAll(childrenList1);
+		for(int i=0;i<childrenList2.size();i++) 
+		{
+			if(i==p1List.getSelectedIndex())
+			{
+				childrenList2.remove(i);
+			}
+		}
+		p2List.setModel(new DefaultComboBoxModel(childrenList2));
+		p2List.setSelectedIndex(0);
 
+	}
+	/*private void secondPlayerChoosed(ActionEvent e) {
+		if(Objects.equals(p1List.getItemAt(p1List.getSelectedIndex()),p2List.getItemAt(p2List.getSelectedIndex()))) 
+		{
+			Vector<String> childrenList2 = new Vector<String>();
+			childrenList2.addAll(childrenList1);
+			for(int i=0;i<childrenList2.size();i++) 
+			{
+				if(i==p2List.getSelectedIndex())
+				{
+					childrenList2.remove(i);
+				}
+			}
+			p1List.setModel(new DefaultComboBoxModel(childrenList2));
+		}	
+	}*/
 	protected void onAnylevelButtonActionPerformed(ActionEvent e) {
 		startGame.setEnabled(true);
 		pNames.setEnabled(true);
 		firstPNameL.setEnabled(true);
 		p1List.setEnabled(true);
+		
 		if(twoP==true) {
 			
 			secondPNameL.setEnabled(true);
@@ -485,8 +484,11 @@ public class MainScreen extends Observable implements View{
 			onAnylevelButtonActionPerformed(e);
 	}
 	public void updateList(Vector arg) {
+		childrenList1=arg;
+//		childrenList2=arg;
 		p1List.setModel(new DefaultComboBoxModel(arg));
-		p2List.setModel(new DefaultComboBoxModel(arg));
+		p1List.setSelectedIndex(0);//select the first name on the list
+	//	p2List.setModel(new DefaultComboBoxModel(arg));
 
 	}
 }

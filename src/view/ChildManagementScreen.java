@@ -4,6 +4,7 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JRadioButton;
 import javax.swing.JButton;
 import javax.swing.SwingConstants;
@@ -36,7 +37,6 @@ public class ChildManagementScreen extends Observable implements View{
 	}
 
 	public class UpdateList {}
-	
 
 	public JFrame frame;
 	private JLabel label,selectChildName,fullnameLabel,idLabel;
@@ -76,6 +76,8 @@ public class ChildManagementScreen extends Observable implements View{
 		frame.setTitle("ניהול מאגר ילדים");
 		frame.setBounds(100, 100, 626, 377);
 		frame.getContentPane().setLayout(null);
+		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
 		
 		label = new JLabel("\u05E0\u05D9\u05D4\u05D5\u05DC \u05E8\u05E9\u05D9\u05DE\u05EA \u05D4\u05D9\u05DC\u05D3\u05D9\u05DD");
 		label.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -127,9 +129,8 @@ public class ChildManagementScreen extends Observable implements View{
 		completeTheAction.setBounds(228, 271, 151, 26);
 		frame.getContentPane().add(completeTheAction);
 		
-		childList = new JComboBox<String>();
-		childList.setToolTipText("\u05E4\u05E2\u05D5\u05DC\u05D4");
-		childList.setMaximumRowCount(2);
+		childList = new JComboBox<>(new Vector());
+		//childList.setToolTipText("\u05E4\u05E2\u05D5\u05DC\u05D4");
 		childList.setBounds(452, 196, 129, 33);
 		frame.getContentPane().add(childList);
 		childList.setEnabled(false);
@@ -139,17 +140,20 @@ public class ChildManagementScreen extends Observable implements View{
 		if(addOrRemoveC.getSelectedItem()=="מחיקת ילד")
 		{
 			int indexSelected=childList.getSelectedIndex();
+			addOrRemoveC.setSelectedIndex(1);
 			setChanged();
-			notifyObservers(indexSelected);
-			//list.deleteChild(indexSelected);
+			notifyObservers(indexSelected);			
 		}
 		else
 		{
-			//list.addChild(new Children(fullNameText.getText(),idText.getText()));
+			addOrRemoveC.setSelectedIndex(0);
 			setChanged();
-			notifyObservers(new Children(fullNameText.getText(),idText.getText()));
+			notifyObservers(new Children(fullNameText.getText(),idText.getText()));	
+			idText.setText("");
+			fullNameText.setText("");
 		}
-		frame.setVisible(false);
+
+		
 
 	}
 	public void display(){frame.setVisible(true);}
@@ -162,7 +166,9 @@ public class ChildManagementScreen extends Observable implements View{
 			fullnameLabel.setEnabled(false);
 			idLabel.setEnabled(false);
 			idText.setEnabled(false);
+			idText.setText("");
 			fullNameText.setEnabled(false);
+			fullNameText.setText("");
 			setChanged();
 			notifyObservers(new UpdateList());
 		}
@@ -181,5 +187,10 @@ public class ChildManagementScreen extends Observable implements View{
 		
 		childList.setModel(new DefaultComboBoxModel(arg));
 		
+	}
+
+	public void ShowAddChildResponse(String arg) {
+		
+		JOptionPane.showMessageDialog(null, arg, "הוספת/מחיקת ילד", JOptionPane.INFORMATION_MESSAGE); // Pop up message
 	}
 }

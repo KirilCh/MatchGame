@@ -27,7 +27,7 @@ private static String[] childSheetColumns = {"שם מלא", "תעודת זהות"};
 private static String[] gamesSheetColumns = {"שם מלא","תאריך המשחק","סוג המשחק","ניקוד"};
 Workbook dataFile;//this will be the file that will contain the two sheets of data we want to save
 CellStyle dateCellStyle;
-Vector<String> children = new Vector<String>(); // Create an ArrayList object
+Vector<String> children = new Vector<String>(); // Create vector object
 FileOutputStream fileOut;
 FileInputStream inputStream;
 String excelFilePath="DataFile.xlsx";
@@ -107,16 +107,49 @@ public Data()
 }
 public void addChild(Children child) 
 {
-	Row row=childrenList.createRow(rowNumCL++);
-	row.createCell(0).setCellValue(child.getName());
-	row.createCell(1).setCellValue(child.getId());
-	for(int i = 0; i < childSheetColumns.length; i++) {
-		childrenList.autoSizeColumn(i);
-    }
-	children.add(child.getName());
-	/*Liat TEST -> 
-	 setChanged();
-	notifyObservers(children);LIAT TEST!!!!*/
+	Row row;
+	boolean isExist=false;
+	for(int j=0;j<children.size();j++)//check if the name exist in the children vector
+	{
+		if(Objects.equals(child.getName(), children.get(j).toString())) //if we found another child with same name we will check the id
+		{
+			row=childrenList.getRow(j+1);//+1 because of the header row
+			cell2compare=row.getCell(1);//getting the id value
+			String strValue2 = formatter.formatCellValue(cell2compare);
+			if(Objects.equals(child.getId(), strValue2))//the id already exist in the DataFile
+			{
+				setChanged();
+				notifyObservers(new String("ישנו ילד עם אותו מספר תעודת זהות!"));
+				isExist=true;
+			}
+			else//we have two different kids with the same name
+			{
+			 	/*row=childrenList.createRow(rowNumCL++);
+				row.createCell(0).setCellValue(child.getName()+" "+child.getId());
+				row.createCell(1).setCellValue(child.getId());
+				for(int i = 0; i < childSheetColumns.length; i++) {
+					childrenList.autoSizeColumn(i);
+    			}
+				children.add(child.getName()+" "+child.getId());*/
+			 	setChanged();
+				//notifyObservers(new String("There are 2 children with the same name, the children added with the ID: "+ child.getName() +" "+child.getId()));
+			 	notifyObservers(new String("ישנם שני ילדים בעלי אותו שם אך מספר תעודת זהות שונה, בבקשה הכנס מזהה נוסף לשם הנוכחי"));
+				isExist=true;
+			}
+		}
+	}
+	if(!isExist)
+	{
+		row=childrenList.createRow(rowNumCL++);
+		row.createCell(0).setCellValue(child.getName());
+		row.createCell(1).setCellValue(child.getId());
+		for(int i = 0; i < childSheetColumns.length; i++) {
+			childrenList.autoSizeColumn(i);
+		}
+		children.add(child.getName());
+		setChanged();
+		notifyObservers(new String(child.getName()+" התווסף בהצלחה למאגר הנתונים!"));
+	}
 }
 public void saveGameDetails(GameRecord gameR)
 {
@@ -149,21 +182,26 @@ public void deleteChild(int index)
 	}
 	rowNumCL--;
 	children.remove(index);
-	for(int i=1;i<rowNumGH;i++)
-	{
-		row=gameHistory.getRow(i);
-		cell2compare=row.getCell(0);
-		String strValue2 = formatter.formatCellValue(cell2compare);
-		if(Objects.equals(child, strValue2))
+	if(rowNumGH!=1)
+	{	
+		for(int i=1;i<rowNumGH;i++)
 		{
-			gameHistory.removeRow(row);
-			if(i!=(rowNumGH-1))
+			row=gameHistory.getRow(i);
+			cell2compare=row.getCell(0);
+			String strValue2 = formatter.formatCellValue(cell2compare);
+			if(Objects.equals(child, strValue2))
 			{
-				gameHistory.shiftRows(i+1, rowNumGH-1, -1);
+				gameHistory.removeRow(row);
+				if(i!=(rowNumGH-1))
+				{
+					gameHistory.shiftRows(i+1, rowNumGH-1, -1);
+				}
+				rowNumGH--;
 			}
-			rowNumGH--;
 		}
 	}
+	setChanged();
+	notifyObservers(new String(child+" והרשומות המקושרות אליו נמחקו ממאגר הנתונים!"));
 }
 
 public void closeFile() // when closing tha app -> close the in/output files 
@@ -178,7 +216,7 @@ public void closeFile() // when closing tha app -> close the in/output files
 	catch(Exception e) {e.printStackTrace();}
 	System.exit(0);
 	}
-public void MakeLinearStatsPerChild(int index) {
+/*public void MakeLinearStatsPerChild(int index) {
 	String child=children.get(index).toString();
 	String chartTitle="Progress Graph";
     JFreeChart lineChart = ChartFactory.createLineChart(
@@ -191,7 +229,6 @@ public void MakeLinearStatsPerChild(int index) {
     		setChanged();
 			notifyObservers(lineChart);
 
-	
 }
 	
 private DefaultCategoryDataset createDataset(String child) {
@@ -217,7 +254,7 @@ private DefaultCategoryDataset createDataset(String child) {
     }
    // dataset.addValue( 5 , "child" , "0" );
     return dataset;
- }
+ }*/
 public void makeGeneralScoreStats() {
 	//this.saveGameDetails(new GameRecord(new Children("rom"),30,"liat"));//for test
     Row row;
