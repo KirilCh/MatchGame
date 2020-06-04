@@ -1,5 +1,6 @@
 package model;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 import javax.swing.ImageIcon;
 
@@ -87,6 +88,13 @@ public AgainstComputer(String p1,int difficulty)
 	//public CompWhosTurn whosTurn() {return whosTurn;}
 	public void compTurn()//(int playersTurn) 
 	{
+		try {
+			TimeUnit.SECONDS.sleep(2);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		Random rand = new Random();
 		int []choosePhotoLabel = new int[2];
 		choosePhotoLabel[0] = rand.nextInt(this.numOfCards);
@@ -96,16 +104,17 @@ public AgainstComputer(String p1,int difficulty)
 				choosePhotoLabel[0] = rand.nextInt(numOfCards);
 		}
 		choosePhotoLabel[1] = rand.nextInt(numOfCards);
-		if(photoFound[choosePhotoLabel[1]]==true)
+		if(photoFound[choosePhotoLabel[1]]==true || choosePhotoLabel[0]==choosePhotoLabel[1])
 		{
-			while(photoFound[choosePhotoLabel[1]]==true)
+			while(photoFound[choosePhotoLabel[1]]==true || choosePhotoLabel[0]==choosePhotoLabel[1])//add condition so choice1!=choice2
 				choosePhotoLabel[1] = rand.nextInt(numOfCards);
 		}
 		setChanged();
 		notifyObservers(choosePhotoLabel);
 	}
-	public void setGame() {	
+	public void setGame() 
+	{	
 		setChanged();
 		notifyObservers(gameSettings);
-		}
+	}
 }

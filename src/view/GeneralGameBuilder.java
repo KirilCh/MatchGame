@@ -38,6 +38,14 @@ public class GeneralGameBuilder extends Observable implements View//extends JFra
 		int score;
 		String gametype;
 		String name;
+		
+		public GameDetails() {}
+		public GameDetails(String gameType, String pName, int score)
+		{
+			this.gametype = gameType;
+			this.name=pName;
+			this.score=score;
+		}
 		public int getScore() {
 			return score;
 		}
@@ -80,7 +88,7 @@ public class GeneralGameBuilder extends Observable implements View//extends JFra
 	
 	protected int labelSelected;
 	protected Timer displayTimer;
-	protected int delay=1000; //600 ms delay between card flips
+	protected int delay=600; //600 ms delay between card flips
 	protected boolean isClickable=true;
 	//protected Timer timer = null; //Timer variable
 	
@@ -364,9 +372,9 @@ public class GeneralGameBuilder extends Observable implements View//extends JFra
 		
 		try
 		{
-			matchSound = Applet.newAudioClip(new URL("file:" + "tada.wav"));
+			matchSound = Applet.newAudioClip(new URL("file:" + "card_match.wav"));
 			noMatchSound = Applet.newAudioClip(new URL("file:" + "card_flip2.wav"));
-			gameOverSound = Applet.newAudioClip(new URL("file:" + "wow.wav"));
+			gameOverSound = Applet.newAudioClip(new URL("file:" + "victory.wav"));
 		}
 		catch (Exception ex)
 		{
@@ -463,12 +471,12 @@ public class GeneralGameBuilder extends Observable implements View//extends JFra
 		
 		
 		//Set a delay before next turn
-		try {
+		/*try {
 			TimeUnit.SECONDS.sleep(1);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		}*/
 		
 		this.photoLabel[compChoice[1]].setIcon(this.photos[photosIndex[compChoice[1]]]);
 		choice[0]=compChoice[0];
@@ -523,18 +531,37 @@ public class GeneralGameBuilder extends Observable implements View//extends JFra
 			
 			if(photosRemaining==0)
 			{
-				if(is2Players==true && isAgainstComputer==false)
+				if(is2Players==true && isAgainstComputer==false)//AgainstRival
 				{
-					//AgainstRival
+					GameDetails p1Record = new GameDetails("AgainstRival",player1Label.getText(),Integer.parseInt(scoreTextField[0].getText()));
+					GameDetails p2Record = new GameDetails("AgainstRival",player2Label.getText(),Integer.parseInt(scoreTextField[1].getText()));
+					
+					setChanged();
+					notifyObservers(p1Record);
+					
+					setChanged();
+					notifyObservers(p2Record);
+					
+					gameOverSound.play();
 				}
-				else if(is2Players==true && isAgainstComputer==true)
+				else if(is2Players==true && isAgainstComputer==true)//AgainstComputer
 				{
-					//AgainstComputer
-					System.exit(0);
+					GameDetails record = new GameDetails("AgainstComputer",player1Label.getText(),Integer.parseInt(scoreTextField[0].getText()));
+					
+					setChanged();
+					notifyObservers(record);
+					
+					gameOverSound.play();
+					//System.exit(0);
 				}
-				else
+				else 	//AgainstTime
 				{
-					//AgainstTime
+					GameDetails record = new GameDetails("AgainstTime",player1Label.getText(),Integer.parseInt(scoreTextField[0].getText()));
+				
+					setChanged();
+					notifyObservers(record);
+					
+					gameOverSound.play();
 				}
 				
 				//End game, Thanos won
@@ -545,12 +572,12 @@ public class GeneralGameBuilder extends Observable implements View//extends JFra
 			if(isAgainstComputer==true && whosTurn==2)
 			{
 				//Set a delay before next turn
-				try {
+				/*try {
 					TimeUnit.SECONDS.sleep(1);
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
-				}
+				}*/
 				
 				setChanged();
 				notifyObservers(new CompTurn());
@@ -575,12 +602,12 @@ public class GeneralGameBuilder extends Observable implements View//extends JFra
 					whosTurn=2;
 					
 					//Set a delay before next turn
-					try {
+					/*try {
 						TimeUnit.SECONDS.sleep(1);
 					} catch (InterruptedException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
-					}
+					}*/
 					
 					setChanged();
 					notifyObservers(new CompTurn());
