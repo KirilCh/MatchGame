@@ -13,11 +13,12 @@ public class GameController implements Controller{
 	private AgainstComputer computerModel;
 	private MainScreen mainView; //
 	private GeneralGameBuilder gameScreenView; // 
+	private DataController data;
 	
-	public GameController(MainScreen view,GeneralGameBuilder gameScreenView,AgainstComputer compM)
+	public GameController(MainScreen view,GeneralGameBuilder gameScreenView,AgainstComputer compM,DataController dataCont)
 	{
 		this.mainView=view;
-		//this.model=model;
+		this.data=dataCont;
 		this.gameScreenView=gameScreenView;
 		this.gameScreenView.addObserver(this);
 		this.computerModel=compM;
@@ -55,6 +56,7 @@ public class GameController implements Controller{
 				 AgainstTime.TimeGameSettings timeGS=at.new TimeGameSettings();
 				 timeGS=(AgainstTime.TimeGameSettings)arg;//
 				 GeneralGameBuilder gameScreenView = new GeneralGameBuilder.Builder().setPhotos(timeGS.getPhotos()).setPhotosIndex(timeGS.getPhotosIndex()).setImageCover(timeGS.getCover()).FirstPlayersName(timeGS.getP1Name()).setDifficulty(timeGS.getDifficulty()).setGameLength(timeGS.getTime()).build();
+				 data.setGs(gameScreenView);
 				 gameScreenView.addObserver(this);
 			 }
 			 else if(arg instanceof AgainstComputer.CompGameSettings) 
@@ -63,6 +65,7 @@ public class GameController implements Controller{
 				 AgainstComputer.CompGameSettings compGS=ac.new CompGameSettings();
 				 compGS=(AgainstComputer.CompGameSettings)arg;//
 				 GeneralGameBuilder gameScreenView = new GeneralGameBuilder.Builder().setPhotos(compGS.getPhotos()).setPhotosIndex(compGS.getPhotosIndex()).setImageCover(compGS.getCover()).FirstPlayersName(compGS.getP1Name()).SecondPlayersName(compGS.getP2Name()).setDifficulty(compGS.getDifficulty()).build();
+				 data.setGs(gameScreenView);
 				 gameScreenView.addObserver(this);
 			 }
 			 else if(arg instanceof AgainstRival.RivalGameSettings) 
@@ -71,6 +74,7 @@ public class GameController implements Controller{
 				 AgainstRival.RivalGameSettings rivalGS=ar.new RivalGameSettings();
 				 rivalGS=(AgainstRival.RivalGameSettings)arg;//
 				 GeneralGameBuilder gameScreenView = new GeneralGameBuilder.Builder().setPhotos(rivalGS.getPhotos()).setPhotosIndex(rivalGS.getPhotosIndex()).setImageCover(rivalGS.getCover()).FirstPlayersName(rivalGS.getP1Name()).SecondPlayersName(rivalGS.getP2Name()).setDifficulty(rivalGS.getDifficulty()).build();
+				 data.setGs(gameScreenView);
 				 gameScreenView.addObserver(this);
 		//add set controller and set imageCover in all game types
 			 }

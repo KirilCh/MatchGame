@@ -52,6 +52,7 @@ public class MainScreen extends Observable implements View{
 		public String getPlayer2() {return player2;}
 	}
 	public class ExitEvent{}
+	public class StartGame{}
 	private GameSettings gameSettings;
 	private JFrame frame;
 	private final ButtonGroup buttonGroup_kind = new ButtonGroup();
@@ -373,6 +374,7 @@ public class MainScreen extends Observable implements View{
 	}
 	
 	protected void openAdmin(MouseEvent e) {
+		//frame.dispose();
 		adminScreen.display();
 	}
 
@@ -435,7 +437,7 @@ public class MainScreen extends Observable implements View{
 		else if(medLevel.isSelected())gameSettings.gameLevel=1;
 		else gameSettings.gameLevel=2;//hardLevel selected
 		setChanged();
-		notifyObservers();
+		notifyObservers(new StartGame());
 	}
 
 	protected void onAnyKindButtonActionPerformed(ActionEvent e) {

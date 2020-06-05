@@ -2,6 +2,7 @@ package controller;
 import javax.swing.*;
 
 import org.jfree.chart.JFreeChart;
+import org.jfree.data.category.DefaultCategoryDataset;
 
 import model.Children;
 import model.Data;
@@ -38,16 +39,19 @@ public class DataController implements Controller{
 		this.Cms=cms;
 	}
 	
-	
+	public void setGs(GeneralGameBuilder gs) {
+		Gs=gs;
+		Gs.addObserver(this);
+	}
 	@Override
 	public void update(Observable o, Object arg) {
 		
 		if(o instanceof Data)
 		{
 			data=(Data)o;
-			if(arg instanceof JFreeChart)
+			if(arg instanceof DefaultCategoryDataset)
 			{
-		    	Ss.Showgraph((JFreeChart) arg);
+		    	Ss.Showgraph((DefaultCategoryDataset) arg);
 			}
 		    else if(arg instanceof JTable)
 			{
@@ -78,12 +82,15 @@ public class DataController implements Controller{
 		else if(o instanceof MainScreen)
 		{
 			Ms=(MainScreen)o;
-			view=new MainScreen();
-			data.getChildrenList();
 			if(arg instanceof MainScreen.ExitEvent)
 			{
 			
 				data.closeFile();
+			}
+			else if(arg instanceof MainScreen.StartGame)
+			{
+				view=new MainScreen();
+				data.getChildrenList();
 			}
 		}
 		else if(o instanceof StatisticsScreen)
@@ -98,7 +105,7 @@ public class DataController implements Controller{
 			{
 				StatisticsScreen.LinearStats graph=Ss.new LinearStats();
 				graph=(StatisticsScreen.LinearStats)arg;
-				//data.MakeLinearStatsPerChild(graph.getIndex());
+				data.MakeLinearStatsPerChild(graph.getIndex());
 			}
 			else if(arg instanceof StatisticsScreen.TableStats)//make inner class
 			{
@@ -127,11 +134,13 @@ public class DataController implements Controller{
 		}
 		else if(o instanceof GeneralGameBuilder)
 		{
-			Gs=(GeneralGameBuilder)o;
-			GeneralGameBuilder gd=new GeneralGameBuilder();
-			GeneralGameBuilder.GameDetails details=gd.new GameDetails();
+			if(arg instanceof GeneralGameBuilder.GameDetails)
+			{//Gs=(GeneralGameBuilder)o;
+			//GeneralGameBuilder gd=new GeneralGameBuilder();
+			GeneralGameBuilder.GameDetails details=Gs.new GameDetails();
 			details=(GeneralGameBuilder.GameDetails)arg;//
 			data.saveGameDetails(new GameRecord(new Children(details.getName()),details.getScore(),details.getGametype()));
+			}
 		}
 	}
 } 

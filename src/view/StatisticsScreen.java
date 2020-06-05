@@ -5,13 +5,13 @@ import javax.swing.*;
 import java.awt.event.*;
 import java.util.Observable;
 import java.util.Vector;
-import model.*;
 
 import com.toedter.calendar.JDateChooser;
 
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.ui.ApplicationFrame;
+import org.jfree.data.category.DefaultCategoryDataset;
 
 public class StatisticsScreen extends Observable implements View{
 
@@ -87,6 +87,8 @@ public class StatisticsScreen extends Observable implements View{
 		allkids = new JRadioButton("All kids");
 		allkids.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				showgraph.setEnabled(false);
+				showtable.setEnabled(true);
 				bp=new ButtonGroup();
 				bp.add(allkids);bp.add(onekid);
 				if(allkids.isSelected())
@@ -130,6 +132,8 @@ public class StatisticsScreen extends Observable implements View{
 		onekid = new JRadioButton("One kid");
 		onekid.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				showgraph.setEnabled(true);
+				showtable.setEnabled(false);
 				bp=new ButtonGroup();
 				bp.add(allkids);bp.add(onekid);
 				if(onekid.isSelected())
@@ -272,13 +276,20 @@ public class StatisticsScreen extends Observable implements View{
 		//p2List.setModel(new DefaultComboBoxModel(arg));
 	}
 
-	public void Showgraph(JFreeChart lineChart) {
+	public void Showgraph(DefaultCategoryDataset arg) {
 		
-		ApplicationFrame frame=new ApplicationFrame("graph");
-		ChartPanel chartPanel = new ChartPanel( lineChart );
-	      chartPanel.setPreferredSize( new java.awt.Dimension( 560 , 367 ) );
-	      frame.setContentPane( chartPanel );
-		
+		//ApplicationFrame frame=new ApplicationFrame("graph");
+	//	ChartPanel chartPanel = new ChartPanel( lineChart );
+	  //    chartPanel.setPreferredSize( new java.awt.Dimension( 560 , 367 ) );
+	    //  frame.setContentPane( chartPanel );
+		 SwingUtilities.invokeLater(() -> {  
+		      LineChart example = new LineChart(arg);
+		      example.setAlwaysOnTop(true);  
+		      example.pack();  
+		      example.setSize(600, 400);  
+		      example.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);  
+		      example.setVisible(true);  
+		    });  
 	}
 
 	public void Showtable(JTable jt) {

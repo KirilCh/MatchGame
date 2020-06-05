@@ -14,9 +14,10 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.DefaultCategoryDataset;
 
-import java.util.Observable;
-
 import javax.swing.JTable;
+import javax.swing.SwingUtilities;
+import javax.swing.WindowConstants;
+
 
 public class Data extends Observable implements Model
 {
@@ -35,6 +36,7 @@ File f=new File(excelFilePath);
 boolean update=false;
 DataFormatter formatter = new DataFormatter();
 Cell cell2compare;
+
 public Data()
 {
 	if(f.exists()) //in case that the DataFile already exists we just update it
@@ -57,6 +59,10 @@ public Data()
 				String strValue2 = formatter.formatCellValue(cell2compare);
 				children.add(strValue2);
 			}
+		    CreationHelper createHelper = dataFile.getCreationHelper();
+			 dateCellStyle = dataFile.createCellStyle();
+			    dateCellStyle.setDataFormat(createHelper.createDataFormat().getFormat("dd-MM-yyyy"));
+
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -104,41 +110,39 @@ public Data()
 	    rowNumCL=1;
 	    rowNumGH=1;
     }
+
 }
 public void addChild(Children child) 
 {
 	Row row;
 	boolean isExist=false;
-	for(int j=0;j<children.size();j++)//check if the name exist in the children vector
+	for(int j=0;j<childrenList.getLastRowNum();j++)//check if the ID exist in the children vector
 	{
-		if(Objects.equals(child.getName(), children.get(j).toString())) //if we found another child with same name we will check the id
+		row=childrenList.getRow(j+1);//+1 because of the header row
+		cell2compare=row.getCell(1);//getting the id value
+		String strValue2 = formatter.formatCellValue(cell2compare);
+		if(Objects.equals(child.getId(), strValue2))//the id already exist in the DataFile
 		{
-			row=childrenList.getRow(j+1);//+1 because of the header row
-			cell2compare=row.getCell(1);//getting the id value
-			String strValue2 = formatter.formatCellValue(cell2compare);
-			if(Objects.equals(child.getId(), strValue2))//the id already exist in the DataFile
-			{
-				setChanged();
-				notifyObservers(new String("ישנו ילד עם אותו מספר תעודת זהות!"));
-				isExist=true;
-			}
-			else//we have two different kids with the same name
-			{
-			 	/*row=childrenList.createRow(rowNumCL++);
-				row.createCell(0).setCellValue(child.getName()+" "+child.getId());
-				row.createCell(1).setCellValue(child.getId());
-				for(int i = 0; i < childSheetColumns.length; i++) {
-					childrenList.autoSizeColumn(i);
-    			}
-				children.add(child.getName()+" "+child.getId());*/
-			 	setChanged();
-				//notifyObservers(new String("There are 2 children with the same name, the children added with the ID: "+ child.getName() +" "+child.getId()));
-			 	notifyObservers(new String("ישנם שני ילדים בעלי אותו שם אך מספר תעודת זהות שונה, בבקשה הכנס מזהה נוסף לשם הנוכחי"));
-				isExist=true;
-			}
+			setChanged();
+			notifyObservers(new String("child with same id already exists"));
+			isExist=true;
+			break;
 		}
 	}
 	if(!isExist)
+	{
+		for(int j=0;j<children.size();j++)//check if the name exist in the children vector
+		{
+			if(Objects.equals(child.getName(), children.get(j).toString())) //if we found another child with same name we will check the id
+			
+				setChanged();
+			 	notifyObservers(new String("2 kids with same name but different ids, enter different name"));
+				isExist=true;
+			 	break;
+		}
+	}
+	
+	if(!isExist)//add the child if there isn't child with same id/name
 	{
 		row=childrenList.createRow(rowNumCL++);
 		row.createCell(0).setCellValue(child.getName());
@@ -148,7 +152,7 @@ public void addChild(Children child)
 		}
 		children.add(child.getName());
 		setChanged();
-		notifyObservers(new String(child.getName()+" התווסף בהצלחה למאגר הנתונים!"));
+		notifyObservers(new String(child.getName()+"successfully added to database!"));
 	}
 }
 public void saveGameDetails(GameRecord gameR)
@@ -216,72 +220,72 @@ public void closeFile() // when closing tha app -> close the in/output files
 	catch(Exception e) {e.printStackTrace();}
 	System.exit(0);
 	}
-/*public void MakeLinearStatsPerChild(int index) {
-	String child=children.get(index).toString();
-	String chartTitle="Progress Graph";
-    JFreeChart lineChart = ChartFactory.createLineChart(
-    	       chartTitle,
-    	       "Game Number","Progress",
-    	       createDataset(child),
-    	       PlotOrientation.VERTICAL,
-    	       true,true,false);
-    		//return lineChart;
-    		setChanged();
-			notifyObservers(lineChart);
+
+public void MakeLinearStatsPerChild(int index) {
+		String child=children.get(index).toString();
+		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+	    Row row;
+	    Cell cell2compare;
+	    DataFormatter formatter = new DataFormatter();
+	 //   this.saveGameDetails(new GameRecord(new Children("rom"),30,"liat"));//for test
+	 //   this.saveGameDetails(new GameRecord(new Children("rom"),20,"liat"));//for test
+	 //   this.saveGameDetails(new GameRecord(new Children("rom"),5,"liat"));//for test
+	 //   this.saveGameDetails(new GameRecord(new Children("rom"),45,"liat"));//for test
+
+		Cell date,score;
+		Integer progress=1;
+	    for(int i=1;i<=gameHistory.getLastRowNum();i++)
+	    {
+	    	row=gameHistory.getRow(i);
+	    	
+			cell2compare=row.getCell(0);
+			String strValue2 = formatter.formatCellValue(cell2compare);
+			if(Objects.equals(child, strValue2))
+			{
+				//date=row.getCell(1);
+		    	score=row.getCell(3);
+		    	//String datestr=formatter.formatCellValue(date);
+		    	String scorestr=formatter.formatCellValue(score);
+				dataset.addValue( Integer.parseInt(scorestr) , child , (progress++).toString());
+			}
+	    }
+	   // dataset.addValue( 5 , "child" , "0" );
+	    setChanged();
+	    notifyObservers(dataset);	
 
 }
 	
-private DefaultCategoryDataset createDataset(String child) {
-    DefaultCategoryDataset dataset = new DefaultCategoryDataset( );
-    Row row;
-    //this.saveGameDetails(new GameRecord(new Children("rom"),30,"liat"));//for test
-	Cell date,score;
-	Integer progress=0;
-    for(int i=1;i<gameHistory.getLastRowNum();i++)
-    {
-    	row=gameHistory.getRow(i);
-    	
-		cell2compare=row.getCell(0);
-		String strValue2 = formatter.formatCellValue(cell2compare);
-		if(Objects.equals(child, strValue2))
-		{
-			//date=row.getCell(1);
-	    	score=row.getCell(3);
-	    	//String datestr=formatter.formatCellValue(date);
-	    	String scorestr=formatter.formatCellValue(score);
-			dataset.addValue( Integer.parseInt(scorestr) , child , (progress++).toString());
-		}
-    }
-   // dataset.addValue( 5 , "child" , "0" );
-    return dataset;
- }*/
+
 public void makeGeneralScoreStats() {
 	//this.saveGameDetails(new GameRecord(new Children("rom"),30,"liat"));//for test
-    Row row;
-	Cell date,score,gametype;
-	String [][] data= new String[gameHistory.getLastRowNum()-1][4]; 
-	String [] record=new String[4];
-	
-    for(int i=1;i<gameHistory.getLastRowNum();i++)
-    {
-    	row=gameHistory.getRow(i);
-		cell2compare=row.getCell(0);
-		date=row.getCell(1);
-    	score=row.getCell(3);
-    	gametype=row.getCell(2);
-		record[0]=formatter.formatCellValue(cell2compare);
-		record[1]=formatter.formatCellValue(date);
-		record[2]=formatter.formatCellValue(gametype);
-		record[3]=formatter.formatCellValue(score);
-		data[i-1]=record.clone();
-    }
-	
-	 //String data[][]= {{"100","rom","15000"}};   
-	 String column[]={"שם מלא","תאריך","סוג משחק","ניקוד"};         
-	 JTable jt=new JTable(data,column);    
-	 jt.setBounds(30,40,200,300);
-	 setChanged();
-	 notifyObservers(jt);
+	if(rowNumGH!=1)
+	{	
+		Row row;
+		Cell date,score,gametype;
+		String [][] data= new String[gameHistory.getLastRowNum()][4]; 
+		String [] record=new String[4];
+		
+	    for(int i=1;i<=gameHistory.getLastRowNum();i++)
+	    {
+	    	row=gameHistory.getRow(i);
+			cell2compare=row.getCell(0);
+			date=row.getCell(1);
+	    	score=row.getCell(3);
+	    	gametype=row.getCell(2);
+			record[0]=formatter.formatCellValue(cell2compare);
+			record[1]=formatter.formatCellValue(date);
+			record[2]=formatter.formatCellValue(gametype);
+			record[3]=formatter.formatCellValue(score);
+			data[i-1]=record.clone();
+	    }
+		
+		 //String data[][]= {{"100","rom","15000"}};   
+		 String column[]={"שם מלא","תאריך","סוג משחק","ניקוד"};         
+		 JTable jt=new JTable(data,column);    
+		 jt.setBounds(30,40,200,300);
+		 setChanged();
+		 notifyObservers(jt);
+	}
 }
 
 	
