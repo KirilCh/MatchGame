@@ -26,31 +26,34 @@ public class GameController implements Controller{
 	@Override
 	public void update(Observable o, Object arg) 
 	{	
-		if(o instanceof MainScreen)
+		if(o instanceof MainScreen)//VIEW TO MODEL
 		{
 			mainView=(MainScreen)o;
-			MainScreen.GameSettings gs=mainView.new GameSettings();
-			gs=(MainScreen.GameSettings)arg;
-			if(gs.getGameType()==0)
+			if(arg instanceof MainScreen.GameSettings)//recieve the game settings from the user(instructions how to build the game screen)
 			{
-			model=new AgainstRival(gs.getPlayer1(),gs.getPlayer2(),gs.getDifficulty());	
+				MainScreen.GameSettings gs=mainView.new GameSettings();
+				gs=(MainScreen.GameSettings)arg;
+				if(gs.getGameType()==0)
+				{
+				model=new AgainstRival(gs.getPlayer1(),gs.getPlayer2(),gs.getDifficulty());	
+				}
+				else if(gs.getGameType()==1)
+				{
+				model=new AgainstTime(gs.getPlayer1(),gs.getDifficulty());	
+				}
+				else if(gs.getGameType()==2)
+				{
+				model=new AgainstComputer(gs.getPlayer1(),gs.getDifficulty());
+				}
+				model.addObserver(this);
+				model.setGame();
 			}
-			else if(gs.getGameType()==1)
-			{
-			model=new AgainstTime(gs.getPlayer1(),gs.getDifficulty());	
-			}
-			else if(gs.getGameType()==2)
-			{
-			model=new AgainstComputer(gs.getPlayer1(),gs.getDifficulty());
-			}
-			model.addObserver(this);
-			model.setGame();
 		}
-		//
+		//responses from the model
 		else if(o instanceof Game) //MODEL TO VIEW 
 		{
 			model=(Game)o;
-			 if(arg instanceof AgainstTime.TimeGameSettings) 
+			 if(arg instanceof AgainstTime.TimeGameSettings) //in case that we need to build againstTime game
 			 {
 				 AgainstTime at=new AgainstTime();
 				 AgainstTime.TimeGameSettings timeGS=at.new TimeGameSettings();
@@ -59,7 +62,7 @@ public class GameController implements Controller{
 				 data.setGs(gameScreenView);
 				 gameScreenView.addObserver(this);
 			 }
-			 else if(arg instanceof AgainstComputer.CompGameSettings) 
+			 else if(arg instanceof AgainstComputer.CompGameSettings) //in case that we need to build againstComp game
 			 {
 				 AgainstComputer ac=new AgainstComputer();
 				 AgainstComputer.CompGameSettings compGS=ac.new CompGameSettings();
@@ -68,7 +71,7 @@ public class GameController implements Controller{
 				 data.setGs(gameScreenView);
 				 gameScreenView.addObserver(this);
 			 }
-			 else if(arg instanceof AgainstRival.RivalGameSettings) 
+			 else if(arg instanceof AgainstRival.RivalGameSettings) //in case that we need to build againstRival game
 			 {
 				 AgainstRival ar=new AgainstRival();
 				 AgainstRival.RivalGameSettings rivalGS=ar.new RivalGameSettings();
@@ -76,119 +79,67 @@ public class GameController implements Controller{
 				 GeneralGameBuilder gameScreenView = new GeneralGameBuilder.Builder().setPhotos(rivalGS.getPhotos()).setPhotosIndex(rivalGS.getPhotosIndex()).setImageCover(rivalGS.getCover()).FirstPlayersName(rivalGS.getP1Name()).SecondPlayersName(rivalGS.getP2Name()).setDifficulty(rivalGS.getDifficulty()).build();
 				 data.setGs(gameScreenView);
 				 gameScreenView.addObserver(this);
-		//add set controller and set imageCover in all game types
 			 }
 		     // 
-		     else if(arg instanceof Boolean)
+		    else if(arg instanceof Boolean)
 	      	{
-			 gameScreenView.checkMatchResult((Boolean)arg);
-	     	}// checkMatchResult -UI
-			 
-	     	//
-	    /*	else if(arg instanceof ImageIcon) 
-	    	{
-	    		gameScreenView.getImageCover((ImageIcon)arg);
-	     	}
-		   //
-	    	else if(arg instanceof ImageIcon[]) 
-		    {
-			gameScreenView.getPhotosArray((ImageIcon[])arg);
-		    }*/
-		   // getPhotosArray-UI
-		   //
+		    	gameScreenView.checkMatchResult((Boolean)arg);
+	     	}// checkMatchResult 
+
 	    	else if(arg instanceof int[]) 
 		    {
-			gameScreenView.getCompMove((int[])arg);
-	     	}
-		   /*? 
-	    	else if(arg instanceof AgainstRival.RivalWhosTurn) 
-		    {
-			AgainstRival ar=new AgainstRival();
-			AgainstRival.RivalWhosTurn rivalWS=ar.new RivalWhosTurn();
-			rivalWS=(AgainstRival.RivalWhosTurn)arg;
-			gameScreenView.whosTurnAnswer(rivalWS.getWhosTurn());
-		    }
-		    */
-		 /*  else if(arg instanceof AgainstComputer.CompWhosTurn)
-		    {
-			 AgainstComputer ac=new AgainstComputer();
-		     AgainstComputer.CompWhosTurn compWS=ac.new CompWhosTurn();
-		     compWS=(AgainstComputer.CompWhosTurn)arg;
-		     gameScreenView.whosTurnAnswer(compWS.getWhosTurn());
-		    }*/
-		   //
+	    		gameScreenView.getCompMove((int[])arg);
+	     	}//response about the computer move
 		
 		   else if(arg instanceof Game.ScoreCalc)
 		    {
 			   Game.ScoreCalc scoreC=model.new ScoreCalc();
 			   scoreC=(Game.ScoreCalc)arg;
 			   gameScreenView.scoreCalcAnswer(scoreC.getScore());
-		    } 
-		    //model to view index arr
-			/*else if (arg instanceof Game.PhotoIndex)
-			    {
-        			 
-        			Game.PhotoIndex pi= model.new PhotoIndex();
-    				pi=(Game.PhotoIndex)arg;//
-    				gameScreenView.getPhotoIndex(pi.getPhotoIndex());
-    			 }*/
+		    } //score calculation answer
+		
 			else if(arg instanceof boolean[])
 	    	{
 	    		gameScreenView.getPhotoFound((boolean[]) arg);
-	    	}
+	    	}//response of the photo-found array
 		}    
 		else if(o instanceof GeneralGameBuilder) //VIEW TO MODEL
 		    {
         	gameScreenView=(GeneralGameBuilder)o;
 
-			 if(arg instanceof GeneralGameBuilder.CheckMatch)//
+			if(arg instanceof GeneralGameBuilder.CheckMatch)
 			{
 				 GeneralGameBuilder ggb=new GeneralGameBuilder();
 				 GeneralGameBuilder.CheckMatch checkingM=ggb.new CheckMatch();
 				 checkingM=( GeneralGameBuilder.CheckMatch)arg;//
-				 model.checkMatch(checkingM.getFirstIndex(),checkingM.getSecondIndex(), checkingM.getWhosTurn());// ARG
-			}
-			 //
+				 model.checkMatch(checkingM.getFirstIndex(),checkingM.getSecondIndex(), checkingM.getWhosTurn());
+			} //request for check if there is a match
 			else if (arg instanceof GeneralGameBuilder.GetImageCover)//
 			{
 				model.getImagecover();		
 			}
-			 //
+			 //request for the image cover
 			else if (arg instanceof GeneralGameBuilder.GetPhotosArray)//  
 			{
 				model.getImagePhotoArr();		
-			}
-			 //
+			}//request for the photos array
 			else if(arg instanceof GeneralGameBuilder.CompTurn)//
 			{
 				computerModel=(AgainstComputer)model;
 				computerModel.compTurn();
-				//model.compTurn();
-			}	
-			 //
-			/*else if(arg instanceof GeneralGameBuilder.CompWhosTurn)//
-			{
-				computerModel.whosTurn();
-			} 
-			else if(arg instanceof GeneralGameBuilder.RivalWhosTurn)
-			{
-				model.whosTurn();
-			}*/
+			}//request for the computer turn
+		
 			else if(arg instanceof GeneralGameBuilder.GetScoreCalc)//
 			{
 				GeneralGameBuilder.GetScoreCalc scoreC=gameScreenView.new GetScoreCalc();
 				scoreC=( GeneralGameBuilder.GetScoreCalc)arg;//
 				model.scoreCalc(scoreC.getWhosTurn());
-			}
-			 //
-			/*else if (arg instanceof GeneralGameBuilder.GetPhotoIndex)
-			{
-	             model.getPhotoIndex();
-			}*/
+			}//request for score calculation for specific player
+			
         	else if(arg instanceof GeneralGameBuilder.GetPhotoFound)
  			{
  				model.getPhotoFound();
- 			}
+ 			}//request for the photo-found array
 		
 		}
 	}

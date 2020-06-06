@@ -1,5 +1,6 @@
 package view;
 
+import java.awt.Color;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
@@ -10,17 +11,23 @@ import javax.swing.JButton;
 import javax.swing.SwingConstants;
 
 import model.*;
+import view.MainScreen.ExitEvent;
 
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.ImageIcon;
 import javax.swing.JTextPane;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.Observable;
 import java.util.Vector;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 public class ChildManagementScreen extends Observable implements View{
 
 	public class Children {
@@ -37,7 +44,7 @@ public class ChildManagementScreen extends Observable implements View{
 	}
 
 	public class UpdateList {}
-
+	private MainScreen mainRef;
 	public JFrame frame;
 	private JLabel label,selectChildName,fullnameLabel,idLabel;
 	private JComboBox<String> addOrRemoveC;
@@ -73,15 +80,23 @@ public class ChildManagementScreen extends Observable implements View{
 	 */
 	private void initialize() {
 		frame = new JFrame();
-		frame.setTitle("È‰ÂÏ Ó‡‚¯ ÈÏ„ÈÌ");
+		frame.setTitle("◊û◊°◊ö ◊†◊ô◊î◊ï◊ú ◊ô◊ú◊ì◊ô◊ù");
 		frame.setBounds(100, 100, 626, 377);
 		frame.getContentPane().setLayout(null);
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		frame.getContentPane().setBackground(new Color(230,230,250));
+		/*frame.addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent e) {
+				mainRef.notifyObsToUpdate();
+				mainRef.p1List.setSelectedIndex(0);
+				System.exit(0);
+			}
+		});*/
 
 		
 		label = new JLabel("\u05E0\u05D9\u05D4\u05D5\u05DC \u05E8\u05E9\u05D9\u05DE\u05EA \u05D4\u05D9\u05DC\u05D3\u05D9\u05DD");
 		label.setHorizontalAlignment(SwingConstants.RIGHT);
-		label.setFont(new Font("Guttman Kav-Light", Font.PLAIN, 34));
+		label.setFont(new Font("Tahoma", Font.PLAIN, 34));
 		label.setBounds(163, 13, 270, 26);
 		frame.getContentPane().add(label);
 		
@@ -120,6 +135,7 @@ public class ChildManagementScreen extends Observable implements View{
 		selectChildName.setEnabled(false);
 		
 		completeTheAction = new JButton("\u05D4\u05E9\u05DC\u05DD \u05D0\u05EA \u05D4\u05E4\u05E2\u05D5\u05DC\u05D4");
+		completeTheAction.setIcon(new ImageIcon("CompleteActionButton.png"));
 		completeTheAction.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -137,7 +153,7 @@ public class ChildManagementScreen extends Observable implements View{
 	}
 
 	protected void addOrRemove(MouseEvent e) {
-		if(addOrRemoveC.getSelectedItem()=="ÓÁÈ˜˙ ÈÏ„")
+		if(addOrRemoveC.getSelectedItem()=="√Æ√ß√©√∑√∫ √©√¨√£")
 		{
 			int indexSelected=childList.getSelectedIndex();
 			addOrRemoveC.setSelectedIndex(1);
@@ -146,20 +162,26 @@ public class ChildManagementScreen extends Observable implements View{
 		}
 		else
 		{
-			addOrRemoveC.setSelectedIndex(0);
-			setChanged();
-			notifyObservers(new Children(fullNameText.getText(),idText.getText()));	
-			idText.setText("");
-			fullNameText.setText("");
+		    Pattern p = Pattern.compile( "[0-9]" );
+		    Matcher m = p.matcher( fullNameText.getText() );
+			if(idText.getText()!=null&&idText.getText().matches("[0-9]+")&&fullNameText.getText()!=null&&m.find()==false)
+			{
+				addOrRemoveC.setSelectedIndex(0);
+				setChanged();
+				notifyObservers(new Children(fullNameText.getText(),idText.getText()));
+				idText.setText("");
+				fullNameText.setText("");
+			}
+			else JOptionPane.showMessageDialog(null, "√†√∞√† √•√•√£√† √´√© √≤√∏√´√© √§√π√£√•√∫ √∫√∑√©√∞√©√≠", "√π√¢√©√†√§", JOptionPane.ERROR_MESSAGE);
+			
 		}
-
-		
-
+		mainRef.notifyObsToUpdate();
+		mainRef.p1List.setSelectedIndex(0);//the children list updated
 	}
 	public void display(){frame.setVisible(true);}
 	public void undisplay(){frame.setVisible(false);}
 	protected void selectAction(ActionEvent e) {
-		if(addOrRemoveC.getSelectedItem()=="ÓÁÈ˜˙ ÈÏ„")
+		if(addOrRemoveC.getSelectedItem()=="√Æ√ß√©√∑√∫ √©√¨√£")
 		{
 			selectChildName.setEnabled(true);
 			childList.setEnabled(true);
@@ -181,9 +203,10 @@ public class ChildManagementScreen extends Observable implements View{
 			idText.setEnabled(true);
 			fullNameText.setEnabled(true);
 		}
+
 	}
 
-	public void updateList(Vector arg) {
+	public void updateList(Vector<String> arg) {
 		
 		childList.setModel(new DefaultComboBoxModel(arg));
 		
@@ -191,6 +214,10 @@ public class ChildManagementScreen extends Observable implements View{
 
 	public void ShowAddChildResponse(String arg) {
 		
-		JOptionPane.showMessageDialog(null, arg, "‰ÂÒÙ˙/ÓÁÈ˜˙ ÈÏ„", JOptionPane.INFORMATION_MESSAGE); // Pop up message
+		JOptionPane.showMessageDialog(null, arg, "√§√•√±√¥√∫/√Æ√ß√©√∑√∫ √©√¨√£", JOptionPane.INFORMATION_MESSAGE); // Pop up message
+	}
+
+	public void setMainRef(MainScreen mainScreen) {
+		mainRef=mainScreen;
 	}
 }

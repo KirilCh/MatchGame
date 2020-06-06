@@ -28,7 +28,8 @@ public class DataController implements Controller{
 	private GeneralGameBuilder Gs;
 	private StatisticsScreen Ss;
 	private ChildManagementScreen Cms;
-	private View view;
+//	private View view;
+	private String view;
 	
 	public DataController(Data d,MainScreen ms,GeneralGameBuilder gs,StatisticsScreen ss,ChildManagementScreen cms)
 	{
@@ -63,20 +64,19 @@ public class DataController implements Controller{
 			}
 		    else if(arg instanceof Vector)
 			{
-		    	if(view instanceof MainScreen)
+		    	if(view == "MainScreen")
 				{
-					Ms.updateList((Vector) arg);
+					Ms.updateList((Vector<String>) arg);
 				}
-				else if(view instanceof ChildManagementScreen)
+				else if(view =="ChildManagementScreen")
 				{
-					Cms.updateList((Vector) arg);
+					Cms.updateList((Vector<String>) arg);
 				}
-				else if(view instanceof StatisticsScreen)
+				else if(view== "StatisticsScreen")
 				{
-					Ss.updateList((Vector) arg);
+					Ss.updateList((Vector<String>) arg);
 				}
 			}
-		   
 			
 		}
 		else if(o instanceof MainScreen)
@@ -89,7 +89,7 @@ public class DataController implements Controller{
 			}
 			else if(arg instanceof MainScreen.StartGame)
 			{
-				view=new MainScreen();
+				view="MainScreen";
 				data.getChildrenList();
 			}
 		}
@@ -98,18 +98,20 @@ public class DataController implements Controller{
 			Ss=(StatisticsScreen)o;
 			if(arg instanceof StatisticsScreen.UpdateList)//make inner class
 			{
-				view=new StatisticsScreen();
+				view="StatisticsScreen";
 				data.getChildrenList();
 			}
 			else if(arg instanceof StatisticsScreen.LinearStats)//make inner class
 			{
 				StatisticsScreen.LinearStats graph=Ss.new LinearStats();
 				graph=(StatisticsScreen.LinearStats)arg;
-				data.MakeLinearStatsPerChild(graph.getIndex());
+				data.MakeLinearStatsPerChild(graph.getIndex(),graph.getfirstD(),graph.getSecondD());
 			}
 			else if(arg instanceof StatisticsScreen.TableStats)//make inner class
 			{
-				data.makeGeneralScoreStats();
+				StatisticsScreen.TableStats table=Ss.new TableStats();
+				table=(StatisticsScreen.TableStats)arg;
+				data.makeGeneralScoreStats(table.getfirstD(),table.getSecondD());
 			}
 		}
 		else if(o instanceof ChildManagementScreen)
@@ -117,29 +119,28 @@ public class DataController implements Controller{
 			Cms=(ChildManagementScreen)o;
 			if(arg instanceof ChildManagementScreen.UpdateList)//make inner class
 			{
-			view= new ChildManagementScreen();
-			data.getChildrenList();
+				view= "ChildManagementScreen";
+				data.getChildrenList();
 			}
 			else if(arg instanceof ChildManagementScreen.Children)
 			{
-			ChildManagementScreen child=new ChildManagementScreen();
-			ChildManagementScreen.Children ch=child.new Children();
-			ch=(ChildManagementScreen.Children)arg;//
-			data.addChild(new Children(ch.getName(),ch.getId()));
+				ChildManagementScreen child=new ChildManagementScreen();
+				ChildManagementScreen.Children ch=child.new Children();
+				ch=(ChildManagementScreen.Children)arg;//
+				data.addChild(new Children(ch.getName(),ch.getId()));
 			}
 			else
 			{
-			data.deleteChild((int) arg);
+				data.deleteChild((int) arg);
 			}
 		}
 		else if(o instanceof GeneralGameBuilder)
 		{
 			if(arg instanceof GeneralGameBuilder.GameDetails)
 			{//Gs=(GeneralGameBuilder)o;
-			//GeneralGameBuilder gd=new GeneralGameBuilder();
-			GeneralGameBuilder.GameDetails details=Gs.new GameDetails();
-			details=(GeneralGameBuilder.GameDetails)arg;//
-			data.saveGameDetails(new GameRecord(new Children(details.getName()),details.getScore(),details.getGametype()));
+				GeneralGameBuilder.GameDetails details=Gs.new GameDetails();
+				details=(GeneralGameBuilder.GameDetails)arg;//
+				data.saveGameDetails(new GameRecord(new Children(details.getName()),details.getScore(),details.getGametype()));
 			}
 		}
 	}

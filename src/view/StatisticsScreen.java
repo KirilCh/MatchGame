@@ -1,8 +1,14 @@
 package view;
 
+import java.awt.Color;
 import java.awt.EventQueue;
+import java.awt.Font;
+
 import javax.swing.*;    
 import java.awt.event.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.Date;
 import java.util.Observable;
 import java.util.Vector;
 
@@ -16,7 +22,6 @@ import org.jfree.data.category.DefaultCategoryDataset;
 public class StatisticsScreen extends Observable implements View{
 
 	private JFrame frame;
-	private JTextField nametext;
 	JRadioButton allkids,onekid;
 	JLabel startdateall,enddateall,startdateone,enddateone,namekid;
 	JDateChooser chooserdatestartall,chooserdateendall,chooserdatestartone,chooserdateendone;
@@ -25,16 +30,13 @@ public class StatisticsScreen extends Observable implements View{
 	JButton showtable,showgraph;
 	StatisticsScreen graphing;
 	private LinearStats linear=new LinearStats();
-	//private JComboBox<String> p2List;
-	//private JComboBox<String> p1List;
-	/**
-	 * Launch the application.
-	 */
+	private TableStats table=new TableStats();
 	public class UpdateList{};
-	public class LinearStats{
-		
+	public class LinearStats
+	{	
 		int index;
-
+		Date start;
+		Date end;
 		public int getIndex() {
 			return index;
 		}
@@ -42,9 +44,23 @@ public class StatisticsScreen extends Observable implements View{
 		{
 			this.index=index;
 		}
+		public Date getfirstD() {
+			return start;
+		}
+		public Date getSecondD() {
+			return end;
+		}
 	};
-	public class TableStats{};
-	
+	public class TableStats{
+		Date start;
+		Date end;
+		public Date getfirstD() {
+			return start;
+		}
+		public Date getSecondD() {
+			return end;
+		}
+	};
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -71,20 +87,35 @@ public class StatisticsScreen extends Observable implements View{
 	
 	private void initialize() {
 		frame = new JFrame();
-		frame.setBounds(100, 100, 517, 339);
-		//frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setBounds(170, 100, 517, 339);
+		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
-		frame.setTitle("Static Page");
+		frame.setTitle( "מסך סטיסטיקות");
+		frame.getContentPane().setBackground(new Color(230,230,250));
 		
-		JLabel lblNewLabel = new JLabel("Static_Page");
-		lblNewLabel.setBounds(193, 0, 82, 38);
+		JLabel lblNewLabel = new JLabel("סטטיסטיקות");
+		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 22));
+		lblNewLabel.setForeground(new Color(153,50,204));
+		lblNewLabel.setBounds(210, 0, 150, 38);
+
 		frame.getContentPane().add(lblNewLabel);
 		
-		JLabel lblNewLabel_1 = new JLabel("Type_of_Static:");
-		lblNewLabel_1.setBounds(27, 36, 94, 24);
+		JLabel informationL = new JLabel("אנא בחר טווח תאריכים וסוג סטטיסטיקה אותה  תרצה להציג");
+		informationL.setFont(new Font("Tahoma", Font.PLAIN,12));
+		informationL.setForeground(Color.RED);
+		informationL.setBounds(160, 243, 330, 38);
+
+		frame.getContentPane().add(informationL);
+		
+		JLabel lblNewLabel_1 = new JLabel("סוג הדוח להצגה:");
+		lblNewLabel_1.setFont(new Font("Tahoma",Font.PLAIN,10));
+		lblNewLabel_1.setBounds(370, 36, 115, 24);//333, 63, 46, 14
 		frame.getContentPane().add(lblNewLabel_1);
 	
-		allkids = new JRadioButton("All kids");
+		allkids = new JRadioButton("היסטוריית משחקים");
+		allkids.setHorizontalTextPosition(JRadioButton.LEADING);
+		allkids.setHorizontalAlignment(JRadioButton.TRAILING);
+		allkids.setBackground(new Color(230,230,250));
 		allkids.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				showgraph.setEnabled(false);
@@ -126,10 +157,13 @@ public class StatisticsScreen extends Observable implements View{
 					combobox.setEnabled(false);
 				}
 			}});
-		allkids.setBounds(27, 67, 109, 23);
+		allkids.setBounds(333, 63, 130, 23);
 		frame.getContentPane().add(allkids);
 		
-		onekid = new JRadioButton("One kid");
+		onekid = new JRadioButton("גרף התקדמות");
+		onekid.setHorizontalTextPosition(JRadioButton.LEADING);
+		onekid.setHorizontalAlignment(JRadioButton.TRAILING);
+		onekid.setBackground(new Color(230,230,250));
 		onekid.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				showgraph.setEnabled(true);
@@ -174,42 +208,57 @@ public class StatisticsScreen extends Observable implements View{
 				notifyObservers(new UpdateList());
 			}
 		});
-		onekid.setBounds(27, 104, 109, 23);
+		onekid.setBounds(333, 83, 130, 23);
 		frame.getContentPane().add(onekid);
 		
-		showgraph = new JButton("Show graph");
+		showgraph = new JButton("הצג את ההתקדמות");
 		showgraph.setBounds(205, 181, 119, 23);
+		showgraph.setIcon(new ImageIcon("ShowGraphButton.png"));
 		frame.getContentPane().add(showgraph);
-		
+		showgraph.setEnabled(false);
 		showgraph.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				
-				setChanged();
-				notifyObservers(linear);
+			public void actionPerformed(ActionEvent e) 
+			{
+				linear.start=chooserdatestartone.getDate();
+				linear.start.setTime(0);
+				linear.end=chooserdateendone.getDate();
+				linear.end.setTime(0);
+				if(linear.start!=null&&linear.end!=null&&combobox.getSelectedItem()!=null)
+				{
+					setChanged();
+					notifyObservers(linear);
+				}
+				else JOptionPane.showMessageDialog(null, "אנא וודא כי הזנת תאריך התחלה ותאריך סוף ושבחרת ילד", "חלה טעות", JOptionPane.INFORMATION_MESSAGE); // Pop up message
 			}
 			});
 		
 		
-		showtable = new JButton("table");
-		showtable.setBounds(205, 215, 119, 23);
+		showtable = new JButton("הצג היסטוריית משחקים");
+		showtable.setBounds(190, 215, 155, 23);
+		showtable.setIcon(new ImageIcon("ShowTableButton.png"));
 		frame.getContentPane().add(showtable);
-		
+		showtable.setEnabled(false);
 		showtable.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
-				setChanged();
-				notifyObservers(new TableStats());
+				table.start=chooserdatestartall.getDate();
+				table.end=chooserdateendall.getDate();
+				if(table.start!=null&&table.end!=null)
+				{
+					setChanged();
+					notifyObservers(table);
+				}
+				else JOptionPane.showMessageDialog(null, "אנא וודא כי הזנת תאריך התחלה ותאריך סוף", "לא נבחר טווח תאריכים", JOptionPane.INFORMATION_MESSAGE); // Pop up message
 			}
 			});
 		
-		startdateall = new JLabel("Start_Date:");
+		startdateall = new JLabel("תאריך התחלה:");
 		startdateall.setEnabled(false);
-		startdateall.setBounds(136, 71, 72, 14);
+		startdateall.setBounds(220, 45, 72, 14);
 		frame.getContentPane().add(startdateall);
 		
-		enddateall = new JLabel("End_Date:");
+		enddateall = new JLabel("תאריך סוף:");
 		enddateall.setEnabled(false);
-		enddateall.setBounds(136, 108, 64, 14);
+		enddateall.setBounds(235, 88, 64, 14);
 		frame.getContentPane().add(enddateall);
 		
 		chooserdatestartall = new JDateChooser();
@@ -217,71 +266,58 @@ public class StatisticsScreen extends Observable implements View{
 		chooserdatestartall.setBounds(214, 67, 78, 19);
 		frame.getContentPane().add(chooserdatestartall);
 		
+		
 		chooserdateendall = new JDateChooser();
 		chooserdateendall.setEnabled(false);
 		chooserdateendall.setBounds(214, 104, 78, 19);
 		frame.getContentPane().add(chooserdateendall);
 		
-		namekid = new JLabel("Name:");
+		namekid = new JLabel("בחר ילד:");
 		namekid.setEnabled(false);
-		namekid.setBounds(333, 63, 46, 14);
+		namekid.setBounds(108, 37, 46, 14);
 		frame.getContentPane().add(namekid);
-		
-		//nametext = new JTextField();
-		//nametext.setEnabled(false);
-		//nametext.setBounds(365, 60, 126, 20);
-		//frame.getContentPane().add(nametext);
-		//nametext.setColumns(10);
 		
 		combobox= new JComboBox<>(new Vector());
 		combobox.setEnabled(false);
-		combobox.setBounds(365,60,126,20);
+		combobox.setBounds(27,60,126,20);
 		frame.getContentPane().add(combobox);
 		
-	
 		combobox.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
 				combo(e);
 			}
 			});
-		
-		
-		startdateone = new JLabel("Start_Date:");
+		startdateone = new JLabel("תאריך התחלה:");
 		startdateone.setEnabled(false);
-		startdateone.setBounds(333, 104, 82, 14);
+		startdateone.setBounds(80, 85, 100, 14);
 		frame.getContentPane().add(startdateone);
 		
 		chooserdatestartone = new JDateChooser();
 		chooserdatestartone.setEnabled(false);
-		chooserdatestartone.setBounds(413, 104, 78, 19);
+		chooserdatestartone.setBounds(27, 100, 126, 19);
 		frame.getContentPane().add(chooserdatestartone);
 		
-		enddateone = new JLabel("End_Date:");
+		enddateone = new JLabel("תאריך סוף:");
 		enddateone.setEnabled(false);
-		enddateone.setBounds(333, 134, 64, 14);
+		enddateone.setBounds(95, 120, 100, 14);
 		frame.getContentPane().add(enddateone);
 		
 		chooserdateendone = new JDateChooser();
 		chooserdateendone.setEnabled(false);
-		chooserdateendone.setBounds(413, 129, 78, 19);
+		chooserdateendone.setBounds(27, 135, 126, 19);
 		frame.getContentPane().add(chooserdateendone);
 		frame.setVisible(false);
 	}
 
-	public void updateList(Vector arg) {
+	public void updateList(Vector<String> arg) 
+	{
 		
 		combobox.setModel(new DefaultComboBoxModel(arg));
-		//p1List.setModel(new DefaultComboBoxModel(arg));
-		//p2List.setModel(new DefaultComboBoxModel(arg));
 	}
 
-	public void Showgraph(DefaultCategoryDataset arg) {
-		
-		//ApplicationFrame frame=new ApplicationFrame("graph");
-	//	ChartPanel chartPanel = new ChartPanel( lineChart );
-	  //    chartPanel.setPreferredSize( new java.awt.Dimension( 560 , 367 ) );
-	    //  frame.setContentPane( chartPanel );
+	public void Showgraph(DefaultCategoryDataset arg) 
+	{	
 		 SwingUtilities.invokeLater(() -> {  
 		      LineChart example = new LineChart(arg);
 		      example.setAlwaysOnTop(true);  

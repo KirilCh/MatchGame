@@ -24,7 +24,7 @@ public class EndGameScreen
 	{
 		frame = new JFrame();
 		frame.setBounds(400,100,1100,800);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		frame.setResizable(false);
 		

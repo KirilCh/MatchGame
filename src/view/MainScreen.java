@@ -18,10 +18,12 @@ import javax.swing.JTextPane;
 import java.awt.Color;
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.ImageIcon;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JLayeredPane;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -64,7 +66,7 @@ public class MainScreen extends Observable implements View{
 	,easLevel,oneOnOne;	
 	private JButton adminButton,startGame;
 	private JComboBox<String> p2List;
-	private JComboBox<String> p1List;
+	public JComboBox<String> p1List;
 	private Vector<String> childrenList1 = new Vector<String>();
 	private static Boolean oneP=false,twoP=false;
 	//private final JLayeredPane againstCompMode = new JLayeredPane();
@@ -113,14 +115,14 @@ public class MainScreen extends Observable implements View{
 	}
 	
 
-
 	/**
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
 		frame = new JFrame();
-		frame.setTitle("���� �� �����");
+		frame.setTitle("זכור את הפעל");
 		frame.setBounds(100, 100, 787, 643);
+		
 		//frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
@@ -132,13 +134,19 @@ public class MainScreen extends Observable implements View{
 		
 		panel = new JPanel();
 		frame.getContentPane().add(panel, BorderLayout.CENTER);
+		//Setting background photo
+		ImagePanel panel = new ImagePanel(new ImageIcon("BackgroundPic.jpg").getImage());
+		//panel.setBackground(Color.WHITE);
+		panel.setBounds(0,0, 1100, 800);
+		frame.getContentPane().add(panel);
 		panel.setLayout(null);
+		
 		
 		//gameName title
 		titleL = new JLabel("\u05D6\u05DB\u05D5\u05E8 \u05D0\u05EA \u05D4\u05E4\u05D5\u05E2\u05DC");
-		titleL.setForeground(new Color(255, 0, 0));
+		titleL.setForeground(new Color(153,50,204));
 		titleL.setHorizontalAlignment(SwingConstants.RIGHT);
-		titleL.setFont(new Font("Guttman Kav-Light", Font.BOLD, 34));
+		titleL.setFont(new Font("Tahoma",Font.BOLD,34));
 		titleL.setBounds(252, 42, 252, 39);
 		panel.add(titleL);
 
@@ -147,6 +155,7 @@ public class MainScreen extends Observable implements View{
 		twoPlayersRadioButton.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		twoPlayersRadioButton.setHorizontalTextPosition(JRadioButton.LEADING);
 		twoPlayersRadioButton.setHorizontalAlignment(JRadioButton.TRAILING);
+		twoPlayersRadioButton.setOpaque(false);//Make radio button background transparent
 		twoPlayersRadioButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				twoPlayersRadioButtonActionPerformed(e);
@@ -161,6 +170,7 @@ public class MainScreen extends Observable implements View{
 		onePlayerRadioButton.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		onePlayerRadioButton.setHorizontalTextPosition(JRadioButton.LEADING);
 		onePlayerRadioButton.setHorizontalAlignment(JRadioButton.TRAILING);
+		onePlayerRadioButton.setOpaque(false);
 		onePlayerRadioButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				onePlayerRadioButtonActionPerformed(e);
@@ -179,7 +189,8 @@ public class MainScreen extends Observable implements View{
 		
 		//admin Button
 		adminButton = new JButton("\u05E1\u05D5\u05E4\u05E8-\u05DE\u05E9\u05EA\u05DE\u05E9");
-		adminButton.setFont(new Font("Guttman Kav-Light", Font.PLAIN, 20));
+		adminButton.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		adminButton.setIcon(new ImageIcon("AdminButton.png"));
 		adminButton.setBounds(12, 13, 149, 25);
 		panel.add(adminButton);
 		adminButton.addMouseListener(new MouseAdapter() {
@@ -202,6 +213,7 @@ public class MainScreen extends Observable implements View{
 		againstTimeRadioButton.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		againstTimeRadioButton.setHorizontalTextPosition(JRadioButton.LEADING);
 		againstTimeRadioButton.setHorizontalAlignment(JRadioButton.TRAILING);
+		againstTimeRadioButton.setOpaque(false);
 		againstTimeRadioButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				onAnyKindButtonActionPerformed(e);
@@ -218,6 +230,7 @@ public class MainScreen extends Observable implements View{
 		buttonGroup_kind.add(againstCompRadioButton);
 		againstCompRadioButton.setHorizontalTextPosition(JRadioButton.LEADING);
 		againstCompRadioButton.setHorizontalAlignment(JRadioButton.TRAILING);
+		againstCompRadioButton.setOpaque(false);
 		againstCompRadioButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				onAnyKindButtonActionPerformed(e);
@@ -265,6 +278,7 @@ public class MainScreen extends Observable implements View{
 		buttonGroup_level.add(medLevel);
 		medLevel.setHorizontalTextPosition(JRadioButton.LEADING);
 		medLevel.setHorizontalAlignment(JRadioButton.TRAILING);
+		medLevel.setOpaque(false);
 		medLevel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				onAnylevelButtonActionPerformed(e);
@@ -280,6 +294,7 @@ public class MainScreen extends Observable implements View{
 		buttonGroup_level.add(easLevel);
 		easLevel.setHorizontalTextPosition(JRadioButton.LEADING);
 		easLevel.setHorizontalAlignment(JRadioButton.TRAILING);
+		easLevel.setOpaque(false);
 		easLevel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				onAnylevelButtonActionPerformed(e);
@@ -295,6 +310,7 @@ public class MainScreen extends Observable implements View{
 		buttonGroup_level.add(hardLevel);
 		hardLevel.setHorizontalTextPosition(JRadioButton.LEADING);
 		hardLevel.setHorizontalAlignment(JRadioButton.TRAILING);
+		hardLevel.setOpaque(false);
 		hardLevel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				onAnylevelButtonActionPerformed(e);
@@ -309,6 +325,7 @@ public class MainScreen extends Observable implements View{
 		oneOnOne.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		oneOnOne.setHorizontalTextPosition(JRadioButton.LEADING);
 		oneOnOne.setHorizontalAlignment(JRadioButton.TRAILING);
+		oneOnOne.setOpaque(false);
 		buttonGroup_kind.add(oneOnOne);
 		oneOnOne.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -321,6 +338,7 @@ public class MainScreen extends Observable implements View{
 
 		//start-game button
 		startGame = new JButton("\u05D4\u05EA\u05D7\u05DC \u05DE\u05E9\u05D7\u05E7!");
+		startGame.setIcon(new ImageIcon("StartGame.png"));
 		startGame.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -336,14 +354,14 @@ public class MainScreen extends Observable implements View{
 	
 		
 		childrenManagementButton = new JButton("\u05E0\u05D4\u05DC \u05D0\u05EA \u05E8\u05E9\u05D9\u05DE\u05EA \u05D4\u05D9\u05DC\u05D3\u05D9\u05DD");
-	
+		childrenManagementButton.setIcon(new ImageIcon("ManageChildrenButton.png"));
 		childrenManagementButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				openScreen(e);
 			}
 		});
-		childrenManagementButton.setFont(new Font("Guttman Kav-Light", Font.PLAIN, 20));
+		childrenManagementButton.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		childrenManagementButton.setBounds(12, 52, 213, 25);
 		panel.add(childrenManagementButton);
 		
@@ -370,37 +388,51 @@ public class MainScreen extends Observable implements View{
 	}
 
 	protected void openScreen(MouseEvent e) {
-		childScreen.display();
+		String inputValue = JOptionPane.showInputDialog("הכנס סיסמת מנהל מערכת");
+		if(Objects.equals(inputValue,"2301")) {
+			childScreen.setMainRef(this);
+			childScreen.display();
+		}
+		else JOptionPane.showMessageDialog(null, "סיסמה לא נכונה", "שגיאה", JOptionPane.ERROR_MESSAGE);
 	}
 	
 	protected void openAdmin(MouseEvent e) {
-		//frame.dispose();
-		adminScreen.display();
+		String inputValue = JOptionPane.showInputDialog("הכנס סיסמת מנהל מערכת");
+		if(Objects.equals(inputValue,"2301"))adminScreen.display();
+		else JOptionPane.showMessageDialog(null, "סיסמא לא נכונה", "שגיאה", JOptionPane.ERROR_MESSAGE);
 	}
 
 
 	protected void onStartGameButtonActionPerformed(MouseEvent e) {
 		if(startGame.isEnabled()==true)
 		{
+			if(againstTimeRadioButton.isSelected())gameSettings.gameType=1;
+			else if(againstCompRadioButton.isSelected())gameSettings.gameType=2;
+			else gameSettings.gameType=0;//one One one selected - against rival
+			if(easLevel.isSelected()) gameSettings.gameLevel=0;
+			else if(medLevel.isSelected())gameSettings.gameLevel=1;
+			else gameSettings.gameLevel=2;//hardLevel selected
 			gameSettings.player1=p1List.getItemAt(p1List.getSelectedIndex());
 			gameSettings.player2=p2List.getItemAt(p2List.getSelectedIndex());;
 			setChanged();
 			notifyObservers(gameSettings);
 		}
 	}
-	private void firstPlayerChoosed(ActionEvent e) {
+	public void firstPlayerChoosed(ActionEvent e) {
 		Vector<String> childrenList2 = new Vector<String>();
 		childrenList2.addAll(childrenList1);
-		for(int i=0;i<childrenList2.size();i++) 
+		if(childrenList1.size()>1)
 		{
-			if(i==p1List.getSelectedIndex())
+			for(int i=0;i<childrenList2.size();i++) 
 			{
-				childrenList2.remove(i);
+				if(i==p1List.getSelectedIndex())
+				{
+					childrenList2.remove(i);
+				}
 			}
+			p2List.setModel(new DefaultComboBoxModel(childrenList2));
+			p2List.setSelectedIndex(0);
 		}
-		p2List.setModel(new DefaultComboBoxModel(childrenList2));
-		p2List.setSelectedIndex(0);
-
 	}
 	/*private void secondPlayerChoosed(ActionEvent e) {
 		if(Objects.equals(p1List.getItemAt(p1List.getSelectedIndex()),p2List.getItemAt(p2List.getSelectedIndex()))) 
@@ -418,7 +450,7 @@ public class MainScreen extends Observable implements View{
 		}	
 	}*/
 	protected void onAnylevelButtonActionPerformed(ActionEvent e) {
-		startGame.setEnabled(true);
+		//startGame.setEnabled(true);
 		pNames.setEnabled(true);
 		firstPNameL.setEnabled(true);
 		p1List.setEnabled(true);
@@ -433,21 +465,19 @@ public class MainScreen extends Observable implements View{
 			p2List.setEnabled(false);
 			secondPNameL.setEnabled(false);
 		}
-		if(easLevel.isSelected()) gameSettings.gameLevel=0;
-		else if(medLevel.isSelected())gameSettings.gameLevel=1;
-		else gameSettings.gameLevel=2;//hardLevel selected
-		setChanged();
-		notifyObservers(new StartGame());
+		//setChanged();
+		//notifyObservers(new StartGame());
+		notifyObsToUpdate();
 	}
-
+	public void notifyObsToUpdate() {
+		setChanged();
+	notifyObservers(new StartGame());
+	}
 	protected void onAnyKindButtonActionPerformed(ActionEvent e) {
 		dLevelL.setEnabled(true);
 		easLevel.setEnabled(true);
 		medLevel.setEnabled(true);
 		hardLevel.setEnabled(true);
-		if(againstTimeRadioButton.isSelected())gameSettings.gameType=1;
-		else if(againstCompRadioButton.isSelected())gameSettings.gameType=2;
-		else gameSettings.gameType=0;//one One one selected - against rival
 	}
 
 	protected void twoPlayersRadioButtonActionPerformed(ActionEvent e) {
@@ -485,12 +515,17 @@ public class MainScreen extends Observable implements View{
 		if(pNames.isEnabled())
 			onAnylevelButtonActionPerformed(e);
 	}
-	public void updateList(Vector arg) {
-		childrenList1=arg;
-//		childrenList2=arg;
-		p1List.setModel(new DefaultComboBoxModel(arg));
-		p1List.setSelectedIndex(0);//select the first name on the list
-	//	p2List.setModel(new DefaultComboBoxModel(arg));
+	public void updateList(Vector<String> arg) {
+		if(!arg.isEmpty())
+		{
+			childrenList1=arg;
+//			childrenList2=arg;
+			p1List.setModel(new DefaultComboBoxModel<String>(arg));
+			p1List.setSelectedIndex(0);//select the first name on the list
+			if(oneP)startGame.setEnabled(true);
+			else if(twoP && arg.size()>1)startGame.setEnabled(true);
+		}
+	//		p2List.setModel(new DefaultComboBoxModel(arg));
 
 	}
 }

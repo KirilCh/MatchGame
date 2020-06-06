@@ -23,9 +23,9 @@ public class Data extends Observable implements Model
 {
 int rowNumCL,rowNumGH;
 Sheet childrenList,gameHistory;
-private static String[] childSheetColumns = {"ων ξμΰ", "ϊςεγϊ ζδεϊ"};
-//private static String[] gamesSheetColumns = {"ων ξμΰ", "ϊςεγϊ ζδεϊ","ϊΰψικ δξωηχ","ρεβ δξωηχ","πιχεγ"};
-private static String[] gamesSheetColumns = {"ων ξμΰ","ϊΰψικ δξωηχ","ρεβ δξωηχ","πιχεγ"};
+private static String[] childSheetColumns = {"Χ©Χ ΧΧΧ", "ΧªΧΆΧ•Χ“Χª Χ–Χ”Χ•Χª"};
+//private static String[] gamesSheetColumns = {"Χ©Χ ΧΧΧ", "ΧªΧΆΧ•Χ“Χª Χ–Χ”Χ•Χª","ΧªΧΧ¨Χ™Χ Χ”ΧΧ©Χ—Χ§","Χ΅Χ•Χ’ Χ”ΧΧ©Χ—Χ§","Χ Χ™Χ§Χ•Χ“"};
+private static String[] gamesSheetColumns = {"Χ©Χ ΧΧΧ","ΧªΧΧ¨Χ™Χ Χ”ΧΧ©Χ—Χ§","Χ΅Χ•Χ’ Χ”ΧΧ©Χ—Χ§","Χ Χ™Χ§Χ•Χ“"};
 Workbook dataFile;//this will be the file that will contain the two sheets of data we want to save
 CellStyle dateCellStyle;
 Vector<String> children = new Vector<String>(); // Create vector object
@@ -72,8 +72,8 @@ public Data()
 	{
 		dataFile=new XSSFWorkbook();
 	    CreationHelper createHelper = dataFile.getCreationHelper();
-		childrenList=dataFile.createSheet("ψωιξϊ ιμγιν");//creating new sheet
-		gameHistory=dataFile.createSheet("διρθεψιιϊ ξωηχιν");//creating new sheet
+		childrenList=dataFile.createSheet("Χ¨Χ©Χ™ΧΧª Χ™ΧΧ“Χ™Χ");//creating new sheet
+		gameHistory=dataFile.createSheet("Χ”Χ™Χ΅ΧΧ•Χ¨Χ™Χ™Χª ΧΧ©Χ—Χ§Χ™Χ");//creating new sheet
 		 // Create a Font for styling header cells
 	    Font headerFont = dataFile.createFont();
 	    headerFont.setBold(true);
@@ -124,9 +124,8 @@ public void addChild(Children child)
 		if(Objects.equals(child.getId(), strValue2))//the id already exist in the DataFile
 		{
 			setChanged();
-			notifyObservers(new String("child with same id already exists"));
+			notifyObservers(new String("Χ™Χ©Χ Χ• Χ™ΧΧ“ ΧΆΧ ΧΧ•ΧªΧ• ΧΧ΅Χ¤Χ¨ ΧªΧΆΧ•Χ“Χª Χ–Χ”Χ•Χª!"));
 			isExist=true;
-			break;
 		}
 	}
 	if(!isExist)
@@ -134,11 +133,11 @@ public void addChild(Children child)
 		for(int j=0;j<children.size();j++)//check if the name exist in the children vector
 		{
 			if(Objects.equals(child.getName(), children.get(j).toString())) //if we found another child with same name we will check the id
-			
-				setChanged();
-			 	notifyObservers(new String("2 kids with same name but different ids, enter different name"));
+			{	
 				isExist=true;
-			 	break;
+				setChanged();
+			 	notifyObservers(new String("Χ™Χ©Χ Χ Χ©Χ Χ™ Χ™ΧΧ“Χ™Χ Χ‘ΧΆΧΧ™ ΧΧ•ΧªΧ• Χ©Χ ΧΧ ΧΧ΅Χ¤Χ¨ ΧªΧΆΧ•Χ“Χª Χ–Χ”Χ•Χª Χ©Χ•Χ Χ”, Χ‘Χ‘Χ§Χ©Χ” Χ”Χ›Χ Χ΅ ΧΧ–Χ”Χ” Χ Χ•Χ΅Χ£ ΧΧ©Χ Χ”Χ Χ•Χ›Χ—Χ™"));
+			}
 		}
 	}
 	
@@ -152,7 +151,7 @@ public void addChild(Children child)
 		}
 		children.add(child.getName());
 		setChanged();
-		notifyObservers(new String(child.getName()+"successfully added to database!"));
+		notifyObservers(new String(child.getName()+" Χ”ΧªΧ•Χ•Χ΅Χ£ Χ‘Χ”Χ¦ΧΧ—Χ” ΧΧΧΧ’Χ¨ Χ”Χ ΧªΧ•Χ Χ™Χ!"));
 	}
 }
 public void saveGameDetails(GameRecord gameR)
@@ -205,7 +204,7 @@ public void deleteChild(int index)
 		}
 	}
 	setChanged();
-	notifyObservers(new String(child+" εδψωεξεϊ δξχεωψεϊ ΰμιε πξηχε ξξΰβψ δπϊεπιν!"));
+	notifyObservers(new String(child+" Χ•Χ”Χ¨Χ©Χ•ΧΧ•Χª Χ”ΧΧ§Χ•Χ©Χ¨Χ•Χª ΧΧΧ™Χ• Χ ΧΧ—Χ§Χ• ΧΧΧΧ’Χ¨ Χ”Χ ΧªΧ•Χ Χ™Χ!"));
 }
 
 public void closeFile() // when closing tha app -> close the in/output files 
@@ -221,42 +220,41 @@ public void closeFile() // when closing tha app -> close the in/output files
 	System.exit(0);
 	}
 
-public void MakeLinearStatsPerChild(int index) {
+public void MakeLinearStatsPerChild(int index,Date startDate,Date endDate ) {
+	//if(todayDate.after(historyDate) && todayDate.before(futureDate)) {
+	    // In between
+	//}
 		String child=children.get(index).toString();
 		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 	    Row row;
 	    Cell cell2compare;
 	    DataFormatter formatter = new DataFormatter();
-	 //   this.saveGameDetails(new GameRecord(new Children("rom"),30,"liat"));//for test
-	 //   this.saveGameDetails(new GameRecord(new Children("rom"),20,"liat"));//for test
-	 //   this.saveGameDetails(new GameRecord(new Children("rom"),5,"liat"));//for test
-	 //   this.saveGameDetails(new GameRecord(new Children("rom"),45,"liat"));//for test
-
+	 //   this.saveGameDetails(new GameRecord(new Children("rom"),30,"liat"));//insert data for testing
 		Cell date,score;
 		Integer progress=1;
 	    for(int i=1;i<=gameHistory.getLastRowNum();i++)
 	    {
 	    	row=gameHistory.getRow(i);
-	    	
 			cell2compare=row.getCell(0);
 			String strValue2 = formatter.formatCellValue(cell2compare);
 			if(Objects.equals(child, strValue2))
 			{
-				//date=row.getCell(1);
-		    	score=row.getCell(3);
-		    	//String datestr=formatter.formatCellValue(date);
-		    	String scorestr=formatter.formatCellValue(score);
-				dataset.addValue( Integer.parseInt(scorestr) , child , (progress++).toString());
-			}
+				date=row.getCell(1);
+		    	Date current=date.getDateCellValue();
+		    	current.setTime(0);
+		    	if(!current.after(endDate) && !current.before(startDate))
+		    	{
+			    	score=row.getCell(3);
+		    		String scorestr=formatter.formatCellValue(score);
+		    		dataset.addValue( Integer.parseInt(scorestr) , child , (progress++).toString());
+		    	}
+		    }
 	    }
-	   // dataset.addValue( 5 , "child" , "0" );
 	    setChanged();
 	    notifyObservers(dataset);	
-
 }
-	
 
-public void makeGeneralScoreStats() {
+public void makeGeneralScoreStats(Date startDate,Date endDate) {
 	//this.saveGameDetails(new GameRecord(new Children("rom"),30,"liat"));//for test
 	if(rowNumGH!=1)
 	{	
@@ -264,23 +262,26 @@ public void makeGeneralScoreStats() {
 		Cell date,score,gametype;
 		String [][] data= new String[gameHistory.getLastRowNum()][4]; 
 		String [] record=new String[4];
-		
+		int k=0;
 	    for(int i=1;i<=gameHistory.getLastRowNum();i++)
 	    {
 	    	row=gameHistory.getRow(i);
-			cell2compare=row.getCell(0);
-			date=row.getCell(1);
-	    	score=row.getCell(3);
-	    	gametype=row.getCell(2);
-			record[0]=formatter.formatCellValue(cell2compare);
-			record[1]=formatter.formatCellValue(date);
-			record[2]=formatter.formatCellValue(gametype);
-			record[3]=formatter.formatCellValue(score);
-			data[i-1]=record.clone();
-	    }
-		
-		 //String data[][]= {{"100","rom","15000"}};   
-		 String column[]={"ων ξμΰ","ϊΰψικ","ρεβ ξωηχ","πιχεγ"};         
+	    	date=row.getCell(1);
+	    	Date current=date.getDateCellValue();
+	    	if(!current.after(endDate) && !current.before(startDate)) 
+	    	{
+				cell2compare=row.getCell(0);
+				date=row.getCell(1);
+		    	score=row.getCell(3);
+		    	gametype=row.getCell(2);
+				record[0]=formatter.formatCellValue(cell2compare);
+				record[1]=formatter.formatCellValue(date);
+				record[2]=formatter.formatCellValue(gametype);
+				record[3]=formatter.formatCellValue(score);
+				data[k++]=record.clone();
+			}
+	    }   
+		 String column[]={"Χ©Χ ΧΧΧ","ΧªΧΧ¨Χ™Χ","Χ΅Χ•Χ’ ΧΧ©Χ—Χ§","Χ Χ™Χ§Χ•Χ“"};         
 		 JTable jt=new JTable(data,column);    
 		 jt.setBounds(30,40,200,300);
 		 setChanged();
@@ -290,7 +291,3 @@ public void makeGeneralScoreStats() {
 
 	
 }
-
-
-
-

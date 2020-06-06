@@ -22,6 +22,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 
 import javax.swing.Timer;
@@ -33,29 +34,7 @@ import java.applet.*;
 
 public class GeneralGameBuilder extends Observable implements View//extends JFrame
 {
-	public class GameDetails {
-			
-		int score;
-		String gametype;
-		String name;
-		
-		public GameDetails() {}
-		public GameDetails(String gameType, String pName, int score)
-		{
-			this.gametype = gameType;
-			this.name=pName;
-			this.score=score;
-		}
-		public int getScore() {
-			return score;
-		}
-		public String getGametype() {
-			return gametype;
-		}
-		public String getName() {
-			return name;
-		}
-	}
+	
 	JFrame mainWindow = new JFrame();
 	
 	
@@ -81,10 +60,13 @@ public class GeneralGameBuilder extends Observable implements View//extends JFra
 	protected int photosRemaining;
 	protected boolean[] whichPhotosFound;
 	protected boolean is2Players;
+	protected Color backColor = new Color(230,230,250);
+	protected Border playerBorder;
 	
 	AudioClip matchSound;
 	AudioClip noMatchSound;
 	AudioClip gameOverSound;
+	AudioClip timesUp;
 	
 	protected int labelSelected;
 	protected Timer displayTimer;
@@ -105,7 +87,29 @@ public class GeneralGameBuilder extends Observable implements View//extends JFra
 		public GetScoreCalc(int playersTurn) {whosTurn=playersTurn;}
 		public int getWhosTurn() {return whosTurn;}
 	}
-	
+	public class GameDetails {
+		
+		int score;
+		String gametype;
+		String name;
+		
+		public GameDetails() {}
+		public GameDetails(String gameType, String pName, int score)
+		{
+			this.gametype = gameType;
+			this.name=pName;
+			this.score=score;
+		}
+		public int getScore() {
+			return score;
+		}
+		public String getGametype() {
+			return gametype;
+		}
+		public String getName() {
+			return name;
+		}
+	}
 	public class CheckMatch
 	{
 		private int firstIndex;
@@ -131,15 +135,16 @@ public class GeneralGameBuilder extends Observable implements View//extends JFra
 		GridBagConstraints gridConstraints;
 		mainWindow.pack();
 		
-		mainWindow.setTitle("Game in progress..."); //Check later how to place it in the center of the screen
+		mainWindow.setTitle("משחק פעיל"); //Check later how to place it in the center of the screen
 		mainWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		mainWindow.setBounds(400,100,1100,800);//Setting up app window size and placing in the center of my screen
-	
-		gamePanel = new JPanel();
+		mainWindow.getContentPane().setBackground(backColor);
 		
+		gamePanel = new JPanel();
 		
 		gamePanel.setPreferredSize(new Dimension(625, 530));
 		gamePanel.setLayout(new GridBagLayout());
+		gamePanel.setBackground(backColor);
 		gridConstraints = new GridBagConstraints();
 		gridConstraints.insets = new Insets(0, 0, 0, 5);
 		
@@ -154,8 +159,9 @@ public class GeneralGameBuilder extends Observable implements View//extends JFra
 		scoreTextField = new JTextField[2];
 		messageLabel = new JLabel();
 		
-		resultsPanel.setPreferredSize(new Dimension(160,140));
+		resultsPanel.setPreferredSize(new Dimension(180,150));
 		resultsPanel.setLayout(new GridBagLayout());
+		resultsPanel.setBackground(backColor);
 		
 		gridConstraints = new GridBagConstraints();
 		gridConstraints.insets = new Insets(0, 0, 5, 0);
@@ -166,7 +172,9 @@ public class GeneralGameBuilder extends Observable implements View//extends JFra
 		//Player1 INFO
 		//player1Label.setText(bld.player1Label.getText());
 		player1Label.setText(bld.p1Name);
-		player1Label.setFont(new Font("Arial",Font.BOLD,16));
+		player1Label.setFont(new Font("Tahoma",Font.BOLD,16));
+		playerBorder = BorderFactory.createLineBorder(Color.RED, 2);
+		player1Label.setBorder(playerBorder);
 		gridConstraints = new GridBagConstraints();
 		gridConstraints.gridx=0;
 		gridConstraints.gridy=0;
@@ -178,7 +186,7 @@ public class GeneralGameBuilder extends Observable implements View//extends JFra
 		scoreTextField[0].setEditable(false);
 		scoreTextField[0].setBackground(Color.WHITE);
 		scoreTextField[0].setHorizontalAlignment(SwingConstants.CENTER);
-		scoreTextField[0].setFont(new Font("Aria",Font.PLAIN,16));
+		scoreTextField[0].setFont(new Font("Tahoma",Font.PLAIN,16));
 		
 		gridConstraints = new GridBagConstraints();
 		gridConstraints.gridx = 0;
@@ -189,8 +197,9 @@ public class GeneralGameBuilder extends Observable implements View//extends JFra
 		if(bld.is2Players==true)
 		{
 			player2Label = new JLabel();
-			player2Label.setText(bld.p2Name);
-			player2Label.setFont(new Font("Arial",Font.BOLD,16));
+			//player2Label.setText(bld.p2Name);
+			player2Label.setText("מחשב");
+			player2Label.setFont(new Font("Tahoma",Font.BOLD,16));
 			gridConstraints = new GridBagConstraints();
 			gridConstraints.gridx = 0;
 			gridConstraints.gridy = 2;
@@ -205,7 +214,7 @@ public class GeneralGameBuilder extends Observable implements View//extends JFra
 			scoreTextField[1].setEditable(false);
 			scoreTextField[1].setBackground(Color.WHITE);
 			scoreTextField[1].setHorizontalAlignment(SwingConstants.CENTER);
-			scoreTextField[1].setFont(new Font("Arial",Font.PLAIN,16));
+			scoreTextField[1].setFont(new Font("Tahoma",Font.PLAIN,16));
 			//scoreTextField[1].setVisible(false);
 					
 			gridConstraints = new GridBagConstraints();
@@ -227,8 +236,8 @@ public class GeneralGameBuilder extends Observable implements View//extends JFra
 			
 			timerPanel = new JPanel();
 			timerPanel.setPreferredSize(new Dimension(160,140));
-			//timerPanel.setBackground(Color.WHITE);
-			timerPanel.setBorder(BorderFactory.createTitledBorder("Time left"));
+			timerPanel.setBackground(backColor);
+			timerPanel.setBorder(BorderFactory.createTitledBorder("הזמן שנותר"));
 			timerPanel.setLayout(new GridBagLayout());
 			gridConstraints = new GridBagConstraints();
 			gridConstraints.insets = new Insets(10,0,0,0);
@@ -250,26 +259,29 @@ public class GeneralGameBuilder extends Observable implements View//extends JFra
 					clockDown.setText(sdf.format(new Date(tempTimerVar)));
 					if(tempTimerVar==0)
 					{
-						JOptionPane.showMessageDialog(null, "Time is up!", "Game Over", JOptionPane.WARNING_MESSAGE); // Pop up message
+						timesUp.play();
+						JOptionPane.showMessageDialog(null, "נגמר הזמן", "סוף המשחק", JOptionPane.WARNING_MESSAGE); // Pop up message
 						//clockDown.setText("00:00");
 						 ((Timer)evt.getSource()).stop(); //Stops the timer
 						 
 						 //Add stop game functions later here
+						 mainWindow.dispose();
 					}
 					else tempTimerVar-=1000;
 				}
 			};
 			new javax.swing.Timer(1000,  al).start();
-			
 			timerPanel.add(clockDown);
 		}
-		
+		Border msgBorder = BorderFactory.createLineBorder(new Color(64,64,64));
 		messageLabel.setPreferredSize(new Dimension(160,40));
 		messageLabel.setOpaque(true);
-		messageLabel.setBackground(Color.YELLOW);
+		messageLabel.setBackground(new Color(176,196,222));
 		messageLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		messageLabel.setText("");
-		messageLabel.setFont(new Font("Arial",Font.PLAIN, 14));
+		messageLabel.setBorder(msgBorder);
+		//messageLabel.setText("");
+		messageLabel.setText(player1Label.getText() + " בוחר / ת קלף"); //Updating players pick
+		messageLabel.setFont(new Font("Tahoma",Font.BOLD, 14));
 				
 		gridConstraints = new GridBagConstraints();
 		gridConstraints.gridx = 0;
@@ -283,11 +295,16 @@ public class GeneralGameBuilder extends Observable implements View//extends JFra
 		
 		for (int i = 0; i < bld.numOfCards; i++)
 		{
+			// create a line border with the specified color and width
+	        //Border cardBorder = BorderFactory.createLineBorder(Color.lightGray, 2);
+	        Border cardBorder = BorderFactory.createLineBorder(new Color(64,64,64));
 			photoLabel[i] = new JLabel();
-			photoLabel[i].setPreferredSize(new Dimension(120, 75));//150,100
+			photoLabel[i].setPreferredSize(new Dimension(120, 75));//Cards size 120x75 pix
 			photoLabel[i].setOpaque(true);
 			photoLabel[i].setBackground(Color.DARK_GRAY);
 			photoLabel[i].setIcon(bld.cover);
+			photoLabel[i].setBorder(cardBorder);
+			
 			gridConstraints = new GridBagConstraints();
 			gridConstraints.gridx = i % 4;
 			gridConstraints.gridy = i / 4;
@@ -328,8 +345,9 @@ public class GeneralGameBuilder extends Observable implements View//extends JFra
 		startStopButton = new JButton();
 		exitButton = new JButton();
 		
-		buttonsPanel.setPreferredSize(new Dimension(200,70));
+		buttonsPanel.setPreferredSize(new Dimension(140,50));
 		buttonsPanel.setLayout(new GridBagLayout());
+		buttonsPanel.setBackground(Color.white);
 		gridConstraints = new GridBagConstraints();
 		gridConstraints.gridx = 1;
 		gridConstraints.gridy = 4;
@@ -350,6 +368,8 @@ public class GeneralGameBuilder extends Observable implements View//extends JFra
 				});*/
 		
 		exitButton.setText("Exit");
+		exitButton.setIcon(new ImageIcon("ExitButton.png"));
+		exitButton.setPreferredSize(new Dimension(180,60));
 		exitButton.setEnabled(true); //Disabled as long as game in progress
 		gridConstraints = new GridBagConstraints();
 		gridConstraints.gridx = 0;
@@ -361,20 +381,18 @@ public class GeneralGameBuilder extends Observable implements View//extends JFra
 				{
 			public void actionPerformed(ActionEvent evt)
 			{
-				//exitButtonActionPerformed(evt);
+				exitButtonActionPerformed(evt);
+				
 			}
 				});
 		choiceNumber=1;//Initializing choiceNumber to 1 to indicate first selection of the card
-		if(isAgainstComputer==true)
-		{
-			mainWindow.setTitle("Current game = AgainstComputer...");
-		}
 		
 		try
 		{
 			matchSound = Applet.newAudioClip(new URL("file:" + "card_match.wav"));
 			noMatchSound = Applet.newAudioClip(new URL("file:" + "card_flip2.wav"));
 			gameOverSound = Applet.newAudioClip(new URL("file:" + "victory.wav"));
+			timesUp = Applet.newAudioClip(new URL("file:" + "times_up.wav"));
 		}
 		catch (Exception ex)
 		{
@@ -421,7 +439,13 @@ public class GeneralGameBuilder extends Observable implements View//extends JFra
 		notifyObservers(new GetPhotoFound());
 		}
 	}
-	
+	private void exitButtonActionPerformed(ActionEvent evt)
+	{
+		//Hide window operation
+		//System.exit(0);
+		
+		mainWindow.dispose();
+	}
 	private void displayTimerActionPerformed(ActionEvent evt)
 	{
 		displayTimer.stop();
@@ -442,7 +466,24 @@ public class GeneralGameBuilder extends Observable implements View//extends JFra
 			{
 				choice[0]=labelSelected;
 				choiceNumber=2;
-				messageLabel.setText(player1Label.getText() + " pick a card"); //Updating players pick
+				if(whosTurn==1)
+				{
+					messageLabel.setText(player1Label.getText() + " בוחר / ת קלף"); //Updating players pick
+					if(is2Players==true)
+					{
+						player2Label.setBorder(null);
+						player1Label.setBorder(playerBorder);
+					}
+				}
+				else 
+					{
+						messageLabel.setText(player2Label.getText() + " בוחר / ת קלף"); //Updating players pick
+						if(is2Players==true)
+						{
+							player1Label.setBorder(null);
+							player2Label.setBorder(playerBorder);
+						}
+					}
 			
 				//Check if 1 or 2 players game, and act accordingly
 			}
@@ -450,7 +491,7 @@ public class GeneralGameBuilder extends Observable implements View//extends JFra
 			{
 				choice[1]=labelSelected;
 				choiceNumber=1;
-			
+				
 				setChanged();
 				notifyObservers(new CheckMatch(choice[0],choice[1],whosTurn));
 			}
@@ -522,19 +563,29 @@ public class GeneralGameBuilder extends Observable implements View//extends JFra
 			photosRemaining--;
 			if(whosTurn==1)
 			{
-				messageLabel.setText(player1Label.getText() + " pick a card"); //Updating players pick
+				messageLabel.setText(player1Label.getText() + " בוחר / ת קלף"); //Updating players pick
+				if(is2Players==true)
+				{
+					player2Label.setBorder(null);
+					player1Label.setBorder(playerBorder);
+				}
 			}
 			else
 			{
-				messageLabel.setText(player2Label.getText() + " pick a card"); //Updating players pick
+				messageLabel.setText(player2Label.getText() + " בוחר / ת קלף"); //Updating players pick
+				if(is2Players==true)
+				{
+					player1Label.setBorder(null);
+					player2Label.setBorder(playerBorder);
+				}
 			}
 			
 			if(photosRemaining==0)
 			{
 				if(is2Players==true && isAgainstComputer==false)//AgainstRival
 				{
-					GameDetails p1Record = new GameDetails("AgainstRival",player1Label.getText(),Integer.parseInt(scoreTextField[0].getText()));
-					GameDetails p2Record = new GameDetails("AgainstRival",player2Label.getText(),Integer.parseInt(scoreTextField[1].getText()));
+					GameDetails p1Record = new GameDetails("אחד נגד השני",player1Label.getText(),Integer.parseInt(scoreTextField[0].getText()));
+					GameDetails p2Record = new GameDetails("אחד נגד השני",player2Label.getText(),Integer.parseInt(scoreTextField[1].getText()));
 					
 					setChanged();
 					notifyObservers(p1Record);
@@ -543,25 +594,32 @@ public class GeneralGameBuilder extends Observable implements View//extends JFra
 					notifyObservers(p2Record);
 					
 					gameOverSound.play();
+					new EndGameScreen.Builder().setP1Name(player1Label.getText()).setP1Score(Integer.parseInt(scoreTextField[0].getText())).setP2Name(player2Label.getText()).setP2Score(Integer.parseInt(scoreTextField[1].getText())).build();
+					mainWindow.dispose();
 				}
 				else if(is2Players==true && isAgainstComputer==true)//AgainstComputer
 				{
-					GameDetails record = new GameDetails("AgainstComputer",player1Label.getText(),Integer.parseInt(scoreTextField[0].getText()));
+					GameDetails record = new GameDetails("נגד המחשב",player1Label.getText(),Integer.parseInt(scoreTextField[0].getText()));
 					
 					setChanged();
 					notifyObservers(record);
 					
 					gameOverSound.play();
+					//new EndGameScreen.Builder().setP1Name(player1Label.getText()).setP1Score(Integer.parseInt(scoreTextField[0].getText())).build();
+					new EndGameScreen.Builder().setP1Name(player1Label.getText()).setP1Score(Integer.parseInt(scoreTextField[0].getText())).setP2Name(player2Label.getText()).setP2Score(Integer.parseInt(scoreTextField[1].getText())).build();
+					mainWindow.dispose();
 					//System.exit(0);
 				}
 				else 	//AgainstTime
 				{
-					GameDetails record = new GameDetails("AgainstTime",player1Label.getText(),Integer.parseInt(scoreTextField[0].getText()));
+					GameDetails record = new GameDetails("נגד הזמן",player1Label.getText(),Integer.parseInt(scoreTextField[0].getText()));
 				
 					setChanged();
 					notifyObservers(record);
 					
 					gameOverSound.play();
+					new EndGameScreen.Builder().setP1Name(player1Label.getText()).setP1Score(Integer.parseInt(scoreTextField[0].getText())).build();
+					mainWindow.dispose();
 				}
 				
 				//End game, Thanos won
@@ -579,6 +637,7 @@ public class GeneralGameBuilder extends Observable implements View//extends JFra
 					e.printStackTrace();
 				}*/
 				
+				isClickable=false;
 				setChanged();
 				notifyObservers(new CompTurn());
 			}
@@ -592,15 +651,26 @@ public class GeneralGameBuilder extends Observable implements View//extends JFra
 			//Change players turn
 			if(is2Players==true)
 			{
-				if(whosTurn==1 && isAgainstComputer==false)
+				if(whosTurn==1 && isAgainstComputer==false) //AgainstRival
 				{
 					whosTurn=2;
-					messageLabel.setText(player2Label.getText() + " pick another"); //Updating players pick
+					messageLabel.setText(player2Label.getText() + " בוחר / ת קלף"); //Updating players pick
+					player1Label.setBorder(null);
+					player2Label.setBorder(playerBorder);
 				}
-				else if(whosTurn==1 && isAgainstComputer==true)
+				else if(whosTurn==2 && isAgainstComputer==false) //AgainstRival
+				{
+					whosTurn=1;
+					messageLabel.setText(player1Label.getText() + " בוחר / ת קלף"); //Updating players pick
+					player2Label.setBorder(null);
+					player1Label.setBorder(playerBorder);
+				}
+				else if(whosTurn==1 && isAgainstComputer==true) //AgainstComputer
 				{
 					whosTurn=2;
-					
+					messageLabel.setText(player2Label.getText() + " בוחר / ת קלף");
+					player1Label.setBorder(null);
+					player2Label.setBorder(playerBorder);
 					//Set a delay before next turn
 					/*try {
 						TimeUnit.SECONDS.sleep(1);
@@ -608,21 +678,19 @@ public class GeneralGameBuilder extends Observable implements View//extends JFra
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}*/
-					
+					isClickable=false;
 					setChanged();
 					notifyObservers(new CompTurn());
 				}
-				else 
+				else  //AgainstTime
 				{
 					whosTurn=1;
-					messageLabel.setText(player1Label.getText() + " pick another"); //Updating players pick
+					messageLabel.setText(player1Label.getText() + " בוחר / ת קלף"); //Updating players pick
+					player2Label.setBorder(null);
+					player1Label.setBorder(playerBorder);
 				}
 			}
 		}
-	}
-	private void letCompPlay()
-	{
-		
 	}
 	private void showSelectedLabel()
 	{

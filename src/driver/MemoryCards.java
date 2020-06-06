@@ -4,9 +4,10 @@ import view.*;
 import controller.*;
 import java.util.Vector;
 
-public class MemoryCards {
-public static void main(String[] args) {
-		
+public class MemoryCards 
+{
+	public static void main(String[] args) 
+	{		
 		Data model=new Data();
 		AgainstComputer compM=new AgainstComputer();
 		GeneralGameBuilder gameWindow = new GeneralGameBuilder();//
@@ -23,11 +24,6 @@ public static void main(String[] args) {
 		statpage.addObserver(controller1);
 		managechild.addObserver(controller1);
 		gameWindow.addObserver(controller1);
-		
-		/**
-		 * ADD view as observer to controller (uncomment your view)
-		 */
-				
-		}
+	}
 }
 
