@@ -423,7 +423,12 @@ public class MainScreen extends Observable implements View{
 			gameSettings.player2=p2List.getItemAt(p2List.getSelectedIndex());
 			setChanged();
 			notifyObservers(gameSettings);
+			frame.setEnabled(false);
 		}
+	}
+	public void setMainScreenEnabled()
+	{
+		frame.setEnabled(true);
 	}
 	public void firstPlayerChoosed(ActionEvent e) {
 		Vector<String> childrenList2 = new Vector<String>();

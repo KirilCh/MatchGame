@@ -12,6 +12,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.Date;
 
 import javax.swing.BorderFactory;
@@ -24,6 +26,8 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
+
+import view.MainScreen.ExitEvent;
 
 import javax.swing.Timer;
 import javax.swing.JOptionPane;
@@ -62,6 +66,7 @@ public class GeneralGameBuilder extends Observable implements View//extends JFra
 	protected boolean is2Players;
 	protected Color backColor = new Color(230,230,250);
 	protected Border playerBorder;
+	private MainScreen ms;
 	
 	AudioClip matchSound;
 	AudioClip noMatchSound;
@@ -128,15 +133,23 @@ public class GeneralGameBuilder extends Observable implements View//extends JFra
 	
 	public GeneralGameBuilder(Builder bld)
 	{
-		cover=new ImageIcon(bld.cover.getDescription());
 		
+		
+		cover=new ImageIcon(bld.cover.getDescription());
+		ms=bld.ms; //Connecting MainScreen instance to hide during game
 		mainWindow.getContentPane().setLayout(new GridBagLayout());
 		//getContentPane().setLayout(new GridBagLayout());
 		GridBagConstraints gridConstraints;
 		mainWindow.pack();
 		
 		mainWindow.setTitle("משחק פעיל"); //Check later how to place it in the center of the screen
-		mainWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		//mainWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		mainWindow.addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent e) {
+				ms.setMainScreenEnabled();
+				mainWindow.dispose();
+			}
+		});
 		mainWindow.setBounds(400,100,1100,800);//Setting up app window size and placing in the center of my screen
 		mainWindow.getContentPane().setBackground(backColor);
 		
@@ -443,7 +456,7 @@ public class GeneralGameBuilder extends Observable implements View//extends JFra
 	{
 		//Hide window operation
 		//System.exit(0);
-		
+		ms.setMainScreenEnabled();
 		mainWindow.dispose();
 	}
 	private void displayTimerActionPerformed(ActionEvent evt)
@@ -595,6 +608,7 @@ public class GeneralGameBuilder extends Observable implements View//extends JFra
 					
 					gameOverSound.play();
 					new EndGameScreen.Builder().setP1Name(player1Label.getText()).setP1Score(Integer.parseInt(scoreTextField[0].getText())).setP2Name(player2Label.getText()).setP2Score(Integer.parseInt(scoreTextField[1].getText())).build();
+					ms.setMainScreenEnabled();
 					mainWindow.dispose();
 				}
 				else if(is2Players==true && isAgainstComputer==true)//AgainstComputer
@@ -607,6 +621,7 @@ public class GeneralGameBuilder extends Observable implements View//extends JFra
 					gameOverSound.play();
 					//new EndGameScreen.Builder().setP1Name(player1Label.getText()).setP1Score(Integer.parseInt(scoreTextField[0].getText())).build();
 					new EndGameScreen.Builder().setP1Name(player1Label.getText()).setP1Score(Integer.parseInt(scoreTextField[0].getText())).setP2Name(player2Label.getText()).setP2Score(Integer.parseInt(scoreTextField[1].getText())).build();
+					ms.setMainScreenEnabled();
 					mainWindow.dispose();
 					//System.exit(0);
 				}
@@ -619,6 +634,7 @@ public class GeneralGameBuilder extends Observable implements View//extends JFra
 					
 					gameOverSound.play();
 					new EndGameScreen.Builder().setP1Name(player1Label.getText()).setP1Score(Integer.parseInt(scoreTextField[0].getText())).build();
+					ms.setMainScreenEnabled();
 					mainWindow.dispose();
 				}
 				
@@ -715,6 +731,7 @@ public class GeneralGameBuilder extends Observable implements View//extends JFra
 		private ImageIcon cover;
 		private int[] photosIndex;
 		private ImageIcon[] photos;
+		private MainScreen ms;
 		
 		
 		public GeneralGameBuilder build()
@@ -776,6 +793,11 @@ public class GeneralGameBuilder extends Observable implements View//extends JFra
 		{
 			this.photos = new ImageIcon[12];
 			this.photos=photos;
+			return this;
+		}
+		public Builder setMainScreenInst(MainScreen ms)
+		{
+			this.ms=ms;
 			return this;
 		}
 	}

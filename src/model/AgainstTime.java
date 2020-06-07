@@ -36,6 +36,7 @@ public class AgainstTime extends Game{
 	{
 		
 		score = new int[2];//Initialized with 0`s
+		
 		//choiceNumber=1; 
 	//	photoIndexInner=new PhotoIndex();
 		imagePhoto = new ImageIcon[12]; //An array of images used to play the game

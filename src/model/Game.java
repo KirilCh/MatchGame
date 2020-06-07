@@ -59,7 +59,8 @@ public abstract class Game extends Observable implements CardsGame{
 			//scoreCalc() //UI
 			if(whosTurn==1) //Combo increment
 				score[1]++;
-			else score[3]++;
+			else if(whosTurn==2)
+				score[3]++;
 			photoRemaining--;
 			photoFound[firstI]=true;
 			photoFound[secondI]=true;
@@ -69,7 +70,8 @@ public abstract class Game extends Observable implements CardsGame{
 		{
 			if(whosTurn==1) //Combo reset
 				score[1]=0;
-			else score[3]=0;
+			else if(whosTurn==2)
+				score[3]=0;
 			setChanged();
 			notifyObservers(false);		}
 	}
@@ -100,17 +102,15 @@ public abstract class Game extends Observable implements CardsGame{
 				nIntegers[i]-=(n/2);
 		photoIndex=nIntegers;
 	}
-	public void  getImagePhotoArr() {	
+	public void  getImagePhotoArr() 
+	{	
 		setChanged();
 		notifyObservers(imagePhoto);}
-	public void getImagecover() {	
+	public void getImagecover() 
+	{	
 		setChanged();
 		notifyObservers(imageCover);
 	}
-	/*public void getPhotoIndex() {
-		setChanged();
-		notifyObservers(photoIndexInner); 
-	}*/
 	
 	public void scoreCalc(int whosTurn) 
 	{
@@ -120,7 +120,7 @@ public abstract class Game extends Observable implements CardsGame{
 			scoreCalc.score=score[0];
 			setChanged();
 			notifyObservers(scoreCalc);		}
-		else
+		else if(whosTurn==2)
 		{
 			score[2]+=5*(score[3]);
 			scoreCalc.score=score[2];

@@ -29,9 +29,5 @@ public void setGameType(String gameT) { gameType=gameT;}
 public void setChild(Children child) { this.child=child;}
 public void setScore(int s) { score=s;}
 public void setGameDate(Date dateP) { datePlayed=dateP;}
-
-@Override
-public String toString() { 
-    return String.format(child + " " + score+" "+ datePlayed+ " "+ gameType); 
-} 
+ 
 }
