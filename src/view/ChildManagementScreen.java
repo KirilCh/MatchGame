@@ -1,6 +1,5 @@
 package view;
 
-import java.awt.Color;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
@@ -15,7 +14,6 @@ import view.MainScreen.ExitEvent;
 
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.ImageIcon;
 import javax.swing.JTextPane;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -80,11 +78,10 @@ public class ChildManagementScreen extends Observable implements View{
 	 */
 	private void initialize() {
 		frame = new JFrame();
-		frame.setTitle("מסך ניהול ילדים");
+		frame.setTitle("ניהול מאגר ילדים");
 		frame.setBounds(100, 100, 626, 377);
 		frame.getContentPane().setLayout(null);
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		frame.getContentPane().setBackground(new Color(230,230,250));
 		/*frame.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
 				mainRef.notifyObsToUpdate();
@@ -96,7 +93,7 @@ public class ChildManagementScreen extends Observable implements View{
 		
 		label = new JLabel("\u05E0\u05D9\u05D4\u05D5\u05DC \u05E8\u05E9\u05D9\u05DE\u05EA \u05D4\u05D9\u05DC\u05D3\u05D9\u05DD");
 		label.setHorizontalAlignment(SwingConstants.RIGHT);
-		label.setFont(new Font("Tahoma", Font.PLAIN, 34));
+		label.setFont(new Font("Guttman Kav-Light", Font.PLAIN, 34));
 		label.setBounds(163, 13, 270, 26);
 		frame.getContentPane().add(label);
 		
@@ -135,7 +132,6 @@ public class ChildManagementScreen extends Observable implements View{
 		selectChildName.setEnabled(false);
 		
 		completeTheAction = new JButton("\u05D4\u05E9\u05DC\u05DD \u05D0\u05EA \u05D4\u05E4\u05E2\u05D5\u05DC\u05D4");
-		completeTheAction.setIcon(new ImageIcon("CompleteActionButton.png"));
 		completeTheAction.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -153,10 +149,9 @@ public class ChildManagementScreen extends Observable implements View{
 	}
 
 	protected void addOrRemove(MouseEvent e) {
-		if(addOrRemoveC.getSelectedItem()=="îçé÷ú éìã")
+		if(addOrRemoveC.getSelectedItem()=="מחיקת ילד")
 		{
 			int indexSelected=childList.getSelectedIndex();
-			addOrRemoveC.setSelectedIndex(1);
 			setChanged();
 			notifyObservers(indexSelected);			
 		}
@@ -166,22 +161,23 @@ public class ChildManagementScreen extends Observable implements View{
 		    Matcher m = p.matcher( fullNameText.getText() );
 			if(idText.getText()!=null&&idText.getText().matches("[0-9]+")&&fullNameText.getText()!=null&&m.find()==false)
 			{
-				addOrRemoveC.setSelectedIndex(0);
 				setChanged();
 				notifyObservers(new Children(fullNameText.getText(),idText.getText()));
 				idText.setText("");
 				fullNameText.setText("");
 			}
-			else JOptionPane.showMessageDialog(null, "àðà ååãà ëé òøëé äùãåú ú÷éðéí", "ùâéàä", JOptionPane.ERROR_MESSAGE);
-			
+			else JOptionPane.showMessageDialog(null, "אנא וודא כי ערכי השדות תקינים", "שגיאה", JOptionPane.ERROR_MESSAGE);
 		}
+		setChanged();
+		notifyObservers(new UpdateList());		
 		mainRef.notifyObsToUpdate();
 		mainRef.p1List.setSelectedIndex(0);//the children list updated
 	}
+	
 	public void display(){frame.setVisible(true);}
 	public void undisplay(){frame.setVisible(false);}
 	protected void selectAction(ActionEvent e) {
-		if(addOrRemoveC.getSelectedItem()=="îçé÷ú éìã")
+		if(addOrRemoveC.getSelectedItem()=="מחיקת ילד")
 		{
 			selectChildName.setEnabled(true);
 			childList.setEnabled(true);
@@ -214,7 +210,7 @@ public class ChildManagementScreen extends Observable implements View{
 
 	public void ShowAddChildResponse(String arg) {
 		
-		JOptionPane.showMessageDialog(null, arg, "äåñôú/îçé÷ú éìã", JOptionPane.INFORMATION_MESSAGE); // Pop up message
+		JOptionPane.showMessageDialog(null, arg, "הוספת/מחיקת ילד", JOptionPane.INFORMATION_MESSAGE); // Pop up message
 	}
 
 	public void setMainRef(MainScreen mainScreen) {

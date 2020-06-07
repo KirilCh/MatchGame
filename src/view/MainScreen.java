@@ -69,9 +69,7 @@ public class MainScreen extends Observable implements View{
 	public JComboBox<String> p1List;
 	private Vector<String> childrenList1 = new Vector<String>();
 	private static Boolean oneP=false,twoP=false;
-	//private final JLayeredPane againstCompMode = new JLayeredPane();
 	private ChildManagementScreen childScreen;
-	//private JLabel errorL;
 	private JButton childrenManagementButton;
 	private StatisticsScreen adminScreen;
 	/**
@@ -187,7 +185,7 @@ public class MainScreen extends Observable implements View{
 		pNum.setBounds(614, 104, 135, 21);
 		panel.add(pNum);
 		
-		//admin Button
+		//statistics Button
 		adminButton = new JButton("\u05E1\u05D5\u05E4\u05E8-\u05DE\u05E9\u05EA\u05DE\u05E9");
 		adminButton.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		adminButton.setIcon(new ImageIcon("AdminButton.png"));
@@ -216,8 +214,7 @@ public class MainScreen extends Observable implements View{
 		againstTimeRadioButton.setOpaque(false);
 		againstTimeRadioButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				onAnyKindButtonActionPerformed(e);
-			}
+				onAgainstTime(e);			}
 		});
 		buttonGroup_kind.add(againstTimeRadioButton);
 		againstTimeRadioButton.setBounds(587, 214, 162, 25);
@@ -233,8 +230,7 @@ public class MainScreen extends Observable implements View{
 		againstCompRadioButton.setOpaque(false);
 		againstCompRadioButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				onAnyKindButtonActionPerformed(e);
-			}
+				onAgainstComp(e);			}
 		});
 		againstCompRadioButton.setBounds(570, 244, 179, 25);
 		againstCompRadioButton.setEnabled(false);
@@ -329,7 +325,7 @@ public class MainScreen extends Observable implements View{
 		buttonGroup_kind.add(oneOnOne);
 		oneOnOne.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				onAnyKindButtonActionPerformed(e);
+				onAgainstRival(e);
 			}
 		});
 		oneOnOne.setBounds(597, 274, 152, 25);
@@ -387,6 +383,20 @@ public class MainScreen extends Observable implements View{
 		panel.add(p2List);
 	}
 
+	protected void onAgainstRival(ActionEvent e) {
+		onAnyKindButtonActionPerformed(e);
+		gameSettings.gameType=0;//one One one selected - against rival
+	}
+	protected void onAgainstComp(ActionEvent e) {
+		onAnyKindButtonActionPerformed(e);
+		gameSettings.gameType=2;//one One one selected - against rival
+		
+	}
+	protected void onAgainstTime(ActionEvent e) {
+		onAnyKindButtonActionPerformed(e);
+		gameSettings.gameType=1;//one One one selected - against rival
+	}
+
 	protected void openScreen(MouseEvent e) {
 		String inputValue = JOptionPane.showInputDialog("הכנס סיסמת מנהל מערכת");
 		if(Objects.equals(inputValue,"2301")) {
@@ -406,14 +416,11 @@ public class MainScreen extends Observable implements View{
 	protected void onStartGameButtonActionPerformed(MouseEvent e) {
 		if(startGame.isEnabled()==true)
 		{
-			if(againstTimeRadioButton.isSelected())gameSettings.gameType=1;
-			else if(againstCompRadioButton.isSelected())gameSettings.gameType=2;
-			else gameSettings.gameType=0;//one One one selected - against rival
 			if(easLevel.isSelected()) gameSettings.gameLevel=0;
 			else if(medLevel.isSelected())gameSettings.gameLevel=1;
 			else gameSettings.gameLevel=2;//hardLevel selected
 			gameSettings.player1=p1List.getItemAt(p1List.getSelectedIndex());
-			gameSettings.player2=p2List.getItemAt(p2List.getSelectedIndex());;
+			gameSettings.player2=p2List.getItemAt(p2List.getSelectedIndex());
 			setChanged();
 			notifyObservers(gameSettings);
 		}
@@ -450,23 +457,18 @@ public class MainScreen extends Observable implements View{
 		}	
 	}*/
 	protected void onAnylevelButtonActionPerformed(ActionEvent e) {
-		//startGame.setEnabled(true);
 		pNames.setEnabled(true);
 		firstPNameL.setEnabled(true);
 		p1List.setEnabled(true);
-		
 		if(twoP==true) {
-			
 			secondPNameL.setEnabled(true);
 			p2List.setEnabled(true);	
 		}
 		else 
-			{
+		{
 			p2List.setEnabled(false);
 			secondPNameL.setEnabled(false);
 		}
-		//setChanged();
-		//notifyObservers(new StartGame());
 		notifyObsToUpdate();
 	}
 	public void notifyObsToUpdate() {
@@ -487,6 +489,8 @@ public class MainScreen extends Observable implements View{
 			againstCompRadioButton.setEnabled(false);
 			oneP=false;
 			oneOnOne.setSelected(true);
+			onAgainstRival(e);
+			onAnyKindButtonActionPerformed(e);
 		}
 		else
 		{
@@ -504,6 +508,7 @@ public class MainScreen extends Observable implements View{
 			oneOnOne.setEnabled(false);
 			twoP=false;
 			againstTimeRadioButton.setSelected(true);
+			onAgainstTime(e);
 		}
 		else
 		{

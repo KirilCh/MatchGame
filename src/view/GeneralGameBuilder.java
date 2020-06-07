@@ -197,8 +197,8 @@ public class GeneralGameBuilder extends Observable implements View//extends JFra
 		if(bld.is2Players==true)
 		{
 			player2Label = new JLabel();
-			//player2Label.setText(bld.p2Name);
-			player2Label.setText("מחשב");
+			player2Label.setText(bld.p2Name);
+			//player2Label.setText("מחשב");
 			player2Label.setFont(new Font("Tahoma",Font.BOLD,16));
 			gridConstraints = new GridBagConstraints();
 			gridConstraints.gridx = 0;
@@ -274,14 +274,14 @@ public class GeneralGameBuilder extends Observable implements View//extends JFra
 			timerPanel.add(clockDown);
 		}
 		Border msgBorder = BorderFactory.createLineBorder(new Color(64,64,64));
-		messageLabel.setPreferredSize(new Dimension(160,40));
+		messageLabel.setPreferredSize(new Dimension(160,40));//160,40
 		messageLabel.setOpaque(true);
 		messageLabel.setBackground(new Color(176,196,222));
 		messageLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		messageLabel.setBorder(msgBorder);
 		//messageLabel.setText("");
 		messageLabel.setText(player1Label.getText() + " בוחר / ת קלף"); //Updating players pick
-		messageLabel.setFont(new Font("Tahoma",Font.BOLD, 14));
+		messageLabel.setFont(new Font("Tahoma",Font.PLAIN, 12));
 				
 		gridConstraints = new GridBagConstraints();
 		gridConstraints.gridx = 0;
@@ -368,7 +368,7 @@ public class GeneralGameBuilder extends Observable implements View//extends JFra
 				});*/
 		
 		exitButton.setText("Exit");
-		exitButton.setIcon(new ImageIcon("ExitButton.png"));
+		exitButton.setIcon(new ImageIcon("ExitButton1.png"));
 		exitButton.setPreferredSize(new Dimension(180,60));
 		exitButton.setEnabled(true); //Disabled as long as game in progress
 		gridConstraints = new GridBagConstraints();
@@ -749,7 +749,9 @@ public class GeneralGameBuilder extends Observable implements View//extends JFra
 		public Builder SecondPlayersName(String name)
 		{
 			this.is2Players=true;
-			this.p2Name = name;
+			if(name=="computer")
+				this.p2Name="מחשב";
+			else this.p2Name = name;
 			return this;
 		}
 		public Builder setGameLength(int num)

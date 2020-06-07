@@ -52,7 +52,8 @@ public class AgainstRival extends Game{
 		imagePhoto[10] = new ImageIcon("PhotoName11.jpeg");
 		imagePhoto[11] = new ImageIcon("PhotoName12.jpeg");
 		
-		imageCover = new ImageIcon("cover.jpeg");
+		//imageCover = new ImageIcon("cover.jpeg");
+		imageCover = new ImageIcon("coverLogo2.png");
 				
 		String level;
 		//Difficulty level affects only numOfCards

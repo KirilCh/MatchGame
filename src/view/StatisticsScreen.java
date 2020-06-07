@@ -220,11 +220,11 @@ public class StatisticsScreen extends Observable implements View{
 			public void actionPerformed(ActionEvent e) 
 			{
 				linear.start=chooserdatestartone.getDate();
-				linear.start.setTime(0);
 				linear.end=chooserdateendone.getDate();
-				linear.end.setTime(0);
 				if(linear.start!=null&&linear.end!=null&&combobox.getSelectedItem()!=null)
-				{
+				{				
+					linear.start.setTime(0);
+					linear.end.setTime(0);
 					setChanged();
 					notifyObservers(linear);
 				}
