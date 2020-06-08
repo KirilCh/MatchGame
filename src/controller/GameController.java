@@ -1,9 +1,5 @@
 package controller;
-import java.awt.event.ActionEvent;
 import java.util.Observable;
-import java.util.Observer;
-import java.util.Vector;
-import javax.swing.ImageIcon;
 import model.*;
 import view.*;
 
@@ -29,7 +25,7 @@ public class GameController implements Controller{
 		if(o instanceof MainScreen)//VIEW TO MODEL
 		{
 			mainView=(MainScreen)o;
-			if(arg instanceof MainScreen.GameSettings)//recieve the game settings from the user(instructions how to build the game screen)
+			if(arg instanceof MainScreen.GameSettings)//Receive the game settings from the user(instructions how to build the game screen)
 			{
 				MainScreen.GameSettings gs=mainView.new GameSettings();
 				gs=(MainScreen.GameSettings)arg;

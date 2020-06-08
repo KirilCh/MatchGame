@@ -1,7 +1,5 @@
 package view;
 
-import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import java.awt.BorderLayout;
@@ -10,11 +8,8 @@ import javax.swing.JRadioButton;
 import java.awt.Font;
 import javax.swing.SwingConstants;
 
-import model.*;
-
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JTextPane;
 import java.awt.Color;
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultComboBoxModel;
@@ -22,15 +17,11 @@ import javax.swing.ImageIcon;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import javax.swing.JLayeredPane;
 import javax.swing.JOptionPane;
-import javax.swing.JTextField;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import java.util.*;
 public class MainScreen extends Observable implements View{
 
@@ -120,8 +111,7 @@ public class MainScreen extends Observable implements View{
 		frame = new JFrame();
 		frame.setTitle("זכור את הפעל");
 		frame.setBounds(100, 100, 787, 643);
-		
-		//frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		//add special closing window behavior
 		frame.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
 				setChanged();
@@ -361,7 +351,7 @@ public class MainScreen extends Observable implements View{
 		childrenManagementButton.setBounds(12, 52, 213, 25);
 		panel.add(childrenManagementButton);
 		
-		p1List = new JComboBox<>(new Vector());
+		p1List = new JComboBox<>(new Vector<>());
 		p1List.setBounds(554, 456, 113, 30);
 		p1List.setEnabled(false);
 		p1List.addActionListener(new ActionListener() {
@@ -372,29 +362,24 @@ public class MainScreen extends Observable implements View{
 		panel.add(p1List);
 
 
-		p2List = new JComboBox<>(new Vector());
+		p2List = new JComboBox<>(new Vector<>());
 		p2List.setBounds(554, 490, 113, 30);
 		p2List.setEnabled(false);
-		/*p2List.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				secondPlayerChoosed(e);
-			}
-			});*/
 		panel.add(p2List);
 	}
 
 	protected void onAgainstRival(ActionEvent e) {
 		onAnyKindButtonActionPerformed(e);
-		gameSettings.gameType=0;//one One one selected - against rival
+		gameSettings.gameType=0;//AgainstRival selected - against rival
 	}
 	protected void onAgainstComp(ActionEvent e) {
 		onAnyKindButtonActionPerformed(e);
-		gameSettings.gameType=2;//one One one selected - against rival
+		gameSettings.gameType=2;//AgainstComp selected - against rival
 		
 	}
 	protected void onAgainstTime(ActionEvent e) {
 		onAnyKindButtonActionPerformed(e);
-		gameSettings.gameType=1;//one One one selected - against rival
+		gameSettings.gameType=1;//AgainstTime selected - against rival
 	}
 
 	protected void openScreen(MouseEvent e) {
@@ -442,25 +427,11 @@ public class MainScreen extends Observable implements View{
 					childrenList2.remove(i);
 				}
 			}
-			p2List.setModel(new DefaultComboBoxModel(childrenList2));
+			p2List.setModel(new DefaultComboBoxModel<>(childrenList2));
 			p2List.setSelectedIndex(0);
 		}
 	}
-	/*private void secondPlayerChoosed(ActionEvent e) {
-		if(Objects.equals(p1List.getItemAt(p1List.getSelectedIndex()),p2List.getItemAt(p2List.getSelectedIndex()))) 
-		{
-			Vector<String> childrenList2 = new Vector<String>();
-			childrenList2.addAll(childrenList1);
-			for(int i=0;i<childrenList2.size();i++) 
-			{
-				if(i==p2List.getSelectedIndex())
-				{
-					childrenList2.remove(i);
-				}
-			}
-			p1List.setModel(new DefaultComboBoxModel(childrenList2));
-		}	
-	}*/
+	
 	protected void onAnylevelButtonActionPerformed(ActionEvent e) {
 		pNames.setEnabled(true);
 		firstPNameL.setEnabled(true);
@@ -529,13 +500,10 @@ public class MainScreen extends Observable implements View{
 		if(!arg.isEmpty())
 		{
 			childrenList1=arg;
-//			childrenList2=arg;
 			p1List.setModel(new DefaultComboBoxModel<String>(arg));
 			p1List.setSelectedIndex(0);//select the first name on the list
 			if(oneP)startGame.setEnabled(true);
 			else if(twoP && arg.size()>1)startGame.setEnabled(true);
 		}
-	//		p2List.setModel(new DefaultComboBoxModel(arg));
-
 	}
 }

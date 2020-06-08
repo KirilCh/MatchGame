@@ -6,17 +6,12 @@ import java.awt.Font;
 
 import javax.swing.*;    
 import java.awt.event.*;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.Date;
 import java.util.Observable;
 import java.util.Vector;
 
 import com.toedter.calendar.JDateChooser;
 
-import org.jfree.chart.ChartPanel;
-import org.jfree.chart.JFreeChart;
-import org.jfree.chart.ui.ApplicationFrame;
 import org.jfree.data.category.DefaultCategoryDataset;
 
 public class StatisticsScreen extends Observable implements View{
@@ -109,7 +104,7 @@ public class StatisticsScreen extends Observable implements View{
 		
 		JLabel lblNewLabel_1 = new JLabel("סוג הדוח להצגה:");
 		lblNewLabel_1.setFont(new Font("Tahoma",Font.PLAIN,10));
-		lblNewLabel_1.setBounds(370, 36, 115, 24);//333, 63, 46, 14
+		lblNewLabel_1.setBounds(370, 36, 115, 24);
 		frame.getContentPane().add(lblNewLabel_1);
 	
 		allkids = new JRadioButton("היסטוריית משחקים");
@@ -143,7 +138,6 @@ public class StatisticsScreen extends Observable implements View{
 					namekid.setEnabled(true);
 					startdateone.setEnabled(true);
 					enddateone.setEnabled(true);
-					//nametext.setEnabled(true);
 					combobox.setEnabled(true);
 				}
 				else
@@ -153,7 +147,6 @@ public class StatisticsScreen extends Observable implements View{
 					namekid.setEnabled(false);
 					startdateone.setEnabled(false);
 					enddateone.setEnabled(false);
-					//nametext.setEnabled(false);
 					combobox.setEnabled(false);
 				}
 			}});
@@ -177,7 +170,6 @@ public class StatisticsScreen extends Observable implements View{
 					namekid.setEnabled(true);
 					startdateone.setEnabled(true);
 					enddateone.setEnabled(true);
-					//nametext.setEnabled(true);
 					combobox.setEnabled(true);
 				}
 				else
@@ -187,7 +179,6 @@ public class StatisticsScreen extends Observable implements View{
 					namekid.setEnabled(false);
 					startdateone.setEnabled(false);
 					enddateone.setEnabled(false);
-					//nametext.setEnabled(false);
 					combobox.setEnabled(false);
 				}
 				if(allkids.isSelected())
@@ -277,14 +268,13 @@ public class StatisticsScreen extends Observable implements View{
 		namekid.setBounds(108, 37, 46, 14);
 		frame.getContentPane().add(namekid);
 		
-		combobox= new JComboBox<>(new Vector());
+		combobox= new JComboBox<>(new Vector<>());
 		combobox.setEnabled(false);
 		combobox.setBounds(27,60,126,20);
 		frame.getContentPane().add(combobox);
 		
 		combobox.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
 				combo(e);
 			}
 			});
@@ -313,7 +303,7 @@ public class StatisticsScreen extends Observable implements View{
 	public void updateList(Vector<String> arg) 
 	{
 		
-		combobox.setModel(new DefaultComboBoxModel(arg));
+		combobox.setModel(new DefaultComboBoxModel<>(arg));
 	}
 
 	public void Showgraph(DefaultCategoryDataset arg) 

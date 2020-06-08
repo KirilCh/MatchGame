@@ -1,12 +1,8 @@
 package view;
 import javax.swing.JFrame;  
-import javax.swing.SwingUtilities;
-import javax.swing.WindowConstants;
 import java.awt.Font;
 import java.awt.Color;
 import org.jfree.chart.renderer.category.StandardBarPainter;
-import org.jfree.ui.RectangleInsets;
-
 import org.jfree.chart.ChartFactory;  
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.ChartTheme;
@@ -21,15 +17,13 @@ import org.jfree.data.category.DefaultCategoryDataset;
 
 		  public LineChart(DefaultCategoryDataset data) {  
 		    super("גרף התקדמות");  
-		    // Create dataset  
-		    DefaultCategoryDataset dataset = data;  
-		    // Create chart  
+		    DefaultCategoryDataset dataset = data;  // Create dataset
 		    JFreeChart chart = ChartFactory.createLineChart(  
 		        "גרף התקדמות אישי", // Chart title  
 		        "משחק", // X-Axis Label  
 		        "ניקוד", // Y-Axis Label  
 		        dataset  
-		        );  
+		        );  		    // Create chart  
 		  setTheme(chart);
 		    ChartPanel panel = new ChartPanel(chart);  
 		    setContentPane(panel);  
@@ -54,7 +48,6 @@ import org.jfree.data.category.DefaultCategoryDataset;
 		        theme.setChartBackgroundPaint(Color.white);
 		        theme.setGridBandPaint(Color.red);
 		        theme.setGridBandAlternatePaint(Color.red);
-		        //theme.setPlotOutlinePaint(Color.BLUE);//outline color of the graph
 		        theme.setTickLabelPaint(Color.BLUE);//values on the XY
 		        theme.setBarPainter(new StandardBarPainter());
 		        theme.setAxisLabelPaint(Color.decode("#666666"));

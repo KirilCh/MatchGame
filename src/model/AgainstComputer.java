@@ -4,8 +4,6 @@ import java.util.concurrent.TimeUnit;
 
 import javax.swing.ImageIcon;
 
-import model.Game.PhotoIndex;
-
 
 
 public class AgainstComputer extends Game{
@@ -33,7 +31,7 @@ public class AgainstComputer extends Game{
 		public int[] getPhotosIndex() {return photosIndex;}
 	}
 	
-	private CompGameSettings gameSettings;
+	protected CompGameSettings gameSettings;
 	public AgainstComputer() {} 
 
 public AgainstComputer(String p1,int difficulty) 

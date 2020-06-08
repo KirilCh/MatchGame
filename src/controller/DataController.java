@@ -1,24 +1,10 @@
 package controller;
 import javax.swing.*;
 
-import org.jfree.chart.JFreeChart;
 import org.jfree.data.category.DefaultCategoryDataset;
-
-import model.Children;
-import model.Data;
-import model.GameRecord;
-import view.ChildManagementScreen;
-import view.GeneralGameBuilder;
-import view.MainScreen;
-import view.StatisticsScreen;
-import view.View;
-
-import java.awt.*;
-import java.awt.event.*;
-import java.io.FileOutputStream;
-import java.util.*;
+import model.*;
+import view.*;
 import java.util.Observable;
-import java.util.Observer;
 import java.util.Vector;
 
 public class DataController implements Controller{
@@ -28,7 +14,6 @@ public class DataController implements Controller{
 	private GeneralGameBuilder Gs;
 	private StatisticsScreen Ss;
 	private ChildManagementScreen Cms;
-//	private View view;
 	private String view;
 	
 	public DataController(Data d,MainScreen ms,GeneralGameBuilder gs,StatisticsScreen ss,ChildManagementScreen cms)
@@ -82,12 +67,12 @@ public class DataController implements Controller{
 		else if(o instanceof MainScreen)
 		{
 			Ms=(MainScreen)o;
-			if(arg instanceof MainScreen.ExitEvent)
+			if(arg instanceof MainScreen.ExitEvent)// inner class
 			{
 			
 				data.closeFile();
 			}
-			else if(arg instanceof MainScreen.StartGame)
+			else if(arg instanceof MainScreen.StartGame)// inner class
 			{
 				view="MainScreen";
 				data.getChildrenList();
@@ -96,18 +81,18 @@ public class DataController implements Controller{
 		else if(o instanceof StatisticsScreen)
 		{
 			Ss=(StatisticsScreen)o;
-			if(arg instanceof StatisticsScreen.UpdateList)//make inner class
+			if(arg instanceof StatisticsScreen.UpdateList)// inner class
 			{
 				view="StatisticsScreen";
 				data.getChildrenList();
 			}
-			else if(arg instanceof StatisticsScreen.LinearStats)//make inner class
+			else if(arg instanceof StatisticsScreen.LinearStats)//inner class
 			{
 				StatisticsScreen.LinearStats graph=Ss.new LinearStats();
 				graph=(StatisticsScreen.LinearStats)arg;
 				data.MakeLinearStatsPerChild(graph.getIndex(),graph.getfirstD(),graph.getSecondD());
 			}
-			else if(arg instanceof StatisticsScreen.TableStats)//make inner class
+			else if(arg instanceof StatisticsScreen.TableStats)//inner class
 			{
 				StatisticsScreen.TableStats table=Ss.new TableStats();
 				table=(StatisticsScreen.TableStats)arg;
@@ -117,12 +102,12 @@ public class DataController implements Controller{
 		else if(o instanceof ChildManagementScreen)
 		{
 			Cms=(ChildManagementScreen)o;
-			if(arg instanceof ChildManagementScreen.UpdateList)//make inner class
+			if(arg instanceof ChildManagementScreen.UpdateList)//inner class
 			{
 				view= "ChildManagementScreen";
 				data.getChildrenList();
 			}
-			else if(arg instanceof ChildManagementScreen.Children)
+			else if(arg instanceof ChildManagementScreen.Children)// inner class
 			{
 				ChildManagementScreen child=new ChildManagementScreen();
 				ChildManagementScreen.Children ch=child.new Children();
@@ -136,7 +121,7 @@ public class DataController implements Controller{
 		}
 		else if(o instanceof GeneralGameBuilder)
 		{
-			if(arg instanceof GeneralGameBuilder.GameDetails)
+			if(arg instanceof GeneralGameBuilder.GameDetails)// inner class
 			{//Gs=(GeneralGameBuilder)o;
 				GeneralGameBuilder.GameDetails details=Gs.new GameDetails();
 				details=(GeneralGameBuilder.GameDetails)arg;//

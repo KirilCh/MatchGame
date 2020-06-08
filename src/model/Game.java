@@ -4,7 +4,6 @@ import java.util.Random;
 import java.util.Observable;
 
 import javax.swing.ImageIcon;
-import javax.swing.JLabel;
 
 public abstract class Game extends Observable implements CardsGame{
 	protected ImageIcon[] imagePhoto;
@@ -12,10 +11,8 @@ public abstract class Game extends Observable implements CardsGame{
 	protected int[] photoIndex;//each cell represent image index- initialize with 2n cards
 	protected boolean[] photoFound;//give indication about the cards - if found in a match already
 	protected int photoRemaining;//amount of pictures that left unmatched
-	//protected int choiceNumber;//number of selected cards in the same turn (1 or 2)
 	protected int[] score;//index 0 score of player 1, index1 combo of player 1, same goes for player 2
 	protected int numOfCards;
-//	protected PhotoIndex photoIndexInner;
 	public class ScoreCalc{
 		int score;
 		public int getScore() {	
@@ -40,9 +37,6 @@ public abstract class Game extends Observable implements CardsGame{
 	
 	public void getRemainingPhotoNum(boolean []photoFound)
 	{
-		//for(int i=0;i<photoFound.length;i++)
-			//if(photoFound[i])
-				//photoRemaining++;
 		setChanged();
 		notifyObservers(photoRemaining);
 	}

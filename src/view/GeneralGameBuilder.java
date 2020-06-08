@@ -1,8 +1,6 @@
 package view;
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -25,14 +23,9 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.Border;
-import javax.swing.border.EmptyBorder;
-
-import view.MainScreen.ExitEvent;
-
 import javax.swing.Timer;
 import javax.swing.JOptionPane;
 import java.util.Observable;
-import java.util.concurrent.TimeUnit;
 import java.net.URL;
 import java.applet.*;
 

@@ -2,21 +2,12 @@ package model;
 import java.io.File;  
 import java.io.FileInputStream;  
 import java.io.FileOutputStream;
-import java.io.*;
 import java.util.*;
-import org.apache.poi.*;
 import org.apache.poi.ss.usermodel.*;  
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import org.apache.poi.xssf.usermodel.XSSFSheet;  
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.jfree.chart.ChartFactory;
-import org.jfree.chart.JFreeChart;
-import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.DefaultCategoryDataset;
 
 import javax.swing.JTable;
-import javax.swing.SwingUtilities;
-import javax.swing.WindowConstants;
 
 
 public class Data extends Observable implements Model

@@ -5,12 +5,8 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JRadioButton;
 import javax.swing.JButton;
 import javax.swing.SwingConstants;
-
-import model.*;
-import view.MainScreen.ExitEvent;
 
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
@@ -20,8 +16,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.util.Observable;
 import java.util.Vector;
 import java.util.regex.Matcher;
@@ -82,13 +76,6 @@ public class ChildManagementScreen extends Observable implements View{
 		frame.setBounds(100, 100, 626, 377);
 		frame.getContentPane().setLayout(null);
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		/*frame.addWindowListener(new WindowAdapter() {
-			public void windowClosing(WindowEvent e) {
-				mainRef.notifyObsToUpdate();
-				mainRef.p1List.setSelectedIndex(0);
-				System.exit(0);
-			}
-		});*/
 
 		
 		label = new JLabel("\u05E0\u05D9\u05D4\u05D5\u05DC \u05E8\u05E9\u05D9\u05DE\u05EA \u05D4\u05D9\u05DC\u05D3\u05D9\u05DD");
@@ -100,7 +87,7 @@ public class ChildManagementScreen extends Observable implements View{
 		addOrRemoveC = new JComboBox<>();
 		addOrRemoveC.setToolTipText("\u05E4\u05E2\u05D5\u05DC\u05D4");
 		addOrRemoveC.setMaximumRowCount(2);
-		addOrRemoveC.setModel(new DefaultComboBoxModel(new String[] {"\u05D4\u05D5\u05E1\u05E4\u05EA \u05D9\u05DC\u05D3", "\u05DE\u05D7\u05D9\u05E7\u05EA \u05D9\u05DC\u05D3"}));
+		addOrRemoveC.setModel(new DefaultComboBoxModel<>(new String[] {"\u05D4\u05D5\u05E1\u05E4\u05EA \u05D9\u05DC\u05D3", "\u05DE\u05D7\u05D9\u05E7\u05EA \u05D9\u05DC\u05D3"}));
 		addOrRemoveC.setBounds(452, 54, 129, 33);
 		frame.getContentPane().add(addOrRemoveC);
 		addOrRemoveC.addActionListener(new ActionListener() {
@@ -141,7 +128,7 @@ public class ChildManagementScreen extends Observable implements View{
 		completeTheAction.setBounds(228, 271, 151, 26);
 		frame.getContentPane().add(completeTheAction);
 		
-		childList = new JComboBox<>(new Vector());
+		childList = new JComboBox<>(new Vector<>());
 		//childList.setToolTipText("\u05E4\u05E2\u05D5\u05DC\u05D4");
 		childList.setBounds(452, 196, 129, 33);
 		frame.getContentPane().add(childList);
@@ -204,7 +191,7 @@ public class ChildManagementScreen extends Observable implements View{
 
 	public void updateList(Vector<String> arg) {
 		
-		childList.setModel(new DefaultComboBoxModel(arg));
+		childList.setModel(new DefaultComboBoxModel<>(arg));
 		
 	}
 

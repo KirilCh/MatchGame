@@ -1,13 +1,8 @@
 package view;
-import java.awt.EventQueue;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
-import java.awt.Canvas;
 import javax.swing.JLabel;
 import java.awt.Font;
-import java.awt.Image;
-
-import javax.swing.JPanel;
 import java.awt.Color;
 
 public class EndGameScreen

@@ -2,9 +2,6 @@ package model;
 
 import javax.swing.ImageIcon;
 
-import model.Game.PhotoIndex;
-import view.GeneralGameBuilder.GetImageCover;
-
 
 public class AgainstRival extends Game{
 	public class RivalGameSettings
@@ -31,7 +28,7 @@ public class AgainstRival extends Game{
 		public int[] getPhotosIndex() {return photosIndex;}
 
 	}
-	private RivalGameSettings gameSettings;
+	protected RivalGameSettings gameSettings;
 	public AgainstRival() {} 
 
 	public AgainstRival(String p1,String p2,int difficulty) 

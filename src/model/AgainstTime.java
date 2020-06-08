@@ -1,7 +1,4 @@
 package model;
-import java.util.Timer;
-import java.util.TimerTask;
-
 import javax.swing.ImageIcon;
 
 public class AgainstTime extends Game{
@@ -27,16 +24,13 @@ public class AgainstTime extends Game{
 		public ImageIcon getCover() {return cover;}
 		public ImageIcon[] getPhotos() {return photos;}
 		public int[] getPhotosIndex() {return photosIndex;}
-
 	}
 	
-	private TimeGameSettings gameSettings;
+	protected TimeGameSettings gameSettings;
 	public AgainstTime() {}
 	public AgainstTime(String p1,int difficulty) 
 	{
-		
-		score = new int[2];//Initialized with 0`s
-		
+		score = new int[2];//Initialized with 0`s	
 		//choiceNumber=1; 
 	//	photoIndexInner=new PhotoIndex();
 		imagePhoto = new ImageIcon[12]; //An array of images used to play the game
@@ -57,24 +51,23 @@ public class AgainstTime extends Game{
 		//imageCover = new ImageIcon("cover.jpeg");
 		imageCover = new ImageIcon("coverLogo2.png");
 		String level;
-		if (difficulty==0) level="Easy";
-		else if (difficulty==1) level="Medium";
-		else level="Hard";
-		numOfCards=24;
-
-//Difficulty level affects only game time length
-		if(difficulty==0)
+		//Difficulty level affects only game time length in AgainstTime (not affected on numOfCards)
+		if (difficulty==0) 
 		{
+			level="Easy";
 			countDown=15;
 		}
-		else if(difficulty==1)
+		else if (difficulty==1) 
 		{
+			level="Medium";
 			countDown=10;
 		}
-		else 
+		else //if(difficulty==2)
 		{
+			level="Hard";
 			countDown=5;
 		}
+		numOfCards=24;
 		gameSettings=new TimeGameSettings(level,p1,countDown);
 		gameSettings.cover=imageCover;
 		gameSettings.photos=imagePhoto;
@@ -84,7 +77,6 @@ public class AgainstTime extends Game{
 		gameSettings.photosIndex=photoIndex;
 		photoFound = new boolean[numOfCards];
 		//photoIndexInner.setPhotoIndex(photoIndex);
-		
 	}
 	public void setGame() {	
 		setChanged();
