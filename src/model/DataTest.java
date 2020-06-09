@@ -1,7 +1,5 @@
 package model;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import java.util.Calendar;
 import java.util.Date;
 
@@ -9,7 +7,7 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.junit.jupiter.api.Test;
 
 public class DataTest extends junit.framework.TestCase{
-	Data data1;
+	 Data data1;
 	public DataTest() {setUp();}
 	public void setUp()
 	{
@@ -60,37 +58,24 @@ public class DataTest extends junit.framework.TestCase{
 	@Test
 	public void testDeleteChild() {
 		Children child1=new Children("Testing1","0012345678900");
-		Children child2=new Children("Testing2","1012345678900");
 		data1.addChild(child1);
-		data1.addChild(child2);
 		data1.saveGameDetails(new GameRecord(child1,55,"AgainstTest"));//insert data
-		data1.saveGameDetails(new GameRecord(child2,55,"AgainstTest"));//insert data
-		data1.saveGameDetails(new GameRecord(child2,55,"AgainstTest"));//insert data
 		data1.saveGameDetails(new GameRecord(child1,55,"AgainstTest"));//insert data
-		int vectorSize =data1.children.size();
-		int currRowCL=data1.childrenList.getLastRowNum();
-		int currRowGH=data1.gameHistory.getLastRowNum();
+		int vectorSize =data1.children.size();//after adding 1 child
+		int currRowCL=data1.childrenList.getLastRowNum();//after adding 1 child
+		int currRowGH=data1.gameHistory.getLastRowNum();//after adding 2 game records
 		data1.deleteChild(vectorSize-1);//delete the last child on the list (the  one that we added before)
 		assertTrue(data1.gameHistory.getLastRowNum()==currRowGH-2);
 		if(vectorSize-1>0)
 		{
 			assertTrue(data1.children.size()==vectorSize-1);//after adding a child the vector and the excel should updated
-			assertTrue(data1.children.get(vectorSize-2).toString()=="Testing1");//after adding a child the vector and the excel should updated
+			assertTrue(data1.children.get(vectorSize-2).toString()!="Testing1");//after adding a child the vector and the excel should updated
 			assertTrue(data1.childrenList.getLastRowNum()==currRowCL-1);
 			String cell2Str = data1.formatter.formatCellValue(data1.childrenList.getRow(currRowCL-1).getCell(0));
-			assertTrue(cell2Str=="Testing1");//after adding a child the vector and the excel should updated
+			assertTrue(cell2Str!="Testing1");//after adding a child the vector and the excel should updated
 			cell2Str = data1.formatter.formatCellValue(data1.childrenList.getRow(currRowCL-1).getCell(1));
-			assertTrue(cell2Str=="0012345678900");//verify that the children realy deleted
+			assertTrue(cell2Str!="0012345678900");//verify that the children really deleted
 		}
-	}
-
-	
-	@Test
-	public void testCloseFile() {
-		int currRow=data1.gameHistory.getLastRowNum();
-		data1.closeFile();
-		data1.addChild(new Children("Testing1","0012345678900"));
-		assertTrue(data1.gameHistory.getLastRowNum()==currRow);//after closing the file we can't write to it
 	}
 
 }

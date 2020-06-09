@@ -208,6 +208,7 @@ public void closeFile() // when closing tha app -> close the in/output files
 		if(update) inputStream.close();
 		fileOut = new FileOutputStream("DataFile.xlsx"); /// else create new file!!!!!
 		dataFile.write(fileOut);
+		fileOut.close();
 		dataFile.close();
 	}
 	catch(Exception e) {e.printStackTrace();}
