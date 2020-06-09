@@ -32,6 +32,7 @@ public class AgainstComputer extends Game{
 	}
 	
 	protected CompGameSettings gameSettings;
+	protected int []choosePhotoLabel;
 	public AgainstComputer() {} 
 
 public AgainstComputer(String p1,int difficulty) 
@@ -90,12 +91,12 @@ public AgainstComputer(String p1,int difficulty)
 		try {
 			TimeUnit.SECONDS.sleep(2);
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		}
 		
 		Random rand = new Random();
-		int []choosePhotoLabel = new int[2];
+		choosePhotoLabel = new int[2];
 		choosePhotoLabel[0] = rand.nextInt(this.numOfCards);
 		if(photoFound[choosePhotoLabel[0]]==true)
 		{

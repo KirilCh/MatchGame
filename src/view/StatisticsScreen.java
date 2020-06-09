@@ -16,7 +16,7 @@ import org.jfree.data.category.DefaultCategoryDataset;
 
 public class StatisticsScreen extends Observable implements View{
 
-	private JFrame frame;
+	protected JFrame frame;
 	JRadioButton allkids,onekid;
 	JLabel startdateall,enddateall,startdateone,enddateone,namekid;
 	JDateChooser chooserdatestartall,chooserdateendall,chooserdatestartone,chooserdateendone;

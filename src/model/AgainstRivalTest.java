@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
-class AgainstRivalTest {
+public class AgainstRivalTest extends junit.framework.TestCase{
 	AgainstRival ar1;
 	public AgainstRivalTest() {setUp();}
 	
@@ -28,7 +28,8 @@ class AgainstRivalTest {
 		int[] counterArray=new int[ar1.numOfCards/2];//create counter array
 		for(int i=0;i<ar1.numOfCards;i++)
 		{
-			assertTrue(ar1.photoIndex[i]<=ar1.numOfCards/2);//Test if the given number is in the range
+			assertTrue(ar1.photoIndex[i]<ar1.numOfCards/2);//Test if the given number is in the range
+			assertTrue(ar1.photoIndex[i]>=0);//Test if the given number is positive
 			counterArray[ar1.photoIndex[i]]++;
 		}
 		for(int i=0;i<ar1.numOfCards/2;i++)
@@ -54,8 +55,9 @@ class AgainstRivalTest {
 		ar1.scoreCalc(2);//second player
 		assertTrue(ar1.score[2]==15);//calculating score for p2 after first combo
 		
-		/*ar1.scoreCalc(2); //score[1] value is not changed because it can only update score for value=1
-		assertTrue(ar1.score[0]==15); //Combo is zero*/	
+		ar1.scoreCalc(3); //score[1] value is not changed because it can only update score for value=1
+		assertTrue(ar1.score[0]==5);  //Verify value not affected
+		assertTrue(ar1.score[2]==15); //Verify value not affected
 	}
 
 }

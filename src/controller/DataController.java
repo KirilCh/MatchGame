@@ -90,7 +90,7 @@ public class DataController implements Controller{
 			{
 				StatisticsScreen.LinearStats graph=Ss.new LinearStats();
 				graph=(StatisticsScreen.LinearStats)arg;
-				data.MakeLinearStatsPerChild(graph.getIndex(),graph.getfirstD(),graph.getSecondD());
+				data.makeLinearStatsPerChild(graph.getIndex(),graph.getfirstD(),graph.getSecondD());
 			}
 			else if(arg instanceof StatisticsScreen.TableStats)//inner class
 			{

@@ -55,7 +55,6 @@ public Data()
 			    dateCellStyle.setDataFormat(createHelper.createDataFormat().getFormat("dd-MM-yyyy"));
 
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -149,7 +148,6 @@ public void saveGameDetails(GameRecord gameR)
 {
 	Row row=gameHistory.createRow(rowNumGH++);
 	row.createCell(0).setCellValue(gameR.getChildName());
-	//row.createCell(1).setCellValue(gameR.getChildID());
 	Cell dateCell=row.createCell(1);
 	dateCell.setCellValue(gameR.getGameDate());
 	dateCell.setCellStyle(dateCellStyle);
@@ -166,36 +164,41 @@ public void getChildrenList()
 
 public void deleteChild(int index)
 {
-	Row row;
-	String child=children.get(index).toString();
-	row=childrenList.getRow(index+1);//+1 because of the header row
-	childrenList.removeRow(row);
-	if((index+1)!=(rowNumCL-1))
+	int rowDeleted=0;
+	if(!children.isEmpty())
 	{
-		childrenList.shiftRows(index+2, rowNumCL-1, -1);
-	}
-	rowNumCL--;
-	children.remove(index);
-	if(rowNumGH!=1)
-	{	
-		for(int i=1;i<rowNumGH;i++)
+		Row row;
+		String child=children.get(index).toString();
+		row=childrenList.getRow(index+1);//+1 because of the header row
+		childrenList.removeRow(row);
+		if((index+1)!=(rowNumCL-1))
 		{
-			row=gameHistory.getRow(i);
-			cell2compare=row.getCell(0);
-			String strValue2 = formatter.formatCellValue(cell2compare);
-			if(Objects.equals(child, strValue2))
+			childrenList.shiftRows(index+2, rowNumCL-1, -1);
+		}
+		rowNumCL--;
+		children.remove(index);
+		if(rowNumGH!=1)
+		{	
+			for(int i=1;i<rowNumGH;i++)
 			{
-				gameHistory.removeRow(row);
-				if(i!=(rowNumGH-1))
+				row=gameHistory.getRow(i);
+				cell2compare=row.getCell(0);
+				String strValue2 = formatter.formatCellValue(cell2compare);
+				if(Objects.equals(child, strValue2))
 				{
-					gameHistory.shiftRows(i+1, rowNumGH-1, -1);
+					gameHistory.removeRow(row);
+					if(i!=(rowNumGH-1))
+					{
+						gameHistory.shiftRows(i+1, rowNumGH-1, -1);
+						i--;
+					}
+					rowNumGH--;
 				}
-				rowNumGH--;
 			}
 		}
+		setChanged();
+		notifyObservers(new String(child+" והרשומות המקושרות אליו נמחקו ממאגר הנתונים!"));
 	}
-	setChanged();
-	notifyObservers(new String(child+" והרשומות המקושרות אליו נמחקו ממאגר הנתונים!"));
 }
 
 public void closeFile() // when closing tha app -> close the in/output files 
@@ -208,19 +211,14 @@ public void closeFile() // when closing tha app -> close the in/output files
 		dataFile.close();
 	}
 	catch(Exception e) {e.printStackTrace();}
-	System.exit(0);
 	}
 
-public void MakeLinearStatsPerChild(int index,Date startDate,Date endDate ) {
-	//if(todayDate.after(historyDate) && todayDate.before(futureDate)) {
-	    // In between
-	//}
+public void makeLinearStatsPerChild(int index,Date startDate,Date endDate ) {
 		String child=children.get(index).toString();
 		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 	    Row row;
 	    Cell cell2compare;
 	    DataFormatter formatter = new DataFormatter();
-	 //   this.saveGameDetails(new GameRecord(new Children("rom"),30,"liat"));//insert data for testing
 		Cell date,score;
 		Integer progress=1;
 	    for(int i=1;i<=gameHistory.getLastRowNum();i++)
@@ -246,7 +244,6 @@ public void MakeLinearStatsPerChild(int index,Date startDate,Date endDate ) {
 }
 
 public void makeGeneralScoreStats(Date startDate,Date endDate) {
-	//this.saveGameDetails(new GameRecord(new Children("rom"),30,"liat"));//for test
 	if(rowNumGH!=1)
 	{	
 		Row row;

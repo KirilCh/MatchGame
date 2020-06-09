@@ -1,5 +1,6 @@
 package view;
 
+import java.awt.Color;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
@@ -10,6 +11,7 @@ import javax.swing.SwingConstants;
 
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.ImageIcon;
 import javax.swing.JTextPane;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -37,7 +39,7 @@ public class ChildManagementScreen extends Observable implements View{
 
 	public class UpdateList {}
 	private MainScreen mainRef;
-	public JFrame frame;
+	protected JFrame frame;
 	private JLabel label,selectChildName,fullnameLabel,idLabel;
 	private JComboBox<String> addOrRemoveC;
 	JComboBox<String> childList;
@@ -76,7 +78,7 @@ public class ChildManagementScreen extends Observable implements View{
 		frame.setBounds(100, 100, 626, 377);
 		frame.getContentPane().setLayout(null);
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-
+		frame.getContentPane().setBackground(new Color(230,230,250));
 		
 		label = new JLabel("\u05E0\u05D9\u05D4\u05D5\u05DC \u05E8\u05E9\u05D9\u05DE\u05EA \u05D4\u05D9\u05DC\u05D3\u05D9\u05DD");
 		label.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -119,6 +121,7 @@ public class ChildManagementScreen extends Observable implements View{
 		selectChildName.setEnabled(false);
 		
 		completeTheAction = new JButton("\u05D4\u05E9\u05DC\u05DD \u05D0\u05EA \u05D4\u05E4\u05E2\u05D5\u05DC\u05D4");
+		completeTheAction.setIcon(new ImageIcon("CompleteActionButton.png"));
 		completeTheAction.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -146,7 +149,7 @@ public class ChildManagementScreen extends Observable implements View{
 		{
 		    Pattern p = Pattern.compile( "[0-9]" );
 		    Matcher m = p.matcher( fullNameText.getText() );
-			if(idText.getText()!=null&&idText.getText().matches("[0-9]+")&&fullNameText.getText()!=null&&m.find()==false)
+			if(idText.getText().matches("[0-9]+")&&fullNameText.getText().length()!=0&&m.find()==false&&idText.getText().length()==9)
 			{
 				setChanged();
 				notifyObservers(new Children(fullNameText.getText(),idText.getText()));

@@ -40,8 +40,8 @@ public class AgainstTimeTest  extends junit.framework.TestCase{
 		at1.scoreCalc(1);
 		assertTrue(at1.score[0]==15);
 		
-		/*at1.scoreCalc(2); //score[1] value is not changed because it can only update score for value=1
-		assertTrue(at1.score[0]==15); //Combo is zero*/
+		at1.scoreCalc(2); //score[1] value is not changed because it can only update score for value=1
+		assertTrue(at1.score[0]==15); //Combo is zero
 	}
 
 	@Test
@@ -49,7 +49,8 @@ public class AgainstTimeTest  extends junit.framework.TestCase{
 		int[] counterArray=new int[at1.numOfCards/2];//create counter array
 		for(int i=0;i<at1.numOfCards;i++)
 		{
-			assertTrue(at1.photoIndex[i]<=at1.numOfCards/2);//Test if the given number is in the range 
+			assertTrue(at1.photoIndex[i]<at1.numOfCards/2);//Test if the given number is in the range
+			assertTrue(at1.photoIndex[i]>=0); //Test if the given number is positive
 			counterArray[at1.photoIndex[i]]++;
 		}
 		for(int i=0;i<at1.numOfCards/2;i++)

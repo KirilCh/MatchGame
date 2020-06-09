@@ -383,18 +383,27 @@ public class MainScreen extends Observable implements View{
 	}
 
 	protected void openScreen(MouseEvent e) {
-		String inputValue = JOptionPane.showInputDialog("הכנס סיסמת מנהל מערכת");
-		if(Objects.equals(inputValue,"2301")) {
-			childScreen.setMainRef(this);
-			childScreen.display();
+		if(!childScreen.frame.isVisible())
+		{
+			String inputValue = JOptionPane.showInputDialog("הכנס סיסמת מנהל מערכת");
+			if(Objects.equals(inputValue,"2301")) {
+				childScreen.setMainRef(this);
+				childScreen.display();
+			}
+			else JOptionPane.showMessageDialog(null, "סיסמה לא נכונה", "שגיאה", JOptionPane.ERROR_MESSAGE);
 		}
-		else JOptionPane.showMessageDialog(null, "סיסמה לא נכונה", "שגיאה", JOptionPane.ERROR_MESSAGE);
+		else childScreen.display();
+
 	}
 	
 	protected void openAdmin(MouseEvent e) {
-		String inputValue = JOptionPane.showInputDialog("הכנס סיסמת מנהל מערכת");
-		if(Objects.equals(inputValue,"2301"))adminScreen.display();
-		else JOptionPane.showMessageDialog(null, "סיסמא לא נכונה", "שגיאה", JOptionPane.ERROR_MESSAGE);
+		if(!adminScreen.frame.isVisible())
+		{
+			String inputValue = JOptionPane.showInputDialog("הכנס סיסמת מנהל מערכת");
+			if(Objects.equals(inputValue,"2301"))adminScreen.display();
+			else JOptionPane.showMessageDialog(null, "סיסמא לא נכונה", "שגיאה", JOptionPane.ERROR_MESSAGE);
+		}
+		else adminScreen.display();
 	}
 
 

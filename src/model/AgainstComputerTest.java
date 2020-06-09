@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
-class AgainstComputerTest {
+public class AgainstComputerTest extends junit.framework.TestCase {
 	AgainstComputer ac1;
 	public AgainstComputerTest() {setUp();}
 	
@@ -25,7 +25,21 @@ class AgainstComputerTest {
 
 	@Test
 	public void testCompTurn() {////think how to get the computer choice(maybe create and update array that is attribute of the class?)
-		//ac1.compTurn();
+		ac1.compTurn();
+		assertTrue(ac1.choosePhotoLabel[0]>=0);
+		assertTrue(ac1.choosePhotoLabel[1]>=0);
+		assertTrue(ac1.choosePhotoLabel[0]!=ac1.choosePhotoLabel[1]);
+		assertTrue(ac1.choosePhotoLabel[0]<ac1.numOfCards);
+		assertTrue(ac1.choosePhotoLabel[1]<ac1.numOfCards);
+		assertTrue(ac1.photoFound[ac1.choosePhotoLabel[0]]==false);
+		assertTrue(ac1.photoFound[ac1.choosePhotoLabel[1]]==false);
+		
+		for(int i=2;i<ac1.numOfCards;i++)
+			ac1.photoFound[i]=true;
+		ac1.photoFound[0]=false;
+		ac1.photoFound[1]=false;
+		ac1.compTurn();
+		assertTrue((ac1.choosePhotoLabel[0]==0 && ac1.choosePhotoLabel[1]==1) || (ac1.choosePhotoLabel[0]==1 && ac1.choosePhotoLabel[1]==0));
 	}
 
 	@Test
@@ -33,7 +47,8 @@ class AgainstComputerTest {
 		int[] counterArray=new int[ac1.numOfCards/2];//create counter array
 		for(int i=0;i<ac1.numOfCards;i++)
 		{
-			assertTrue(ac1.photoIndex[i]<=ac1.numOfCards/2);//Test if the given number is in the range
+			assertTrue(ac1.photoIndex[i]<ac1.numOfCards/2);//Test if the given number is in the range
+			assertTrue(ac1.photoIndex[i]>=0);//Test if the given number is positive
 			counterArray[ac1.photoIndex[i]]++;
 		}
 		for(int i=0;i<ac1.numOfCards/2;i++)
@@ -59,8 +74,9 @@ class AgainstComputerTest {
 		ac1.scoreCalc(2);//second player
 		assertTrue(ac1.score[2]==15);//calculating score for p2 after first combo
 		
-		/*ac1.scoreCalc(2); //score[1] value is not changed because it can only update score for value=1
-		assertTrue(ac1.score[0]==15); //Combo is zero*/	
+		ac1.scoreCalc(3); //score[1] value is not changed because it can only update score for value=1
+		assertTrue(ac1.score[0]==5);
+		assertTrue(ac1.score[2]==15); //Combo is zero*
 	}
 
 }
