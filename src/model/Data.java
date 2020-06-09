@@ -15,7 +15,6 @@ public class Data extends Observable implements Model
 int rowNumCL,rowNumGH;
 Sheet childrenList,gameHistory;
 private static String[] childSheetColumns = {"שם מלא", "תעודת זהות"};
-//private static String[] gamesSheetColumns = {"שם מלא", "תעודת זהות","תאריך המשחק","סוג המשחק","ניקוד"};
 private static String[] gamesSheetColumns = {"שם מלא","תאריך המשחק","סוג המשחק","ניקוד"};
 Workbook dataFile;//this will be the file that will contain the two sheets of data we want to save
 CellStyle dateCellStyle;

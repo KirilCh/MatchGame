@@ -29,6 +29,7 @@ public class DataController implements Controller{
 		Gs=gs;
 		Gs.addObserver(this);
 	}
+	@SuppressWarnings("unchecked")
 	@Override
 	public void update(Observable o, Object arg) {
 		
@@ -122,7 +123,7 @@ public class DataController implements Controller{
 		else if(o instanceof GeneralGameBuilder)
 		{
 			if(arg instanceof GeneralGameBuilder.GameDetails)// inner class
-			{//Gs=(GeneralGameBuilder)o;
+			{
 				GeneralGameBuilder.GameDetails details=Gs.new GameDetails();
 				details=(GeneralGameBuilder.GameDetails)arg;//
 				data.saveGameDetails(new GameRecord(new Children(details.getName()),details.getScore(),details.getGametype()));
