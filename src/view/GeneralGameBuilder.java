@@ -503,28 +503,11 @@ public class GeneralGameBuilder extends Observable implements View//extends JFra
 			}
 		}
 	}
-	/*public void getImageCover(ImageIcon imgCover) {
-		cover=new ImageIcon();
-		cover=imgCover;
-		//cover.getIconWidth();
-		} //Card cover*/
-	/*public void getPhotosArray(ImageIcon[] photosArr) {photos=photosArr;} //Card for the game
-	public void getPhotoIndex(int[] photoIndex) {photosIndex=photoIndex;} //Connecting labels to cards*/
 	
 	public void getCompMove(int[] compChoice)//Array is of size 2, containing 1st and 2nd pick
 	{
 		//Reveal the 2 cards the computer selected
-		this.photoLabel[compChoice[0]].setIcon(this.photos[photosIndex[compChoice[0]]]);
-		
-		
-		//Set a delay before next turn
-		/*try {
-			TimeUnit.SECONDS.sleep(1);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}*/
-		
+		this.photoLabel[compChoice[0]].setIcon(this.photos[photosIndex[compChoice[0]]]);	
 		this.photoLabel[compChoice[1]].setIcon(this.photos[photosIndex[compChoice[1]]]);
 		choice[0]=compChoice[0];
 		choice[1]=compChoice[1];
@@ -630,21 +613,10 @@ public class GeneralGameBuilder extends Observable implements View//extends JFra
 					ms.setMainScreenEnabled();
 					mainWindow.dispose();
 				}
-				
-				//End game, Thanos won
-				//Check with Orel about end game page
-				//Which parameteres to pass to constructor
-				//Split into 2 constructors - 1 for 1 player, and another 2 players
 			}
 			if(isAgainstComputer==true && whosTurn==2)
 			{
 				//Set a delay before next turn
-				/*try {
-					TimeUnit.SECONDS.sleep(1);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}*/
 				
 				isClickable=false;
 				setChanged();
@@ -681,12 +653,7 @@ public class GeneralGameBuilder extends Observable implements View//extends JFra
 					player1Label.setBorder(null);
 					player2Label.setBorder(playerBorder);
 					//Set a delay before next turn
-					/*try {
-						TimeUnit.SECONDS.sleep(1);
-					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}*/
+					
 					isClickable=false;
 					setChanged();
 					notifyObservers(new CompTurn());
@@ -709,9 +676,6 @@ public class GeneralGameBuilder extends Observable implements View//extends JFra
 			isClickable=false;
 			displayTimer.start();
 		}
-		
-		
-		//photoFound[labelSelected] = true -> Changed when theres a match
 	}
 	public static class Builder
 	{
