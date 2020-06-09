@@ -335,9 +335,7 @@ public class GeneralGameBuilder extends Observable implements View//extends JFra
 				}
 			});
 		}
-		
-	
-		
+			
 		photosRemaining=bld.numOfCards/2;
 		//Get photos for the game
 		/*setChanged();
@@ -415,7 +413,8 @@ public class GeneralGameBuilder extends Observable implements View//extends JFra
 		{
 			photosIndex[i]=bld.photosIndex[i];
 		}
-		
+		if(bld.p2Name=="מחשב")
+			isAgainstComputer=true;
 		
 		displayTimer = new Timer(delay, new ActionListener()
 				{
