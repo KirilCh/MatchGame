@@ -244,23 +244,23 @@ public class StatisticsScreen extends Observable implements View{
 		
 		startdateall = new JLabel("תאריך התחלה:");
 		startdateall.setEnabled(false);
-		startdateall.setBounds(220, 45, 72, 14);
+		startdateall.setBounds(250, 45, 72, 14);
 		frame.getContentPane().add(startdateall);
 		
 		enddateall = new JLabel("תאריך סוף:");
 		enddateall.setEnabled(false);
-		enddateall.setBounds(235, 88, 64, 14);
+		enddateall.setBounds(265, 88, 64, 14);
 		frame.getContentPane().add(enddateall);
 		
 		chooserdatestartall = new JDateChooser();
 		chooserdatestartall.setEnabled(false);
-		chooserdatestartall.setBounds(214, 67, 78, 19);
+		chooserdatestartall.setBounds(204, 67, 126, 19);
 		frame.getContentPane().add(chooserdatestartall);
 		
 		
 		chooserdateendall = new JDateChooser();
 		chooserdateendall.setEnabled(false);
-		chooserdateendall.setBounds(214, 104, 78, 19);
+		chooserdateendall.setBounds(204, 104, 126, 19);
 		frame.getContentPane().add(chooserdateendall);
 		
 		namekid = new JLabel("בחר ילד:");

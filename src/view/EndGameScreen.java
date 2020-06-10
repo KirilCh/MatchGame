@@ -65,7 +65,7 @@ public class EndGameScreen
 			panel.add(p2Score);
 		}
 		
-		congratsLabel = new JLabel("лм длбег !!!");
+		congratsLabel = new JLabel("Ч›Чњ Ч”Ч›Ч‘Ч•Ч“ !!!");
 		congratsLabel.setForeground(new Color(0, 100, 0));
 		congratsLabel.setBounds(385, 650, 230, 43);
 		congratsLabel.setFont(new Font("Tahoma", Font.BOLD, 30));

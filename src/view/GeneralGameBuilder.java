@@ -70,7 +70,6 @@ public class GeneralGameBuilder extends Observable implements View//extends JFra
 	protected Timer displayTimer;
 	protected int delay=600; //600 ms delay between card flips
 	protected boolean isClickable=true;
-	//protected Timer timer = null; //Timer variable
 	
 	public class GetImageCover{}
 	public class GetPhotosArray{}
@@ -337,14 +336,7 @@ public class GeneralGameBuilder extends Observable implements View//extends JFra
 		}
 			
 		photosRemaining=bld.numOfCards/2;
-		//Get photos for the game
-		/*setChanged();
-		notifyObservers(new GetPhotosArray());
 		
-		//Get photos indexes for the game // photosIndex
-		setChanged();
-		notifyObservers(new GetPhotoIndex());
-		*/
 		buttonsPanel = new JPanel();
 		startStopButton = new JButton();
 		exitButton = new JButton();
@@ -356,20 +348,7 @@ public class GeneralGameBuilder extends Observable implements View//extends JFra
 		gridConstraints.gridx = 1;
 		gridConstraints.gridy = 4;
 		mainWindow.getContentPane().add(buttonsPanel, gridConstraints);
-		
-		/*startStopButton.setText("Stop Game");
-		gridConstraints = new GridBagConstraints();
-		gridConstraints.gridx = 0;
-		gridConstraints.gridy = 0;
-		buttonsPanel.add(startStopButton, gridConstraints);
-		
-		startStopButton.addActionListener(new ActionListener()
-				{
-			public void actionPerformed(ActionEvent evt)
-			{
-				//startStopButtonActionPerformed(evt);
-			}
-				});*/
+	
 		
 		exitButton.setText("Exit");
 		exitButton.setIcon(new ImageIcon("ExitButton1.png"));
@@ -447,7 +426,7 @@ public class GeneralGameBuilder extends Observable implements View//extends JFra
 	private void exitButtonActionPerformed(ActionEvent evt)
 	{
 		//Hide window operation
-		//System.exit(0);
+	
 		ms.setMainScreenEnabled();
 		mainWindow.dispose();
 	}
