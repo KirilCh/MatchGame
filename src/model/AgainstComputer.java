@@ -1,8 +1,11 @@
 package model;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 import javax.swing.ImageIcon;
+import javax.swing.Timer;
 
 
 
@@ -33,6 +36,8 @@ public class AgainstComputer extends Game{
 	
 	protected CompGameSettings gameSettings;
 	protected int []choosePhotoLabel;
+	protected Timer displayTimer;
+	protected int delay = 700;
 	public AgainstComputer() {} 
 
 public AgainstComputer(String p1,int difficulty) 
@@ -84,17 +89,25 @@ public AgainstComputer(String p1,int difficulty)
 	gameSettings.photosIndex=photoIndex;
 	photoFound = new boolean[numOfCards];
 	//photoIndexInner.setPhotoIndex(photoIndex);
+	
+	
+	displayTimer = new Timer(delay, new ActionListener()
+	{
+public void actionPerformed(ActionEvent evt)
+{
+	displayTimerActionPerformed(evt);
+}
+	});
+	
 }
 	//public CompWhosTurn whosTurn() {return whosTurn;}
 	public void compTurn()//(int playersTurn) 
 	{
-		try {
-			TimeUnit.SECONDS.sleep(2);
-		} catch (InterruptedException e) {
-			
-			e.printStackTrace();
-		}
-		
+		displayTimer.start();
+	}
+	private void displayTimerActionPerformed(ActionEvent evt)
+	{
+		displayTimer.stop();
 		Random rand = new Random();
 		choosePhotoLabel = new int[2];
 		choosePhotoLabel[0] = rand.nextInt(this.numOfCards);
@@ -112,6 +125,7 @@ public AgainstComputer(String p1,int difficulty)
 		setChanged();
 		notifyObservers(choosePhotoLabel);
 	}
+	
 	public void setGame() 
 	{	
 		setChanged();
