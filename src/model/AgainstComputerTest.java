@@ -1,7 +1,5 @@
 package model;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import org.junit.jupiter.api.Test;
 
 public class AgainstComputerTest extends junit.framework.TestCase {
@@ -24,8 +22,9 @@ public class AgainstComputerTest extends junit.framework.TestCase {
 	}
 
 	@Test
-	public void testCompTurn() {////think how to get the computer choice(maybe create and update array that is attribute of the class?)
-		ac1.compTurn();
+	public void testCompTurn() 
+	{		
+		ac1.compTurn();	
 		assertTrue(ac1.choosePhotoLabel[0]>=0);
 		assertTrue(ac1.choosePhotoLabel[1]>=0);
 		assertTrue(ac1.choosePhotoLabel[0]!=ac1.choosePhotoLabel[1]);
@@ -33,13 +32,13 @@ public class AgainstComputerTest extends junit.framework.TestCase {
 		assertTrue(ac1.choosePhotoLabel[1]<ac1.numOfCards);
 		assertTrue(ac1.photoFound[ac1.choosePhotoLabel[0]]==false);
 		assertTrue(ac1.photoFound[ac1.choosePhotoLabel[1]]==false);
-		
-		for(int i=2;i<ac1.numOfCards;i++)
-			ac1.photoFound[i]=true;
+			for(int i=2;i<ac1.numOfCards;i++)
+				ac1.photoFound[i]=true;
 		ac1.photoFound[0]=false;
 		ac1.photoFound[1]=false;
 		ac1.compTurn();
 		assertTrue((ac1.choosePhotoLabel[0]==0 && ac1.choosePhotoLabel[1]==1) || (ac1.choosePhotoLabel[0]==1 && ac1.choosePhotoLabel[1]==0));
+		
 	}
 
 	@Test

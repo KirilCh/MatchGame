@@ -38,6 +38,7 @@ public class AgainstComputer extends Game{
 	protected int []choosePhotoLabel;
 	protected Timer displayTimer;
 	protected int delay = 700;
+	protected boolean isAfterDelay=false;
 	public AgainstComputer() {} 
 
 public AgainstComputer(String p1,int difficulty) 
@@ -88,26 +89,10 @@ public AgainstComputer(String p1,int difficulty)
 	nRandomIntegers(numOfCards);
 	gameSettings.photosIndex=photoIndex;
 	photoFound = new boolean[numOfCards];
-	//photoIndexInner.setPhotoIndex(photoIndex);
-	
-	
-	displayTimer = new Timer(delay, new ActionListener()
-	{
-public void actionPerformed(ActionEvent evt)
-{
-	displayTimerActionPerformed(evt);
-}
-	});
 	
 }
-	//public CompWhosTurn whosTurn() {return whosTurn;}
-	public void compTurn()//(int playersTurn) 
+	public void compTurn()
 	{
-		displayTimer.start();
-	}
-	private void displayTimerActionPerformed(ActionEvent evt)
-	{
-		displayTimer.stop();
 		Random rand = new Random();
 		choosePhotoLabel = new int[2];
 		choosePhotoLabel[0] = rand.nextInt(this.numOfCards);
@@ -124,6 +109,7 @@ public void actionPerformed(ActionEvent evt)
 		}
 		setChanged();
 		notifyObservers(choosePhotoLabel);
+		
 	}
 	
 	public void setGame() 
