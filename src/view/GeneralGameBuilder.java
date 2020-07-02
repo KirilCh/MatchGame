@@ -59,6 +59,7 @@ public class GeneralGameBuilder extends Observable implements View//extends JFra
 	protected boolean is2Players;
 	protected Color backColor = new Color(230,230,250);
 	protected Border playerBorder;
+	protected int[] prevChoices;
 	private MainScreen ms;
 	
 	AudioClip matchSound;
@@ -360,6 +361,8 @@ public class GeneralGameBuilder extends Observable implements View//extends JFra
 		gridConstraints.insets = new Insets (10,0,0,0);
 		buttonsPanel.add(exitButton, gridConstraints);
 		
+		prevChoices = new int[2];
+		
 		exitButton.addActionListener(new ActionListener()
 				{
 			public void actionPerformed(ActionEvent evt)
@@ -416,11 +419,27 @@ public class GeneralGameBuilder extends Observable implements View//extends JFra
 			{
 				if(p.x==photoLabel[labelSelected].getX() && p.y==photoLabel[labelSelected].getY())
 				{
-					break;
+					if(prevChoices[0]==whosTurn && prevChoices[1]==labelSelected)
+					{
+						break;
+					}
+					else
+					{	
+						if(choiceNumber==2)
+						{
+							prevChoices[1]=-1;
+						}
+						else
+						{
+							prevChoices[0]=whosTurn;
+							prevChoices[1]=labelSelected;
+						}						
+						setChanged();
+						notifyObservers(new GetPhotoFound());
+						break;
+					}
 				}
 			}
-		setChanged();
-		notifyObservers(new GetPhotoFound());
 		}
 	}
 	private void exitButtonActionPerformed(ActionEvent evt)
@@ -651,6 +670,7 @@ public class GeneralGameBuilder extends Observable implements View//extends JFra
 		if(isClickable==true)
 		{
 			this.photoLabel[labelSelected].setIcon(this.photos[photosIndex[labelSelected]]);
+			
 			isClickable=false;
 			displayTimer.start();
 		}
